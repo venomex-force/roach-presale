@@ -15,8 +15,6 @@
   </style>
 </head>
 <body class="min-h-screen">
-
-  <!-- Navbar -->
   <header class="border-b border-gray-800 bg-black/40 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
     <div class="flex items-center gap-3">
       <span class="text-3xl">🪳</span>
@@ -32,10 +30,7 @@
     </div>
   </header>
 
-  <!-- Hero Section & Presale Widget -->
   <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-    
-    <!-- Left: Narrative & Utility -->
     <div class="lg:col-span-7 space-y-8">
       <div class="inline-block bg-emerald-500/10 border border-emerald-500/30 px-4 py-1.5 rounded-full text-emerald-400 text-xs font-bold tracking-widest uppercase">
         ⚡ Phase 1 Presale Is Live - 240% APY Staking
@@ -47,7 +42,6 @@
         Cockroaches survive nuclear blasts. $ROACH survives bear markets. Backed by automated trading intelligence and high-yield presale reward vaults.
       </p>
 
-      <!-- AI Utility Scanner Preview Widget -->
       <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-6 space-y-4">
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
           <span class="font-brand text-sm text-emerald-400 font-bold flex items-center gap-2">
@@ -62,7 +56,6 @@
         </div>
       </div>
 
-      <!-- Feature Badges -->
       <div class="grid grid-cols-3 gap-4 text-center">
         <div class="bg-gray-900/40 border border-gray-800 p-4 rounded-xl">
           <div class="text-2xl font-bold font-brand text-white">240%</div>
@@ -79,10 +72,7 @@
       </div>
     </div>
 
-    <!-- Right: Presale Engine Widget -->
     <div class="lg:col-span-5 bg-gradient-to-b from-gray-900 to-black border border-emerald-500/30 rounded-3xl p-6 sm:p-8 neon-border relative overflow-hidden">
-      
-      <!-- Stage & Countdown -->
       <div class="text-center space-y-2 border-b border-gray-800 pb-6">
         <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Stage 1 Price Increase In</div>
         <div id="countdown" class="font-brand text-2xl font-black text-emerald-400 tracking-wider">
@@ -93,7 +83,6 @@
         </div>
       </div>
 
-      <!-- Progress Bar -->
       <div class="py-6 space-y-2">
         <div class="flex justify-between text-xs text-gray-400">
           <span>Target Raised</span>
@@ -104,13 +93,11 @@
         </div>
       </div>
 
-      <!-- Payment Tabs -->
       <div class="grid grid-cols-2 gap-2 bg-gray-950 p-1.5 rounded-xl border border-gray-800 mb-6">
         <button id="tabBnb" onclick="switchPayMethod('BNB')" class="py-2.5 rounded-lg font-bold text-sm bg-emerald-500 text-black font-brand">Pay with BNB</button>
         <button id="tabUsdt" onclick="switchPayMethod('USDT')" class="py-2.5 rounded-lg font-bold text-sm text-gray-400 hover:text-white font-brand">Pay with USDT</button>
       </div>
 
-      <!-- Input Area -->
       <div class="space-y-4">
         <div>
           <label class="text-xs text-gray-400 font-semibold mb-1 block">You Pay (<span id="payAsset">BNB</span>):</label>
@@ -128,15 +115,13 @@
           </div>
         </div>
 
-        <!-- Buy Action Button -->
-        <button onclick="executeBuy()" class="w-full glow-btn text-black font-brand font-black py-4 rounded-xl text-lg hover:scale-[1.02] active:scale-95 transition-all">
+        <button onclick="alert('Connect wallet first!')" class="w-full glow-btn text-black font-brand font-black py-4 rounded-xl text-lg hover:scale-[1.02] active:scale-95 transition-all">
           BUY $ROACH NOW
         </button>
 
         <p class="text-[11px] text-center text-gray-500">Auto-staked at 240% APY until presale concludes.</p>
       </div>
 
-      <!-- Referral Link Box -->
       <div class="mt-8 border-t border-gray-800 pt-6 space-y-2">
         <div class="flex justify-between items-center text-xs">
           <span class="text-gray-400 font-semibold">Your Referral Link (10% Bonus):</span>
@@ -144,13 +129,11 @@
         </div>
         <input type="text" id="refLink" readonly value="Connect Wallet to Generate" class="w-full bg-black border border-gray-800 px-3 py-2 rounded-lg text-xs text-gray-400 truncate outline-none">
       </div>
-
     </div>
   </main>
 
   <script>
     let currentMethod = 'BNB';
-    let userAddress = null;
     const STAGE_PRICE = 0.0010;
     const BNB_PRICE_USD = 600;
 
@@ -158,16 +141,6 @@
       currentMethod = method;
       document.getElementById('payAsset').innerText = method;
       document.getElementById('payAssetBadge').innerText = method;
-      
-      if (method === 'BNB') {
-        document.getElementById('tabBnb').className = 'py-2.5 rounded-lg font-bold text-sm bg-emerald-500 text-black font-brand';
-        document.getElementById('tabUsdt').className = 'py-2.5 rounded-lg font-bold text-sm text-gray-400 hover:text-white font-brand';
-        document.getElementById('payAmount').value = "0.5";
-      } else {
-        document.getElementById('tabUsdt').className = 'py-2.5 rounded-lg font-bold text-sm bg-emerald-500 text-black font-brand';
-        document.getElementById('tabBnb').className = 'py-2.5 rounded-lg font-bold text-sm text-gray-400 hover:text-white font-brand';
-        document.getElementById('payAmount').value = "300";
-      }
       calculateTokens();
     }
 
@@ -180,34 +153,16 @@
 
     async function connectWallet() {
       if (window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          userAddress = accounts[0];
-          document.getElementById('connectBtn').innerText = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
-          document.getElementById('refLink').value = window.location.origin + window.location.pathname + '?ref=' + userAddress;
-        } catch (e) {
-          console.error(e);
-        }
-      } else {
-        alert("Please install MetaMask or Trust Wallet!");
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        document.getElementById('connectBtn').innerText = accounts[0].substring(0, 6) + '...' + accounts[0].substring(38);
+        document.getElementById('refLink').value = window.location.origin + window.location.pathname + '?ref=' + accounts[0];
       }
     }
 
     function copyRef() {
-      const copyText = document.getElementById("refLink");
-      navigator.clipboard.writeText(copyText.value);
+      navigator.clipboard.writeText(document.getElementById("refLink").value);
       alert("Referral link copied!");
     }
-
-    // Auto-countdown timer simulation
-    let seconds = 86058;
-    setInterval(() => {
-      seconds--;
-      let h = Math.floor(seconds / 3600);
-      let m = Math.floor((seconds % 3600) / 60);
-      let s = seconds % 60;
-      document.getElementById('countdown').innerText = `${h}h : ${m}m : ${s}s`;
-    }, 1000);
   </script>
 </body>
 </html>
