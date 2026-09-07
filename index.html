@@ -304,31 +304,101 @@
       <p class="text-gray-400 text-sm sm:text-base">1,000,000,000 Total Fixed Supply. Zero team dumping, zero VC cliff liquidations.</p>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-      <div class="neon-card p-6 rounded-2xl border-t-4 border-t-emerald-500">
-        <div class="font-brand text-3xl font-black text-white">30%</div>
-        <div class="text-xs font-bold text-emerald-400 mt-1 uppercase font-brand">Public Presale</div>
-        <div class="text-[11px] text-gray-400 mt-2">300,000,000 ROACH</div>
+    <div class="neon-card rounded-3xl p-8 sm:p-12 border border-emerald-500/30 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <!-- 3D Big Glowing Ring Chart -->
+      <div class="lg:col-span-6 flex justify-center items-center">
+        <div class="relative w-72 h-72 sm:w-88 sm:h-88 flex items-center justify-center">
+          <!-- Outer 3D Glow Ring -->
+          <div class="absolute inset-0 rounded-full blur-2xl opacity-40 bg-gradient-to-tr from-emerald-500 via-teal-400 to-yellow-500"></div>
+
+          <!-- Multi-Segment Conic Gradient Donut -->
+          <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full p-6 sm:p-8 flex items-center justify-center shadow-[inset_0_0_30px_rgba(0,0,0,0.9),0_0_40px_rgba(16,185,129,0.3)] transition-transform duration-700 hover:scale-105"
+               style="background: conic-gradient(#10B981 0% 30%, #2DD4BF 30% 50%, #FACC15 50% 70%, #22D3EE 70% 90%, #F43F5E 90% 100%);">
+            
+            <!-- Hollow Core with Center Statistics -->
+            <div class="w-full h-full bg-[#07090E] rounded-full flex flex-col items-center justify-center border-4 border-gray-900 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] text-center p-4">
+              <span class="text-[10px] sm:text-xs font-brand uppercase tracking-widest text-emerald-400 font-bold">Total Cap</span>
+              <span class="font-brand text-2xl sm:text-3xl font-black text-white">1,000M</span>
+              <span class="text-xs font-mono text-gray-400">$ROACH</span>
+              <div class="mt-2 text-[10px] bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                100% Fixed Supply
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="neon-card p-6 rounded-2xl border-t-4 border-t-teal-400">
-        <div class="font-brand text-3xl font-black text-white">20%</div>
-        <div class="text-xs font-bold text-teal-400 mt-1 uppercase font-brand">Staking Vault</div>
-        <div class="text-[11px] text-gray-400 mt-2">200,000,000 ROACH</div>
-      </div>
-      <div class="neon-card p-6 rounded-2xl border-t-4 border-t-yellow-400">
-        <div class="font-brand text-3xl font-black text-white">20%</div>
-        <div class="text-xs font-bold text-yellow-400 mt-1 uppercase font-brand">Marketing & CEX</div>
-        <div class="text-[11px] text-gray-400 mt-2">200,000,000 ROACH</div>
-      </div>
-      <div class="neon-card p-6 rounded-2xl border-t-4 border-t-cyan-400">
-        <div class="font-brand text-3xl font-black text-white">20%</div>
-        <div class="text-xs font-bold text-cyan-400 mt-1 uppercase font-brand">AI Development</div>
-        <div class="text-[11px] text-gray-400 mt-2">200,000,000 ROACH</div>
-      </div>
-      <div class="neon-card p-6 rounded-2xl border-t-4 border-t-rose-400 col-span-2 md:col-span-1">
-        <div class="font-brand text-3xl font-black text-white">10%</div>
-        <div class="text-xs font-bold text-rose-400 mt-1 uppercase font-brand">DEX Liquidity</div>
-        <div class="text-[11px] text-gray-400 mt-2">100,000,000 (Locked)</div>
+
+      <!-- Segment Badges & Explanations -->
+      <div class="lg:col-span-6 space-y-3.5">
+        <div class="bg-black/50 border border-emerald-500/40 p-3.5 rounded-2xl flex items-center justify-between hover:border-emerald-400 transition-all">
+          <div class="flex items-center gap-3">
+            <span class="w-3.5 h-3.5 rounded-full bg-[#10B981] shadow-[0_0_10px_#10B981]"></span>
+            <div>
+              <div class="text-white font-brand font-bold text-sm">Public Presale</div>
+              <div class="text-[11px] text-gray-400">Fair multi-stage community allocation</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="font-brand text-emerald-400 font-bold text-base">30%</span>
+            <div class="text-[10px] text-gray-500 font-mono">300,000,000</div>
+          </div>
+        </div>
+
+        <div class="bg-black/50 border border-teal-500/30 p-3.5 rounded-2xl flex items-center justify-between hover:border-teal-400 transition-all">
+          <div class="flex items-center gap-3">
+            <span class="w-3.5 h-3.5 rounded-full bg-[#2DD4BF] shadow-[0_0_10px_#2DD4BF]"></span>
+            <div>
+              <div class="text-white font-brand font-bold text-sm">Staking Vault</div>
+              <div class="text-[11px] text-gray-400">240% APY holder rewards compounding</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="font-brand text-teal-400 font-bold text-base">20%</span>
+            <div class="text-[10px] text-gray-500 font-mono">200,000,000</div>
+          </div>
+        </div>
+
+        <div class="bg-black/50 border border-yellow-500/30 p-3.5 rounded-2xl flex items-center justify-between hover:border-yellow-400 transition-all">
+          <div class="flex items-center gap-3">
+            <span class="w-3.5 h-3.5 rounded-full bg-[#FACC15] shadow-[0_0_10px_#FACC15]"></span>
+            <div>
+              <div class="text-white font-brand font-bold text-sm">Marketing & CEX Listings</div>
+              <div class="text-[11px] text-gray-400">Global campaigns & tier exchange listings</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="font-brand text-yellow-400 font-bold text-base">20%</span>
+            <div class="text-[10px] text-gray-500 font-mono">200,000,000</div>
+          </div>
+        </div>
+
+        <div class="bg-black/50 border border-cyan-500/30 p-3.5 rounded-2xl flex items-center justify-between hover:border-cyan-400 transition-all">
+          <div class="flex items-center gap-3">
+            <span class="w-3.5 h-3.5 rounded-full bg-[#22D3EE] shadow-[0_0_10px_#22D3EE]"></span>
+            <div>
+              <div class="text-white font-brand font-bold text-sm">AI Core Development</div>
+              <div class="text-[11px] text-gray-400">Sentinel Scanner & RoachSwap DEX maintenance</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="font-brand text-cyan-400 font-bold text-base">20%</span>
+            <div class="text-[10px] text-gray-500 font-mono">200,000,000</div>
+          </div>
+        </div>
+
+        <div class="bg-black/50 border border-rose-500/30 p-3.5 rounded-2xl flex items-center justify-between hover:border-rose-400 transition-all">
+          <div class="flex items-center gap-3">
+            <span class="w-3.5 h-3.5 rounded-full bg-[#F43F5E] shadow-[0_0_10px_#F43F5E]"></span>
+            <div>
+              <div class="text-white font-brand font-bold text-sm">DEX Liquidity Pool</div>
+              <div class="text-[11px] text-gray-400">Locked permanently on PancakeSwap launch</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="font-brand text-rose-400 font-bold text-base">10%</span>
+            <div class="text-[10px] text-gray-500 font-mono">100,000,000</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
