@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cockroach AI ($ROACH) | Official Presale & Staking</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --primary-hover: #d97706;
+      --bg-dark: #090d16;
+      --card-bg: #131b2e;
+      --card-border: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px; }
+    
+    .nav { width: 100%; max-width: 520px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .brand { font-size: 20px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .btn-connect { background: #1e293b; color: #fff; border: 1px solid #334155; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 13px; }
+    .btn-connect:hover { border-color: var(--primary); color: var(--primary); }
+
+    .card { width: 100%; max-width: 520px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
+    
+    /* Countdown Timer */
+    .timer-wrap { text-align: center; margin-bottom: 20px; }
+    .timer-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
+    .timer-boxes { display: flex; justify-content: center; gap: 10px; }
+    .t-box { background: #0b1120; border: 1px solid #1e293b; padding: 10px 14px; border-radius: 10px; min-width: 60px; text-align: center; }
+    .t-num { font-size: 20px; font-weight: 800; color: var(--primary); }
+    .t-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+
+    /* Progress Bar */
+    .progress-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+    .progress-bar-bg { width: 100%; height: 12px; background: #0b1120; border-radius: 10px; overflow: hidden; margin-bottom: 16px; border: 1px solid #1e293b; }
+    .progress-bar-fill { width: 34%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 10px; transition: 0.5s; }
+
+    /* Price Badge */
+    .price-badge { background: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; text-align: center; font-size: 13px; margin-bottom: 20px; }
+    .price-badge span { color: var(--accent); font-weight: 700; }
+
+    /* Tabs */
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .tab-btn { background: #0b1120; border: 1px solid #1e293b; color: var(--text-muted); padding: 10px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; }
+    .tab-btn.active { background: #1e293b; color: #fff; border-color: var(--primary); }
+
+    /* Input Controls */
+    .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; }
+    .input-box { width: 100%; background: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 16px; outline: none; margin-bottom: 14px; }
+    .input-box:focus { border-color: var(--primary); }
+
+    /* Action Buttons */
+    .btn-main { width: 100%; background: var(--primary); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-main:hover { background: var(--primary-hover); }
+
+    /* Staking Section */
+    .stake-pools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; }
+    .pool-chip { background: #0b1120; border: 1px solid #1e293b; border-radius: 8px; padding: 8px 4px; text-align: center; cursor: pointer; font-size: 11px; }
+    .pool-chip.selected { border-color: var(--accent); background: rgba(16, 185, 129, 0.1); }
+    .pool-chip strong { display: block; font-size: 13px; color: #fff; }
+    .pool-chip span { color: var(--accent); font-weight: 700; }
+
+    /* Status Banner */
+    .status-box { margin-top: 14px; padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; display: none; word-break: break-all; }
+    .status-box.active { display: block; background: #0b1120; border: 1px solid #334155; color: var(--primary); }
+  </style>
+</head>
+<body>
+
+  <div class="nav">
+    <div class="brand">🪳 Cockroach AI <span>($ROACH)</span></div>
+    <button class="btn-connect" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+  </div>
+
+  <div class="card">
+    <div class="timer-wrap">
+      <div class="timer-title">Presale Stage 1 Ends In</div>
+      <div class="timer-boxes">
+        <div class="t-box"><div class="t-num" id="d">04</div><div class="t-lbl">Days</div></div>
+        <div class="t-box"><div class="t-num" id="h">18</div><div class="t-lbl">Hours</div></div>
+        <div class="t-box"><div class="t-num" id="m">32</div><div class="t-lbl">Mins</div></div>
+        <div class="t-box"><div class="t-num" id="s">45</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div>
+
+    <div class="progress-header">
+      <span style="color: var(--text-muted)">Raised: <strong>$178,400</strong></span>
+      <span style="color: var(--accent)">Target: <strong>$500,000</strong></span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+
+    <div class="price-badge">
+      1 $ROACH = <span>$0.001 USD</span> | 1 BNB = <span>600,000 $ROACH</span>
+    </div>
+
+    <!-- Buy Section -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tabBNB" onclick="switchCurrency('BNB')">Buy with BNB</button>
+      <button class="tab-btn" id="tabUSDT" onclick="switchCurrency('USDT')">Buy with USDT</button>
+    </div>
+
+    <label class="input-label" id="payLabel">Pay with BNB (Max Balance: <span id="userBnbBal">0.0</span>)</label>
+    <input type="number" id="payAmount" class="input-box" placeholder="0.0" oninput="calculateTokens()" />
+
+    <label class="input-label">You Receive ($ROACH)</label>
+    <input type="text" id="receiveAmount" class="input-box" placeholder="0" readonly style="color: var(--primary); font-weight: bold;" />
+
+    <button class="btn-main" id="actionBtn" onclick="executeBuy()">Buy $ROACH Tokens</button>
+
+    <div id="statusBox" class="status-box"></div>
+  </div>
+
+  <!-- Staking Dashboard Card -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h3 style="font-size: 16px;">Staking Rewards Vault</h3>
+      <span style="font-size: 12px; color: var(--accent); background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 6px;">Dynamic APY</span>
+    </div>
+
+    <label class="input-label">Lock Duration</label>
+    <div class="stake-pools">
+      <div class="pool-chip" onclick="selectPool(30, 2, this)"><strong>30D</strong><span>2% APY</span></div>
+      <div class="pool-chip selected" onclick="selectPool(60, 3, this)"><strong>60D</strong><span>3% APY</span></div>
+      <div class="pool-chip" onclick="selectPool(90, 5, this)"><strong>90D</strong><span>5% APY</span></div>
+      <div class="pool-chip" onclick="selectPool(180, 8, this)"><strong>180D</strong><span>8% APY</span></div>
+    </div>
+
+    <label class="input-label">Amount to Stake (Balance: <span id="userRoachBal">0</span>)</label>
+    <input type="number" id="stakeAmount" class="input-box" placeholder="Enter $ROACH amount" />
+
+    <button class="btn-main" style="background: #10b981;" onclick="executeStake()">Approve & Stake Tokens</button>
+  </div>
+
+<script>
+  const PRESALE_ADDR = "0xd42385A8595E6Fc5Cac0CeC28e135f0c81A521eC";
+  const TOKEN_ADDR   = "0x2D433E4C7a9E4f3AA64Cf9b011139D2585722A18";
+  const USDT_ADDR    = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+
+  let signer, userAddress, provider;
+  let activeCurrency = 'BNB';
+  let selectedDays = 60;
+
+  // Countdown timer logic
+  let targetDate = new Date().getTime() + (4 * 24 * 60 * 60 * 1000) + (18 * 60 * 60 * 1000);
+  setInterval(() => {
+    let now = new Date().getTime();
+    let diff = targetDate - now;
+    if(diff > 0) {
+      document.getElementById('d').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+      document.getElementById('h').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+      document.getElementById('m').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      document.getElementById('s').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+    }
+  }, 1000);
+
+  function switchCurrency(curr) {
+    activeCurrency = curr;
+    document.getElementById('tabBNB').className = curr === 'BNB' ? 'tab-btn active' : 'tab-btn';
+    document.getElementById('tabUSDT').className = curr === 'USDT' ? 'tab-btn active' : 'tab-btn';
+    document.getElementById('payLabel').innerText = `Pay with ${curr}`;
+    calculateTokens();
+  }
+
+  function calculateTokens() {
+    let amt = parseFloat(document.getElementById('payAmount').value) || 0;
+    let tokens = activeCurrency === 'BNB' ? amt * 600000 : amt * 1000;
+    document.getElementById('receiveAmount').value = tokens > 0 ? tokens.toLocaleString() : '0';
+  }
+
+  function selectPool(days, apy, el) {
+    selectedDays = days;
+    document.querySelectorAll('.pool-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function logStatus(msg) {
+    const box = document.getElementById('statusBox');
+    box.className = 'status-box active';
+    box.innerText = msg;
+  }
+
+  async function connectWallet() {
+    if (!window.ethereum) return alert("MetaMask installed nahi hai!");
+    provider = new ethers.BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+    userAddress = await signer.getAddress();
+    
+    document.getElementById('connectBtn').innerText = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
+    
+    // Fetch Balances
+    const bnbBal = await provider.getBalance(userAddress);
+    document.getElementById('userBnbBal').innerText = parseFloat(ethers.formatEther(bnbBal)).toFixed(3);
+
+    const tokenContract = new ethers.Contract(TOKEN_ADDR, ["function balanceOf(address) view returns (uint256)"], provider);
+    const roachBal = await tokenContract.balanceOf(userAddress);
+    document.getElementById('userRoachBal').innerText = Number(ethers.formatEther(roachBal)).toLocaleString();
+  }
+
+  async function executeBuy() {
+    if (!signer) return alert("Pehle MetaMask connect karein!");
+    let amt = document.getElementById('payAmount').value;
+    if (!amt || amt <= 0) return alert("Valid amount enter karein!");
+
+    const presale = new ethers.Contract(PRESALE_ADDR, [
+      "function buyWithBNB() payable",
+      "function buyWithUSDT(uint256 amount)"
+    ], signer);
+
+    try {
+      if (activeCurrency === 'BNB') {
+        logStatus("Transaction Pending: Buying with BNB...");
+        const tx = await presale.buyWithBNB({ value: ethers.parseEther(amt) });
+        await tx.wait();
+        logStatus("Success! $ROACH tokens credited to wallet.");
+      } else {
+        const usdt = new ethers.Contract(USDT_ADDR, ["function approve(address,uint256) returns (bool)"], signer);
+        const parsed = ethers.parseEther(amt);
+        logStatus("1/2: Approving USDT...");
+        const appTx = await usdt.approve(PRESALE_ADDR, parsed);
+        await appTx.wait();
+        logStatus("2/2: Confirming USDT Purchase...");
+        const buyTx = await presale.buyWithUSDT(parsed);
+        await buyTx.wait();
+        logStatus("Success! USDT purchase complete.");
+      }
+      connectWallet();
+    } catch (err) {
+      logStatus("Error: " + (err.reason || err.message));
+    }
+  }
+
+  async function executeStake() {
+    if (!signer) return alert("Pehle MetaMask connect karein!");
+    let amt = document.getElementById('stakeAmount').value;
+    if (!amt || amt <= 0) return alert("Valid stake amount enter karein!");
+
+    const token = new ethers.Contract(TOKEN_ADDR, ["function approve(address,uint256) returns (bool)"], signer);
+    const presale = new ethers.Contract(PRESALE_ADDR, ["function stakeTokens(uint256,uint256)"], signer);
+    const parsed = ethers.parseEther(amt);
+
+    try {
+      logStatus("1/2: Approving $ROACH for Vault Lock...");
+      const tx1 = await token.approve(PRESALE_ADDR, parsed);
+      await tx1.wait();
+      
+      logStatus(`2/2: Locking in ${selectedDays}-day pool...`);
+      const tx2 = await presale.stakeTokens(parsed, selectedDays);
+      await tx2.wait();
+      
+      logStatus("Success! Staking complete. Yield is now accumulating.");
+      connectWallet();
+    } catch (err) {
+      logStatus("Error: " + (err.reason || err.message));
+    }
+  }
+</script>
+</body>
+</html>
