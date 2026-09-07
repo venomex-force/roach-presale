@@ -29,7 +29,7 @@
     <span class="inline-flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
       <span class="text-emerald-400 font-bold uppercase tracking-wider font-brand">CockroachAI Dev Release #012:</span>
-      <span class="text-gray-300">Sentinel Scanner v1.0 & BSC Staking Contracts Synchronized.</span>
+      <span class="text-gray-300">Sentinel Scanner v1.0 & BSC Presale Engine Synchronized.</span>
       <a href="#ecosystem" class="text-emerald-400 underline font-semibold hover:text-emerald-300 ml-2">Read Tech Specs →</a>
     </span>
   </div>
@@ -54,7 +54,7 @@
 
       <div class="flex items-center gap-3">
         <div class="hidden sm:flex items-center gap-2 bg-gray-900 border border-emerald-500/30 px-3 py-1.5 rounded-full text-xs text-emerald-400 font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span> BSC Network
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span> BSC Mainnet
         </div>
         <button id="navConnectBtn" onclick="connectWallet()" class="glow-btn text-black font-brand font-bold px-5 py-2.5 rounded-xl hover:scale-105 transition-all text-xs tracking-wider uppercase">
           Connect Wallet
@@ -79,10 +79,10 @@
       </h1>
 
       <p class="text-gray-400 text-lg leading-relaxed">
-        CockroachAI ($ROACH) powers a battle-hardened DeFi intelligence suite: <span class="text-emerald-400 font-semibold">RoachSwap</span>, <span class="text-emerald-400 font-semibold">Sentinel AI Scanner</span>, and non-dilutive monthly <span class="text-emerald-400 font-semibold">USDT holder reward pools</span>. Built to adapt, conquer volatility, and burn supply.
+        CockroachAI ($ROACH) powers a battle-hardened DeFi intelligence suite on Binance Smart Chain: <span class="text-emerald-400 font-semibold">RoachSwap</span>, <span class="text-emerald-400 font-semibold">Sentinel AI Scanner</span>, and non-dilutive monthly <span class="text-emerald-400 font-semibold">USDT holder reward pools</span>. Built to adapt, conquer volatility, and burn supply.
       </p>
 
-      <!-- Audited & Verified Badges -->
+      <!-- Audited Badges -->
       <div class="flex flex-wrap items-center gap-6 pt-2 border-y border-gray-800/80 py-4">
         <div class="text-xs text-gray-500 uppercase tracking-widest font-semibold">Audited & Verified By</div>
         <div class="flex items-center gap-5 text-sm font-brand font-bold text-gray-400">
@@ -109,17 +109,19 @@
       </div>
     </div>
 
-    <!-- Right: High-Conversion Presale Engine -->
+    <!-- Right: Presale Engine (Pure BSC) -->
     <div class="lg:col-span-5 bg-gradient-to-b from-[#0F141C] to-[#080B10] border border-emerald-500/30 rounded-3xl p-6 sm:p-8 neon-border relative shadow-2xl">
       
+      <!-- Countdown Header (3 Days) -->
       <div class="text-center pb-5 border-b border-gray-800">
         <span class="text-[11px] font-bold uppercase tracking-widest text-gray-400">Next Price Jump In:</span>
         <div id="countdown" class="font-brand text-2xl sm:text-3xl font-black text-emerald-400 tracking-widest mt-1">
-          01D : 14H : 32M : 45S
+          03D : 00H : 00M : 00S
         </div>
         <div class="text-xs text-yellow-400 font-semibold mt-1">Current: $0.0010 ➔ Next: $0.0015 (+50%)</div>
       </div>
 
+      <!-- Target Raised Progress -->
       <div class="py-5 space-y-2">
         <div class="flex justify-between text-xs font-semibold">
           <span class="text-gray-400">Stage 1 Raised</span>
@@ -130,15 +132,30 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-2 bg-black/50 p-1 rounded-xl border border-gray-800 mb-5">
-        <button id="btnPayBnb" onclick="setCurrency('BNB')" class="py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all">
-          PAY WITH BNB
-        </button>
-        <button id="btnPayUsdt" onclick="setCurrency('USDT')" class="py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all">
-          PAY WITH USDT
-        </button>
+      <!-- Network Badge (Locked to BSC) -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between bg-yellow-500/10 border border-yellow-500/30 px-4 py-2.5 rounded-xl text-xs font-bold text-yellow-400 font-brand">
+          <span class="flex items-center gap-2">
+            <span>🟡</span> Network: BNB Smart Chain (BEP-20)
+          </span>
+          <span class="text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded border border-yellow-500/40">Active</span>
+        </div>
       </div>
 
+      <!-- Currency Selector: BNB vs USDT -->
+      <div class="mb-5">
+        <label class="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-1.5">Select Payment Currency:</label>
+        <div class="grid grid-cols-2 gap-2 bg-black/50 p-1 rounded-xl border border-gray-800">
+          <button id="btnPayBnb" onclick="setCurrency('BNB')" class="py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all">
+            PAY WITH BNB
+          </button>
+          <button id="btnPayUsdt" onclick="setCurrency('USDT')" class="py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all">
+            PAY WITH USDT (BEP-20)
+          </button>
+        </div>
+      </div>
+
+      <!-- Calculator Inputs -->
       <div class="space-y-4">
         <div>
           <div class="flex justify-between text-xs text-gray-400 mb-1">
@@ -162,11 +179,16 @@
           </div>
         </div>
 
+        <div>
+          <input type="text" placeholder="Have a bonus promo code?" class="w-full bg-black/40 border border-gray-800 px-3 py-2 rounded-lg text-xs text-gray-300 outline-none focus:border-emerald-500" />
+        </div>
+
         <button onclick="triggerPurchase()" class="w-full glow-btn text-black font-brand font-black py-4 rounded-xl text-base tracking-wider uppercase hover:scale-[1.02] active:scale-95 transition-all">
           Buy $ROACH Tokens
         </button>
       </div>
 
+      <!-- Referral Link Box -->
       <div class="mt-6 pt-5 border-t border-gray-800/80 space-y-2">
         <div class="flex justify-between items-center text-xs">
           <span class="text-gray-400">Your 10% Instant Commission Link:</span>
@@ -180,7 +202,6 @@
   <!-- OFFICIAL SMART CONTRACT ADDRESS BOX -->
   <section class="max-w-7xl mx-auto px-6 pb-12" id="contract">
     <div class="bg-gradient-to-r from-emerald-950/30 via-black to-emerald-950/30 border border-emerald-500/30 p-6 sm:p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 neon-border shadow-[0_0_30px_rgba(16,185,129,0.15)] relative overflow-hidden">
-      <!-- Glow Background -->
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-500/5 blur-[100px] pointer-events-none"></div>
       
       <div class="flex items-center gap-5 relative z-10 w-full md:w-auto">
@@ -190,7 +211,7 @@
         <div class="w-full">
           <div class="text-xs text-emerald-400 font-bold uppercase tracking-widest font-brand mb-1.5 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Official Smart Contract Address (BSC)
+            Official Smart Contract Address (BSC Mainnet)
           </div>
           <div class="bg-black border border-gray-700 rounded-xl px-4 py-3 font-mono text-gray-300 text-sm sm:text-base break-all selection:bg-emerald-500 selection:text-black">
             <span id="caText">0x0000000000000000000000000000000000000000</span>
@@ -204,7 +225,7 @@
     </div>
   </section>
 
-  <!-- Big Showcase Section -->
+  <!-- Big Center Showcase: The Founder's Lounge -->
   <section class="max-w-7xl mx-auto px-6 py-12">
     <div class="bg-gradient-to-r from-emerald-950/40 via-[#0B0F17] to-black border border-emerald-500/30 rounded-3xl p-8 lg:p-12 neon-border grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
       <div class="lg:col-span-6 flex justify-center">
@@ -222,14 +243,55 @@
           THE <span class="text-emerald-400">FOUNDER'S LOUNGE</span> & SENTINEL SUITE.
         </h2>
         <p class="text-gray-300 leading-relaxed text-sm sm:text-base">
-          While traditional meme tokens wither during market drawdowns, $ROACH is built with genetic resistance. Our protocol couples automated liquidity reinforcements with an on-chain AI scanner that monitors malicious mints and honey-pots across BNB Smart Chain.
+          While traditional meme tokens wither during market drawdowns, $ROACH is built with genetic resistance. Our protocol couples automated liquidity reinforcements with an on-chain AI scanner that monitors malicious mints and honey-pots across Binance Smart Chain.
         </p>
 
         <div class="space-y-3 font-medium text-sm text-gray-300">
-          <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>RoachRank Tier Matrix:</strong> Earn platform gems.</span></div>
-          <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>Automated Staking Vault:</strong> Instant compounding.</span></div>
+          <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>RoachRank Tier Matrix:</strong> Earn platform gems and rank multipliers.</span></div>
+          <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>Automated Staking Vault:</strong> Instant 240% APY compounding.</span></div>
           <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>AI Arbitrage Engine:</strong> Protocol revenue burns 50% of trade fees.</span></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ecosystem / Utility Features -->
+  <section class="max-w-7xl mx-auto px-6 py-20" id="ecosystem">
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+      <span class="text-xs font-brand font-bold text-emerald-400 uppercase tracking-widest">Early Access Ecosystem</span>
+      <h2 class="font-brand text-3xl sm:text-5xl font-black text-white">MORE THAN A MEME. LIVE UTILITY.</h2>
+      <p class="text-gray-400 text-sm sm:text-base">Real tools engineered for BSC traders before our DEX listing goes live.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="neon-card p-8 rounded-3xl space-y-5">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-3xl">🤖</div>
+        <h3 class="font-brand text-xl font-bold text-white">RoachSwap Native DEX</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">The intelligence-native swap engine. Runs real-time safety scans on every contract before you commit. Routes liquidity seamlessly across PancakeSwap.</p>
+        <ul class="text-xs text-gray-400 space-y-2 pt-2 border-t border-gray-800">
+          <li>• 0.3% Trading Fee (50% permanently burned)</li>
+          <li>• Anti-MEV Sandwich Protection</li>
+        </ul>
+      </div>
+
+      <div class="neon-card p-8 rounded-3xl space-y-5">
+        <div class="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-3xl">🛡️</div>
+        <h3 class="font-brand text-xl font-bold text-white">Sentinel AI Scanner</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Evaluates token holder concentration, proxy vulnerabilities, hidden mint functions, and liquidity unlock schedules with a single click.</p>
+        <ul class="text-xs text-gray-400 space-y-2 pt-2 border-t border-gray-800">
+          <li>• Instant On-chain Safety Score (0-100)</li>
+          <li>• Automated Risk Classification</li>
+        </ul>
+      </div>
+
+      <div class="neon-card p-8 rounded-3xl space-y-5">
+        <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-3xl">👑</div>
+        <h3 class="font-brand text-xl font-bold text-white">The RoachPalace & Gems</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Earn platform gems for every dollar contributed. Spend them on referral power-ups, whitelist guarantees, and exclusive tier promotions.</p>
+        <ul class="text-xs text-gray-400 space-y-2 pt-2 border-t border-gray-800">
+          <li>• 5 Tier Ranks: Beta, Gamma, Sigma, Omega, Apex</li>
+          <li>• Exclusive Presale Bonus Multipliers</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -239,33 +301,39 @@
     <div class="text-center max-w-2xl mx-auto space-y-4 mb-16">
       <span class="text-xs font-brand font-bold text-emerald-400 uppercase tracking-widest">Fair Distribution</span>
       <h2 class="font-brand text-3xl sm:text-5xl font-black text-white">TOKENOMICS WITH TEETH.</h2>
+      <p class="text-gray-400 text-sm sm:text-base">1,000,000,000 Total Fixed Supply. Zero team dumping, zero VC cliff liquidations.</p>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
       <div class="neon-card p-6 rounded-2xl border-t-4 border-t-emerald-500">
         <div class="font-brand text-3xl font-black text-white">30%</div>
         <div class="text-xs font-bold text-emerald-400 mt-1 uppercase font-brand">Public Presale</div>
+        <div class="text-[11px] text-gray-400 mt-2">300,000,000 ROACH</div>
       </div>
       <div class="neon-card p-6 rounded-2xl border-t-4 border-t-teal-400">
         <div class="font-brand text-3xl font-black text-white">20%</div>
         <div class="text-xs font-bold text-teal-400 mt-1 uppercase font-brand">Staking Vault</div>
+        <div class="text-[11px] text-gray-400 mt-2">200,000,000 ROACH</div>
       </div>
       <div class="neon-card p-6 rounded-2xl border-t-4 border-t-yellow-400">
         <div class="font-brand text-3xl font-black text-white">20%</div>
         <div class="text-xs font-bold text-yellow-400 mt-1 uppercase font-brand">Marketing & CEX</div>
+        <div class="text-[11px] text-gray-400 mt-2">200,000,000 ROACH</div>
       </div>
       <div class="neon-card p-6 rounded-2xl border-t-4 border-t-cyan-400">
         <div class="font-brand text-3xl font-black text-white">20%</div>
         <div class="text-xs font-bold text-cyan-400 mt-1 uppercase font-brand">AI Development</div>
+        <div class="text-[11px] text-gray-400 mt-2">200,000,000 ROACH</div>
       </div>
       <div class="neon-card p-6 rounded-2xl border-t-4 border-t-rose-400 col-span-2 md:col-span-1">
         <div class="font-brand text-3xl font-black text-white">10%</div>
         <div class="text-xs font-bold text-rose-400 mt-1 uppercase font-brand">DEX Liquidity</div>
+        <div class="text-[11px] text-gray-400 mt-2">100,000,000 (Locked)</div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- Footer with Socials -->
   <footer class="border-t border-gray-800/80 bg-black/80 pt-16 pb-12">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-gray-900">
       
@@ -302,16 +370,16 @@
 
   <script>
     let activeCurrency = 'BNB';
-    const BNB_USD_RATE = 600;
     const TOKEN_PRICE_USD = 0.0010;
+    const BNB_USD_RATE = 600;
 
-    function setCurrency(currency) {
-      activeCurrency = currency;
+    function setCurrency(curr) {
+      activeCurrency = curr;
       const btnBnb = document.getElementById('btnPayBnb');
       const btnUsdt = document.getElementById('btnPayUsdt');
       const badge = document.getElementById('currencyBadge');
 
-      if (currency === 'BNB') {
+      if (curr === 'BNB') {
         btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
         btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
         badge.innerText = 'BNB';
@@ -329,6 +397,21 @@
       let roachAmount = totalUsd / TOKEN_PRICE_USD;
       document.getElementById('receiveInput').value = Math.floor(roachAmount).toLocaleString();
     }
+
+    // Exact 3-Day Countdown Timer
+    let targetTime = Date.now() + (3 * 24 * 60 * 60 * 1000);
+    function updateCountdown() {
+      let diff = Math.max(0, targetTime - Date.now());
+      let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      let hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      let mins = Math.floor((diff / (1000 * 60)) % 60);
+      let secs = Math.floor((diff / 1000) % 60);
+
+      const pad = (n) => String(n).padStart(2, '0');
+      document.getElementById('countdown').innerText = `${pad(days)}D : ${pad(hours)}H : ${pad(mins)}M : ${pad(secs)}S`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
     async function connectWallet() {
       if (typeof window.ethereum !== 'undefined') {
@@ -357,7 +440,6 @@
       }
     }
 
-    // Function to Copy Smart Contract Address
     function copyContractAddress() {
       const caText = document.getElementById('caText').innerText;
       navigator.clipboard.writeText(caText).then(() => {
@@ -367,7 +449,6 @@
         btnText.innerText = "COPIED! ✅";
         btnIcon.innerText = "";
         
-        // Reset after 2.5 seconds
         setTimeout(() => {
           btnText.innerText = "COPY CA";
           btnIcon.innerText = "📋";
