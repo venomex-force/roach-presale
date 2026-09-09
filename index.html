@@ -703,5 +703,115 @@
       }
     }
   </script>
+
+  <!-- PRIVACY POLICY MODAL -->
+  <div id="privacyModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4 sm:p-6 overflow-y-auto">
+    <div class="relative w-full max-w-3xl max-h-[88vh] bg-[#0c131d] border border-emerald-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto text-gray-300 font-sans text-xs sm:text-sm leading-relaxed space-y-6">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+        <div>
+          <h3 class="text-xl sm:text-2xl font-brand font-black text-white"><button onclick="togglePrivacyModal(true)" class="hover:text-emerald-400 transition-colors underline underline-offset-4 cursor-pointer">Privacy Policy</button></h3>
+          <p class="text-[11px] text-emerald-400 font-mono mt-0.5">Last updated: May 2026 • CockroachAI Protocol</p>
+        </div>
+        <button onclick="togglePrivacyModal(false)" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white flex items-center justify-center font-bold text-base transition">✕</button>
+      </div>
+
+      <p>
+        Welcome to <strong>CockroachAI ($ROACH)</strong>. Your privacy matters to us. This Privacy Policy outlines how we collect, use, protect, and handle your personal information when you interact with our website, presale dApp, and related decentralized smart contracts. By using CockroachAI, you agree to the practices described in this policy.
+      </p>
+
+      <!-- Section 1 -->
+      <div class="space-y-2">
+        <h4 class="text-sm sm:text-base font-brand font-bold text-white uppercase tracking-wider">1. Information We Collect</h4>
+        <div class="bg-black/50 p-4 rounded-xl border border-gray-800 space-y-2">
+          <p class="font-bold text-emerald-400 text-xs uppercase">A. Information You Provide</p>
+          <ul class="list-disc pl-5 space-y-1 text-gray-400 text-xs">
+            <li>Public Web3 wallet addresses (for token allocations, claims, and staking rewards)</li>
+            <li>On-chain transaction signatures and payment references</li>
+            <li>Direct inquiries, support messages, and official bug bounty reports</li>
+            <li>On-chain referral binding telemetry</li>
+          </ul>
+          <p class="font-bold text-emerald-400 text-xs uppercase pt-2">B. Automatically Collected Technical Data</p>
+          <ul class="list-disc pl-5 space-y-1 text-gray-400 text-xs">
+            <li>Browser type, language settings, and device architecture</li>
+            <li>Approximate geographic region (country level) and network latency metrics</li>
+            <li>Interface interaction timestamps and navigation flow</li>
+          </ul>
+          <p class="font-bold text-emerald-400 text-xs uppercase pt-2">C. Blockchain Ledger Invariance</p>
+          <p class="text-gray-400 text-xs">
+            Transactions executed via the presale smart contract settle directly on the <strong>Binance Smart Chain (BSC)</strong>. Wallet addresses, transaction hashes, and purchased token values are permanently immutable, cryptographic public records.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="space-y-2">
+        <h4 class="text-sm sm:text-base font-brand font-bold text-white uppercase tracking-wider">2. How We Use Your Information</h4>
+        <ul class="list-disc pl-5 space-y-1.5 text-gray-300">
+          <li><strong>Facilitate On-Chain Distribution:</strong> Validating BNB/USDT deposits to credit $ROACH presale allocations.</li>
+          <li><strong>Automated Sentinel Security:</strong> Scanning platform traffic against automated bot attacks and malicious exploits.</li>
+          <li><strong>Ecosystem Enhancements:</strong> Optimizing UI performance across mobile and desktop Web3 environments.</li>
+          <li><strong>Legal & Regulatory Adherence:</strong> Complying with decentralized technology standards and statutory requirements.</li>
+        </ul>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="space-y-2">
+        <h4 class="text-sm sm:text-base font-brand font-bold text-white uppercase tracking-wider">3. Information Sharing & Safeguards</h4>
+        <p>
+          We do not sell, rent, or trade your data. Information is only utilized by decentralized infrastructure nodes, RPC providers (Binance Smart Chain node relays), and essential security monitoring tools. We may disclose data only under enforceable legal orders or to safeguard the integrity of smart contract pools.
+        </p>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="space-y-2">
+        <h4 class="text-sm sm:text-base font-brand font-bold text-white uppercase tracking-wider">4. Security Infrastructure</h4>
+        <p>
+          We deploy enterprise-grade SSL/TLS 256-bit data encryption, OpenZeppelin vetted smart contracts, and regular static analysis checks (Slither AST scan verified). Users operate on decentralized protocols at their own operational discretion.
+        </p>
+      </div>
+
+      <!-- Section 5: Rights Grid -->
+      <div class="space-y-3">
+        <h4 class="text-sm sm:text-base font-brand font-bold text-white uppercase tracking-wider">5. Your Data Rights</h4>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-center">
+          <div class="p-2.5 rounded-xl bg-black/40 border border-gray-800"><span class="text-emerald-400 font-bold block">01 Access</span> Request data telemetry</div>
+          <div class="p-2.5 rounded-xl bg-black/40 border border-gray-800"><span class="text-emerald-400 font-bold block">02 Rectify</span> Update contact records</div>
+          <div class="p-2.5 rounded-xl bg-black/40 border border-gray-800"><span class="text-emerald-400 font-bold block">03 Deletion</span> Remove off-chain data</div>
+          <div class="p-2.5 rounded-xl bg-black/40 border border-gray-800"><span class="text-emerald-400 font-bold block">04 Portability</span> Export logged entries</div>
+          <div class="p-2.5 rounded-xl bg-black/40 border border-gray-800"><span class="text-emerald-400 font-bold block">05 Objection</span> Opt-out of analytics</div>
+          <div class="p-2.5 rounded-xl bg-black/40 border border-gray-800"><span class="text-emerald-400 font-bold block">06 Consent</span> Revoke permissions</div>
+        </div>
+        <p class="text-[11px] text-gray-500 italic">*Note: Distributed ledger states on the Binance Smart Chain cannot be altered or removed.</p>
+      </div>
+
+      <!-- Section 6: Contact -->
+      <div class="border-t border-gray-800 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs uppercase font-brand font-bold text-gray-400">Official Protocol Inquiries:</span>
+          <div class="text-emerald-400 font-mono text-xs mt-0.5">contact@cockroachai.io • GitHub / Telegram Support</div>
+        </div>
+        <button onclick="togglePrivacyModal(false)" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-brand font-black text-xs uppercase tracking-wider transition">I Understand</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function togglePrivacyModal(show) {
+      const modal = document.getElementById('privacyModal');
+      if (show) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+      }
+    }
+  </script>
+
 </body>
 </html>
