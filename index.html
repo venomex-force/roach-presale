@@ -45,7 +45,6 @@
       </div>
 
       <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-gray-300">
-        <a href="#about" class="hover:text-emerald-400 transition-colors">About</a>
         <a href="index.html" class="text-white hover:text-emerald-400 font-bold transition">Home</a>
         <a href="#ecosystem" class="hover:text-emerald-400 transition-colors">RoachSwap & AI</a>
         <a href="#security-audit" class="hover:text-emerald-400 transition-colors">Security <a href="#tokenomics" class="hover:text-emerald-400 transition-colors">Tokenomics</a>
@@ -713,57 +712,104 @@
   </section>
 
 
-  <!-- FAQ SECTION -->
-  <section id="faq" style="scroll-margin-top: 100px;" class="max-w-4xl mx-auto px-6 py-20 border-t border-gray-900">
-    <div class="text-center space-y-4 mb-12">
-      <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
-        Questions & Answers
+    <!-- FAQ SECTION -->
+  <section id="faq" class="max-w-4xl mx-auto px-6 py-20 border-t border-gray-900 scroll-mt-24">
+    <div class="text-center space-y-3 mb-12">
+      <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 uppercase tracking-wider">
+        Protocol Knowledge Base
       </span>
-      <h2 class="font-brand text-3xl sm:text-5xl font-black text-white">FREQUENTLY ASKED</h2>
+      <h2 class="text-3xl sm:text-4xl font-black text-white font-brand">FREQUENTLY ASKED QUESTIONS</h2>
+      <p class="text-xs sm:text-sm text-gray-400 max-w-xl mx-auto">
+        Everything you need to know about the $ROACH token presale, instant wallet delivery, locked staking vaults, and ecosystem security.
+      </p>
     </div>
 
-    <div class="space-y-4">
-      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition">
-        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center">
+    <div class="space-y-4 font-sans">
+      
+      <!-- FAQ 1: What is CockroachAI -->
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition hover:border-emerald-500/30">
+        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
+          <span>What is CockroachAI ($ROACH) and its core mission?</span>
+          <span class="text-emerald-400">▼</span>
+        </summary>
+        <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
+          CockroachAI is an autonomous, decentralized utility protocol deployed on BNB Smart Chain (BEP-20). Built for ultimate market resilience, it powers three core pillars: the <strong>Sentinel AI Scanner</strong> (real-time bytecode vulnerability and honeypot detection), <strong>RoachSwap DEX</strong> (anti-MEV private order routing with a permanent 50% fee buyback-and-burn mechanism), and <strong>Deflationary Staking Vaults</strong> delivering up to 148% APY.
+        </p>
+      </details>
+
+      <!-- FAQ 2: Instant Wallet Delivery & Launch Lock -->
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition hover:border-emerald-500/30">
+        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
           <span>Do I get $ROACH in my wallet immediately after buying?</span>
           <span class="text-emerald-400">▼</span>
         </summary>
         <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
-          Yes! Purchased $ROACH tokens are transferred directly to your connected Web3 wallet. To prevent early market dumping and sniper bot manipulation before PancakeSwap listing, peer-to-peer transfers remain locked until official launch. However, your tokens can be deposited directly into 3M, 6M, or 12M Staking Vaults to compound up to 148% APY.
+          Yes! Upon transaction confirmation in the presale widget, $ROACH tokens are transferred directly to your connected Web3 wallet (MetaMask, Trust Wallet, or Binance Web3 Wallet). To shield early investors from front-running snipers and premature DEX dumping, public trading remains locked until official launch. However, your tokens can be deposited immediately into the Staking Vaults to begin compounding yield right away.
         </p>
       </details>
 
-      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 cursor-pointer">
-        <summary class="font-bold text-white flex justify-between items-center list-none">
-          <span>What is CockroachAI ($ROACH)?</span>
+      <!-- FAQ 3: Staking APYs and Math -->
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition hover:border-emerald-500/30">
+        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
+          <span>How does the 3M / 6M / 12M staking APY work?</span>
           <span class="text-emerald-400">▼</span>
         </summary>
         <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
-          CockroachAI is an autonomous decentralized protocol on Binance Smart Chain providing automated smart contract security audits, anti-MEV DEX swaps, and locked staking yields.
+          Staking rewards are distributed from an immutable, dedicated 200,000,000 $ROACH vault (20% of total supply). Returns are tailored to lock duration:
+          <br><br>
+          • <strong>3 Months Lock:</strong> 36% APY (9% Net Yield on principal)<br>
+          • <strong>6 Months Lock:</strong> 72% APY (36% Net Yield + 1.5x weight multiplier)<br>
+          • <strong>12 Months Lock:</strong> 148% APY (148% Net Yield + 2x multiplier & zero RoachSwap platform fees)
         </p>
       </details>
 
-      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 cursor-pointer">
-        <summary class="font-bold text-white flex justify-between items-center list-none">
-          <span>How does the locked staking yield work?</span>
+      <!-- FAQ 4: How to Participate -->
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition hover:border-emerald-500/30">
+        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
+          <span>Which currencies are accepted and what are the network requirements?</span>
           <span class="text-emerald-400">▼</span>
         </summary>
         <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
-          Holders can lock $ROACH in 3 vaults: 3 Months (36% APY / 9% Net), 6 Months (72% APY / 36% Net), or 12 Months (148% APY). Rewards are sourced directly from the 200M $ROACH staking vault.
+          You can participate using either <strong>BNB</strong> or <strong>USDT (BEP-20)</strong>. Make sure your wallet is set to the <strong>BNB Smart Chain (Chain ID: 56)</strong> network and keep a small balance of BNB (0.005–0.01 BNB) to cover BSC network gas fees.
         </p>
       </details>
 
-      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 cursor-pointer">
-        <summary class="font-bold text-white flex justify-between items-center list-none">
-          <span>When can I claim my presale tokens?</span>
+      <!-- FAQ 5: 10% Instant Referral Bonus -->
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition hover:border-emerald-500/30">
+        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
+          <span>How does the 10% instant referral commission work?</span>
           <span class="text-emerald-400">▼</span>
         </summary>
         <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
-          Token claims will be activated immediately at the conclusion of the presale round, synchronized with the PancakeSwap DEX liquidity launch.
+          Once your wallet is connected, your custom referral link is generated instantly. Whenever someone contributes to the presale using your link, the smart contract automatically routes 10% of their contribution directly to your wallet in the same transaction—no withdrawal claims or waiting periods required.
         </p>
       </details>
+
+      <!-- FAQ 6: Security and Audits -->
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition hover:border-emerald-500/30">
+        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
+          <span>Are the smart contracts audited and secure?</span>
+          <span class="text-emerald-400">▼</span>
+        </summary>
+        <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
+          Yes. The contract architecture is built using OpenZeppelin v5 standards with SafeERC20 and nonReentrant execution guards. Bytecode static analysis via Slither yielded zero high or medium severity vulnerabilities, and full state transitions have passed 100% of EVM unit tests in Foundry.
+        </p>
+      </details>
+
+      <!-- FAQ 7: DEX/CEX Listing & Unlock -->
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition hover:border-emerald-500/30">
+        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
+          <span>When will $ROACH be listed on PancakeSwap and unlocked for trading?</span>
+          <span class="text-emerald-400">▼</span>
+        </summary>
+        <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
+          Immediately upon conclusion of Stage 1 and subsequent presale rounds, liquidity will be seeded and permanently locked on PancakeSwap. Trading will be unlocked globally via a one-way immutable switch, enabling instant trading without manual claim fees.
+        </p>
+      </details>
+
     </div>
   </section>
+
 
 <footer class="border-t border-gray-800/80 bg-black/80 pt-16 pb-12">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-gray-900">
