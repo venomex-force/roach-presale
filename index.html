@@ -825,5 +825,137 @@
     }
   </script>
 
+
+  <!-- STAKING & DAPP DASHBOARD MODAL -->
+  <div id="stakingModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/90 backdrop-blur-lg p-4 sm:p-6 overflow-y-auto">
+    <div class="relative w-full max-w-4xl bg-[#0b121c] border border-emerald-500/40 rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(16,185,129,0.15)] overflow-hidden text-gray-200 font-sans">
+      
+      <!-- Top Bar Inside Modal -->
+      <div class="flex items-center justify-between border-b border-gray-800/80 pb-4 mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl">🪳</div>
+          <div>
+            <h3 class="text-lg sm:text-xl font-brand font-black text-white">CockroachAI Portal</h3>
+            <p class="text-[11px] text-emerald-400 font-mono">BSC Mainnet • Vault v2.4 Active</p>
+          </div>
+        </div>
+        <button onclick="toggleStakingModal(false)" class="w-9 h-9 rounded-full bg-gray-800/80 hover:bg-gray-700 text-gray-400 hover:text-white flex items-center justify-center font-bold text-base transition">✕</button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left Sidebar Navigation -->
+        <div class="lg:col-span-4 space-y-4 border-b lg:border-b-0 lg:border-r border-gray-800/80 pb-6 lg:pb-0 lg:pr-4">
+          <div>
+            <span class="text-[10px] uppercase tracking-widest font-brand font-bold text-gray-500">Core Dashboard</span>
+            <div class="mt-2 space-y-1">
+              <button class="w-full text-left px-3 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-between">
+                <span>📊 Dashboard Overview</span>
+                <span class="text-[10px] bg-emerald-400/20 px-1.5 py-0.5 rounded">Live</span>
+              </button>
+              <a href="#presale-box" onclick="toggleStakingModal(false)" class="w-full text-left px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 text-xs block transition">
+                🪙 Buy $ROACH
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[10px] uppercase tracking-widest font-brand font-bold text-gray-500">Earn & Multipliers</span>
+            <div class="mt-2 space-y-1">
+              <button class="w-full text-left px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-bold text-xs flex items-center justify-between">
+                <span>🥩 Staking Vaults</span>
+                <span class="text-[10px] text-yellow-400 font-mono font-bold">Up to 148%</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 text-xs flex items-center justify-between transition">
+                <span>🤝 Refer & Earn</span>
+                <span class="text-[10px] text-emerald-400">10% Direct</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 text-xs flex items-center justify-between transition">
+                <span>🎁 Early Airdrops</span>
+                <span class="text-[9px] bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">TBA</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[10px] uppercase tracking-widest font-brand font-bold text-gray-500">AI Ecosystem</span>
+            <div class="mt-2 space-y-1">
+              <button class="w-full text-left px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 text-xs flex items-center justify-between transition">
+                <span>🛡️ Sentinel Scanner</span>
+                <span class="text-[9px] text-cyan-400">Beta</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 text-xs flex items-center justify-between transition">
+                <span>🔄 RoachSwap DEX</span>
+                <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">Soon</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 text-xs flex items-center justify-between transition">
+                <span>🏛️ RoachDAO</span>
+                <span class="text-[9px] bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">Phase 4</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Main View -->
+        <div class="lg:col-span-8 flex flex-col justify-center space-y-6 text-center py-4">
+          
+          <!-- Staking APY Teaser Cards -->
+          <div class="grid grid-cols-3 gap-3 text-left">
+            <div class="p-3 rounded-2xl bg-black/50 border border-gray-800">
+              <div class="text-[10px] text-gray-400">3 Months Lock</div>
+              <div class="text-base sm:text-xl font-brand font-black text-emerald-400">36% APY</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">Flexible harvest</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-black/50 border border-emerald-500/30">
+              <div class="text-[10px] text-emerald-400 font-bold">6 Months Lock</div>
+              <div class="text-base sm:text-xl font-brand font-black text-teal-300">72% APY</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">1.5x Multiplier</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-black/50 border border-yellow-500/40">
+              <div class="text-[10px] text-yellow-400 font-bold">12 Months Lock</div>
+              <div class="text-base sm:text-xl font-brand font-black text-yellow-400">148% APY</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">2x + 0% DEX Fees</div>
+            </div>
+          </div>
+
+          <!-- Connect Wallet Card Prompt -->
+          <div class="p-8 rounded-3xl bg-black/60 border border-emerald-500/30 space-y-4">
+            <div class="w-16 h-16 rounded-3xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-3xl mx-auto">
+              👛
+            </div>
+            <div class="space-y-1">
+              <h4 class="font-brand text-xl sm:text-2xl font-black text-white">Connect Your Wallet</h4>
+              <p class="text-xs sm:text-sm text-gray-400 max-w-md mx-auto">
+                Connect your Web3 wallet to inspect your <strong>$ROACH</strong> allocation, live staking positions, compound yields, and referral tier.
+              </p>
+            </div>
+            <div>
+              <button onclick="connectWallet(); toggleStakingModal(false);" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-brand font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer">
+                Connect Wallet
+              </button>
+            </div>
+            <p class="text-[10px] text-gray-500 font-mono">Supported: MetaMask, Trust Wallet, Binance Web3 Wallet on BNB Smart Chain</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function toggleStakingModal(show) {
+      const modal = document.getElementById('stakingModal');
+      if (show) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+      }
+    }
+  </script>
+
 </body>
 </html>
