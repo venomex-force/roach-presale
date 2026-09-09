@@ -1048,20 +1048,53 @@
   </script>
 
 
+  
+
+
   <script>
-    async function handleVaultClick(tier) {
-      if (!userAccount) {
-        // Agar wallet connect nahi hai, direct wallet trigger karo
+    let activeUserAccount = null;
+
+    async function triggerWalletConnection() {
+      if (typeof window.ethereum !== 'undefined') {
         try {
-          await connectWallet();
-          if (userAccount) {
-            toggleStakingModal(true);
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          if (accounts && accounts.length > 0) {
+            activeUserAccount = accounts[0];
+            updateWalletUIAfterConnect(activeUserAccount);
+            return activeUserAccount;
           }
-        } catch (err) {
-          console.error("Wallet connection failed:", err);
+        } catch (error) {
+          if (error.code === 4001) {
+            alert("Connection rejected in wallet. Please approve to continue.");
+          } else {
+            console.error("Wallet error:", error);
+            alert("Wallet connection error: " + (error.message || "Unknown error"));
+          }
+          return null;
         }
       } else {
-        // Already connected, open staking dashboard directly
+        alert("Web3 Wallet not found!\n\nIf you are on desktop, please install MetaMask. If you are on mobile, open this website inside Trust Wallet or MetaMask DApp browser.");
+        return null;
+      }
+    }
+
+    function updateWalletUIAfterConnect(addr) {
+      const shortAddr = addr.substring(0, 6) + "..." + addr.substring(addr.length - 4);
+      const topBtns = document.querySelectorAll('button[onclick*="connectWallet"]');
+      topBtns.forEach(btn => {
+        btn.innerText = shortAddr;
+        btn.classList.remove('bg-emerald-500', 'from-emerald-500');
+        btn.classList.add('bg-emerald-950', 'text-emerald-400', 'border', 'border-emerald-500/50');
+      });
+      const modalAddrElem = document.getElementById('modalUserAddress');
+      if (modalAddrElem) {
+        modalAddrElem.innerText = addr;
+      }
+    }
+
+    async function handleVaultClick(tier) {
+      const account = await triggerWalletConnection();
+      if (account) {
         toggleStakingModal(true);
       }
     }
