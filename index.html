@@ -574,7 +574,97 @@
   </section>
 
   <!-- Footer with Socials -->
-  <footer class="border-t border-gray-800/80 bg-black/80 pt-16 pb-12">
+  
+  <!-- STAKING VAULTS SECTION -->
+  <section class="max-w-7xl mx-auto px-6 py-20 scroll-mt-20" id="staking-vaults">
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+      <span class="text-xs font-brand font-bold text-emerald-400 uppercase tracking-widest flex items-center justify-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Earn Passive Yield
+      </span>
+      <h2 class="font-brand text-3xl sm:text-5xl font-black text-white">LOCKED STAKING VAULTS.</h2>
+      <p class="text-gray-400 text-sm sm:text-base">
+        Lock your $ROACH tokens to secure the network and earn up to 148% APY backed by the 200,000,000 $ROACH staking reserve.
+      </p>
+    </div>
+
+    <!-- 3 Tier Staking Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- 3 Month Vault -->
+      <div class="neon-card p-8 rounded-3xl border border-gray-800 space-y-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-gray-800 text-gray-300">Vault 01</span>
+            <span class="text-xs text-gray-500">90 Days Lock</span>
+          </div>
+          <div class="mt-4">
+            <div class="text-4xl font-brand font-black text-emerald-400">36% <span class="text-sm font-sans font-normal text-gray-400">APY</span></div>
+            <div class="text-sm text-gray-300 font-bold mt-1">Short-Term Compounder</div>
+            <p class="text-xs text-gray-400 mt-2">Flexible lock with daily rewards harvest. Ideal for active traders.</p>
+          </div>
+          <ul class="text-xs text-gray-400 space-y-2 mt-4 pt-4 border-t border-gray-800/80">
+            <li>• Net Return: <strong>+9.0%</strong></li>
+            <li>• Auto-compound compatible</li>
+            <li>• Minimum: 5,000 $ROACH</li>
+          </ul>
+        </div>
+        <button onclick="toggleStakingModal(true)" class="w-full py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-brand font-bold text-xs uppercase tracking-wider transition cursor-pointer">
+          Open Vault
+        </button>
+      </div>
+
+      <!-- 6 Month Vault -->
+      <div class="neon-card p-8 rounded-3xl border border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.15)] space-y-6 flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -top-3 right-6 bg-emerald-500 text-black text-[10px] font-brand font-black px-3 py-1 rounded-full uppercase tracking-wide">
+          Popular
+        </div>
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300">Vault 02</span>
+            <span class="text-xs text-emerald-400 font-mono">180 Days Lock</span>
+          </div>
+          <div class="mt-4">
+            <div class="text-4xl font-brand font-black text-teal-300">72% <span class="text-sm font-sans font-normal text-gray-400">APY</span></div>
+            <div class="text-sm text-white font-bold mt-1">Medium-Term Vault</div>
+            <p class="text-xs text-gray-400 mt-2">1.5x reward weight with early beta access to Sentinel AI Scanner tools.</p>
+          </div>
+          <ul class="text-xs text-gray-300 space-y-2 mt-4 pt-4 border-t border-gray-800/80">
+            <li>• Net Return: <strong>+36.0%</strong></li>
+            <li>• 1.5x Yield Multiplier</li>
+            <li>• Sentinel AI Scanner Beta Access</li>
+          </ul>
+        </div>
+        <button onclick="toggleStakingModal(true)" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-brand font-black text-xs uppercase tracking-wider transition shadow-lg cursor-pointer">
+          Stake 6 Months
+        </button>
+      </div>
+
+      <!-- 12 Month Vault -->
+      <div class="neon-card p-8 rounded-3xl border border-yellow-500/40 space-y-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-yellow-500/20 text-yellow-300">Vault 03</span>
+            <span class="text-xs text-yellow-400 font-mono">365 Days Lock</span>
+          </div>
+          <div class="mt-4">
+            <div class="text-4xl font-brand font-black text-yellow-400">148% <span class="text-sm font-sans font-normal text-gray-400">APY</span></div>
+            <div class="text-sm text-white font-bold mt-1">Diamond Hands Vault</div>
+            <p class="text-xs text-gray-400 mt-2">Maximum yield pool with zero platform fees on upcoming RoachSwap DEX.</p>
+          </div>
+          <ul class="text-xs text-gray-300 space-y-2 mt-4 pt-4 border-t border-gray-800/80">
+            <li>• Net Return: <strong>+148.0%</strong></li>
+            <li>• 2x Maximum Multiplier</li>
+            <li>• 0% Platform Fees on RoachSwap</li>
+          </ul>
+        </div>
+        <button onclick="toggleStakingModal(true)" class="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-brand font-black text-xs uppercase tracking-wider transition cursor-pointer">
+          Stake 12 Months
+        </button>
+      </div>
+    </div>
+  </section>
+
+<footer class="border-t border-gray-800/80 bg-black/80 pt-16 pb-12">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-gray-900">
       
       <div class="space-y-4 md:col-span-2">
