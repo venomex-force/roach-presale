@@ -608,8 +608,8 @@
             <li>• Minimum: 5,000 $ROACH</li>
           </ul>
         </div>
-        <button onclick="toggleStakingModal(true)" class="w-full py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-brand font-bold text-xs uppercase tracking-wider transition cursor-pointer">
-          Open Vault
+        <button onclick="handleVaultClick('3M')" class="w-full py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-brand font-bold text-xs uppercase tracking-wider transition cursor-pointer">
+          Stake 3 Months
         </button>
       </div>
 
@@ -634,7 +634,7 @@
             <li>• Sentinel AI Scanner Beta Access</li>
           </ul>
         </div>
-        <button onclick="toggleStakingModal(true)" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-brand font-black text-xs uppercase tracking-wider transition shadow-lg cursor-pointer">
+        <button onclick="handleVaultClick('6M')" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-brand font-black text-xs uppercase tracking-wider transition shadow-lg cursor-pointer">
           Stake 6 Months
         </button>
       </div>
@@ -657,7 +657,7 @@
             <li>• 0% Platform Fees on RoachSwap</li>
           </ul>
         </div>
-        <button onclick="toggleStakingModal(true)" class="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-brand font-black text-xs uppercase tracking-wider transition cursor-pointer">
+        <button onclick="handleVaultClick('12M')" class="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-brand font-black text-xs uppercase tracking-wider transition cursor-pointer">
           Stake 12 Months
         </button>
       </div>
@@ -1043,6 +1043,26 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
         document.body.style.overflow = 'auto';
+      }
+    }
+  </script>
+
+
+  <script>
+    async function handleVaultClick(tier) {
+      if (!userAccount) {
+        // Agar wallet connect nahi hai, direct wallet trigger karo
+        try {
+          await connectWallet();
+          if (userAccount) {
+            toggleStakingModal(true);
+          }
+        } catch (err) {
+          console.error("Wallet connection failed:", err);
+        }
+      } else {
+        // Already connected, open staking dashboard directly
+        toggleStakingModal(true);
       }
     }
   </script>
