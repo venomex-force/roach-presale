@@ -69,7 +69,7 @@
     <!-- Left Hero -->
     <div class="lg:col-span-7 space-y-7">
       <div class="inline-flex items-center gap-2 gold-pill px-4 py-1.5 rounded-full text-xs font-bold text-emerald-300 uppercase tracking-wider">
-        🚀 Presale Stage 1 Is Live • 240% APY Staking Active
+        🚀 Presale Stage 1 Is Live • 148% APY Staking Active
       </div>
 
       <h1 class="font-brand text-4xl sm:text-6xl font-black text-white leading-tight">
@@ -95,7 +95,7 @@
       <!-- Quick Metrics Grid -->
       <div class="grid grid-cols-3 gap-4 pt-2">
         <div class="neon-card p-4 rounded-2xl text-center">
-          <div class="text-2xl sm:text-3xl font-bold font-brand text-emerald-400">240%</div>
+          <div class="text-2xl sm:text-3xl font-bold font-brand text-emerald-400">148% APY</div>
           <div class="text-xs text-gray-400 mt-1">Staking APY</div>
         </div>
         <div class="neon-card p-4 rounded-2xl text-center">
@@ -279,7 +279,7 @@
 
         <div class="space-y-3 font-medium text-sm text-gray-300">
           <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>RoachRank Tier Matrix:</strong> Earn platform gems and rank multipliers.</span></div>
-          <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>Automated Staking Vault:</strong> Instant 240% APY compounding.</span></div>
+          <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>Automated Staking Vault:</strong> Instant 148% APY compounding.</span></div>
           <div class="flex items-center gap-3"><span class="text-emerald-400 text-base">✓</span> <span><strong>AI Arbitrage Engine:</strong> Protocol revenue burns 50% of trade fees.</span></div>
         </div>
       </div>
@@ -517,7 +517,7 @@
             <span class="w-3.5 h-3.5 rounded-full bg-[#2DD4BF] shadow-[0_0_10px_#2DD4BF]"></span>
             <div>
               <div class="text-white font-brand font-bold text-sm">Staking Vault</div>
-              <div class="text-[11px] text-gray-400">240% APY holder rewards compounding</div>
+              <div class="text-[11px] text-gray-400">148% APY holder rewards compounding</div>
             </div>
           </div>
           <div class="text-right">
@@ -1128,6 +1128,26 @@
         }
       }
     }
+  </script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll("header a, nav a").forEach(function(link) {
+        var href = link.getAttribute("href");
+        if (href && href.startsWith("#") && href.length > 1) {
+          link.addEventListener("click", function(e) {
+            var targetId = href.substring(1);
+            var targetElem = document.getElementById(targetId);
+            if (targetElem) {
+              e.preventDefault();
+              targetElem.scrollIntoView({ behavior: "smooth", block: "start" });
+              history.pushState(null, null, href);
+            }
+          });
+        }
+      });
+    });
   </script>
 
 </body>
