@@ -662,6 +662,89 @@
     </div>
   </section>
 
+
+  <!-- ROADMAP SECTION -->
+  <section id="roadmap" style="scroll-margin-top: 100px;" class="max-w-7xl mx-auto px-6 py-20 border-t border-gray-900">
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+      <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+        Strategic Milestones
+      </span>
+      <h2 class="font-brand text-3xl sm:text-5xl font-black text-white">PROTOCOL ROADMAP</h2>
+      <p class="text-gray-400 text-sm sm:text-base">
+        Strategic phases executing security audits, decentralized liquidity, and AI utility integration.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="p-6 rounded-3xl bg-black/60 border border-emerald-500/40 space-y-3">
+        <span class="text-xs font-mono text-emerald-400 font-bold uppercase">Phase 01 • Active</span>
+        <h3 class="text-lg font-bold text-white">Security & Presale</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">Foundry & Slither smart contract verification. BEP-20 native BNB & USDT presale launch with 10% referral rewards.</p>
+      </div>
+
+      <div class="p-6 rounded-3xl bg-black/60 border border-gray-800 space-y-3">
+        <span class="text-xs font-mono text-gray-400 font-bold uppercase">Phase 02</span>
+        <h3 class="text-lg font-bold text-white">Liquidity & Vaults</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">PancakeSwap LP permanently locked. Activation of 3M, 6M, and 12M locked staking pools (up to 148% APY). CMC & CoinGecko indexing.</p>
+      </div>
+
+      <div class="p-6 rounded-3xl bg-black/60 border border-gray-800 space-y-3">
+        <span class="text-xs font-mono text-gray-400 font-bold uppercase">Phase 03</span>
+        <h3 class="text-lg font-bold text-white">Sentinel AI & DEX</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">Public launch of Sentinel AI Scanner for bytecode analysis. RoachSwap Anti-MEV DEX live with 50% protocol fee buyback-and-burn.</p>
+      </div>
+
+      <div class="p-6 rounded-3xl bg-black/60 border border-gray-800 space-y-3">
+        <span class="text-xs font-mono text-gray-400 font-bold uppercase">Phase 04</span>
+        <h3 class="text-lg font-bold text-white">API & Tier-1 CEX</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">Public Sentinel API feeds for Web3 wallets and launchpads. Tier-1 centralized exchange listings and cross-chain expansion.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FAQ SECTION -->
+  <section id="faq" style="scroll-margin-top: 100px;" class="max-w-4xl mx-auto px-6 py-20 border-t border-gray-900">
+    <div class="text-center space-y-4 mb-12">
+      <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+        Questions & Answers
+      </span>
+      <h2 class="font-brand text-3xl sm:text-5xl font-black text-white">FREQUENTLY ASKED</h2>
+    </div>
+
+    <div class="space-y-4">
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 cursor-pointer">
+        <summary class="font-bold text-white flex justify-between items-center list-none">
+          <span>What is CockroachAI ($ROACH)?</span>
+          <span class="text-emerald-400">▼</span>
+        </summary>
+        <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
+          CockroachAI is an autonomous decentralized protocol on Binance Smart Chain providing automated smart contract security audits, anti-MEV DEX swaps, and locked staking yields.
+        </p>
+      </details>
+
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 cursor-pointer">
+        <summary class="font-bold text-white flex justify-between items-center list-none">
+          <span>How does the locked staking yield work?</span>
+          <span class="text-emerald-400">▼</span>
+        </summary>
+        <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
+          Holders can lock $ROACH in 3 vaults: 3 Months (36% APY / 9% Net), 6 Months (72% APY / 36% Net), or 12 Months (148% APY). Rewards are sourced directly from the 200M $ROACH staking vault.
+        </p>
+      </details>
+
+      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 cursor-pointer">
+        <summary class="font-bold text-white flex justify-between items-center list-none">
+          <span>When can I claim my presale tokens?</span>
+          <span class="text-emerald-400">▼</span>
+        </summary>
+        <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
+          Token claims will be activated immediately at the conclusion of the presale round, synchronized with the PancakeSwap DEX liquidity launch.
+        </p>
+      </details>
+    </div>
+  </section>
+
 <footer class="border-t border-gray-800/80 bg-black/80 pt-16 pb-12">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-gray-900">
       
@@ -1145,6 +1228,39 @@
               history.pushState(null, null, href);
             }
           });
+        }
+      });
+    });
+  </script>
+
+
+  <script>
+    function smoothScrollTo(elementId) {
+      var target = document.getElementById(elementId);
+      if (target) {
+        var headerOffset = 90;
+        var elementPosition = target.getBoundingClientRect().top;
+        var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      document.body.addEventListener("click", function(e) {
+        var anchor = e.target.closest("a");
+        if (!anchor) return;
+        var href = anchor.getAttribute("href");
+        if (href && href.startsWith("#") && href.length > 1) {
+          var targetId = href.substring(1);
+          var elem = document.getElementById(targetId);
+          if (elem) {
+            e.preventDefault();
+            smoothScrollTo(targetId);
+            history.pushState(null, null, href);
+          }
         }
       });
     });
