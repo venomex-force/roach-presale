@@ -58,9 +58,7 @@
         <div class="hidden sm:flex items-center gap-2 bg-gray-900 border border-emerald-500/30 px-3 py-1.5 rounded-full text-xs text-emerald-400 font-semibold">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span> BSC Mainnet
         </div>
-        <button id="navConnectBtn" onclick="connectWallet()" class="glow-btn text-black font-brand font-bold px-5 py-2.5 rounded-xl hover:scale-105 transition-all text-xs tracking-wider uppercase">
-          Connect Wallet
-        </button>
+        <button onclick="handleModalWalletConnect()"  class="glow-btn text-black font-brand font-bold px-5 py-2.5 rounded-xl hover:scale-105 transition-all text-xs tracking-wider uppercase">Connect Wallet</button>
       </div>
     </div>
   </header>
@@ -1019,7 +1017,7 @@
               </p>
             </div>
             <div>
-              <button onclick="connectWallet(); toggleStakingModal(false);" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-brand font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer">
+              <button onclick="handleModalWalletConnect()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-brand font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer">
                 Connect Wallet
               </button>
             </div>
@@ -1096,6 +1094,38 @@
       const account = await triggerWalletConnection();
       if (account) {
         toggleStakingModal(true);
+      }
+    }
+  </script>
+
+
+  <script>
+    async function handleModalWalletConnect() {
+      const account = await triggerWalletConnection();
+      if (account) {
+        const promptBox = document.querySelector('#stakingModal .p-8.rounded-3xl');
+        if (promptBox) {
+          const short = account.substring(0, 6) + "..." + account.substring(account.length - 4);
+          promptBox.innerHTML = `
+            <div class="w-16 h-16 rounded-3xl bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-3xl mx-auto">
+              ✅
+            </div>
+            <div class="space-y-1">
+              <h4 class="font-brand text-xl sm:text-2xl font-black text-white">Wallet Connected</h4>
+              <p class="text-xs sm:text-sm font-mono text-emerald-400 max-w-md mx-auto break-all">
+                ${account}
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl bg-black/70 border border-gray-800 text-xs text-left space-y-2">
+              <div class="flex justify-between text-gray-400"><span>Available $ROACH:</span><span class="text-white font-bold">0.00</span></div>
+              <div class="flex justify-between text-gray-400"><span>Active Staked:</span><span class="text-white font-bold">0.00</span></div>
+              <div class="flex justify-between text-gray-400"><span>Unclaimed Yield:</span><span class="text-emerald-400 font-bold">0.00</span></div>
+            </div>
+            <button onclick="toggleStakingModal(false)" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-brand font-black text-xs uppercase tracking-wider transition">
+              Return to Vaults
+            </button>
+          `;
+        }
       }
     }
   </script>
