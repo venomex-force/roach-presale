@@ -32,6 +32,7 @@
       <span class="text-emerald-400 font-bold uppercase tracking-wider font-brand">CockroachAI Dev Release #012:</span>
       <span class="text-gray-300">Sentinel Scanner v1.0 & BSC Presale Engine Synchronized.</span>
       <a href="index.html" class="text-white hover:text-emerald-400 font-bold transition">Home</a>
+        <a href="whitepaper.html" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center gap-1">📄 Whitepaper</a>
         <a href="#ecosystem" class="text-emerald-400 underline font-semibold hover:text-emerald-300 ml-2">Read Tech Specs →</a>
     </span>
   </div>
@@ -46,6 +47,7 @@
 
       <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-gray-300">
         <a href="index.html" class="text-white hover:text-emerald-400 font-bold transition">Home</a>
+        <a href="whitepaper.html" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center gap-1">📄 Whitepaper</a>
         <a href="#ecosystem" class="hover:text-emerald-400 transition-colors">RoachSwap & AI</a>
         <a href="#security-audit" class="hover:text-emerald-400 transition-colors">Security <a href="#tokenomics" class="hover:text-emerald-400 transition-colors">Tokenomics</a>
         Audit</a>
@@ -888,17 +890,37 @@
 
     // Exact 3-Day Countdown Timer
     let targetTime = Date.now() + (3 * 24 * 60 * 60 * 1000);
-    function updateCountdown() {
-      let diff = Math.max(0, targetTime - Date.now());
-      let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      let hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      let mins = Math.floor((diff / (1000 * 60)) % 60);
-      let secs = Math.floor((diff / 1000) % 60);
+    // Fixed Presale Stage 1 End Date (Fixed Unix Timestamp)
+  // Yeh date har reload par change nahi hogi
+  const TARGET_END_TIME = new Date("2026-09-20T18:00:00Z").getTime();
 
-      const pad = (n) => String(n).padStart(2, '0');
-      document.getElementById('countdown').innerText = `${pad(days)}D : ${pad(hours)}H : ${pad(mins)}M : ${pad(secs)}S`;
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = TARGET_END_TIME - now;
+
+    if (distance <= 0) {
+      document.getElementById("cd-days") ? document.getElementById("cd-days").innerText = "00" : null;
+      document.getElementById("cd-hours") ? document.getElementById("cd-hours").innerText = "00" : null;
+      document.getElementById("cd-mins") ? document.getElementById("cd-mins").innerText = "00" : null;
+      document.getElementById("cd-secs") ? document.getElementById("cd-secs").innerText = "00" : null;
+      return;
     }
-    setInterval(updateCountdown, 1000);
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    const pad = (n) => String(n).padStart(2, '0');
+
+    if (document.getElementById("cd-days")) document.getElementById("cd-days").innerText = pad(days);
+    if (document.getElementById("cd-hours")) document.getElementById("cd-hours").innerText = pad(hours);
+    if (document.getElementById("cd-mins")) document.getElementById("cd-mins").innerText = pad(minutes);
+    if (document.getElementById("cd-secs")) document.getElementById("cd-secs").innerText = pad(seconds);
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
     updateCountdown();
 
     async function connectWallet() {
