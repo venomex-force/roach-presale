@@ -1333,31 +1333,46 @@
 
 
 
+
+
+
 <script>
-window.addEventListener('DOMContentLoaded', () => {
-  const TARGET_TIME = new Date("2026-09-25T18:00:00Z").getTime();
+(function() {
+  // Target: 25 Sep 2026 18:00 UTC
+  const targetTime = new Date("2026-09-25T18:00:00Z").getTime();
 
-  function renderTimer() {
+  function update() {
     const now = Date.now();
-    const remaining = Math.max(0, TARGET_TIME - now);
+    const diff = Math.max(0, targetTime - now);
 
-    const d = Math.floor(remaining / (1000 * 60 * 60 * 24));
-    const h = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((remaining % (1000 * 60)) / 1000);
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-    const pad = (val) => String(val).padStart(2, '0');
+    const pad = (n) => String(n).padStart(2, '0');
+    const formatted = `${pad(d)}d : ${pad(h)}h : ${pad(m)}m : ${pad(s)}s`;
 
-    // Saare potential container IDs ko update karein
-    ['cd-days', 'days'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(d); });
-    ['cd-hours', 'hours'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(h); });
-    ['cd-mins', 'cd-minutes', 'minutes'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(m); });
-    ['cd-secs', 'cd-seconds', 'seconds'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(s); });
+    const el = document.getElementById("countdown");
+    if (el) {
+      el.textContent = formatted;
+    }
+
+    // Backup ke liye alag spans agar kahi hon
+    const elD = document.getElementById("cd-days");
+    const elH = document.getElementById("cd-hours");
+    const elM = document.getElementById("cd-mins");
+    const elS = document.getElementById("cd-secs");
+    if (elD) elD.textContent = pad(d);
+    if (elH) elH.textContent = pad(h);
+    if (elM) elM.textContent = pad(m);
+    if (elS) elS.textContent = pad(s);
   }
 
-  setInterval(renderTimer, 1000);
-  renderTimer();
-});
+  setInterval(update, 1000);
+  document.addEventListener("DOMContentLoaded", update);
+  update();
+})();
 </script>
 
 </body>
