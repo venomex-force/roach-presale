@@ -1354,5 +1354,38 @@
     });
   </script>
 
+
+<script>
+  (function() {
+    // Target Date: 20 September 2026 18:00 UTC
+    const TARGET = new Date("2026-09-20T18:00:00Z").getTime();
+
+    function tick() {
+      const now = Date.now();
+      const rem = Math.max(0, TARGET - now);
+
+      const d = Math.floor(rem / (1000 * 60 * 60 * 24));
+      const h = Math.floor((rem % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((rem % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((rem % (1000 * 60)) / 1000);
+
+      const pad = n => String(n).padStart(2, '0');
+
+      const elD = document.getElementById("cd-days") || document.getElementById("days");
+      const elH = document.getElementById("cd-hours") || document.getElementById("hours");
+      const elM = document.getElementById("cd-mins") || document.getElementById("cd-minutes") || document.getElementById("minutes");
+      const elS = document.getElementById("cd-secs") || document.getElementById("cd-seconds") || document.getElementById("seconds");
+
+      if (elD) elD.textContent = pad(d);
+      if (elH) elH.textContent = pad(h);
+      if (elM) elM.textContent = pad(m);
+      if (elS) elS.textContent = pad(s);
+    }
+
+    setInterval(tick, 1000);
+    tick();
+  })();
+</script>
+
 </body>
 </html>
