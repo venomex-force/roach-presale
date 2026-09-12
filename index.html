@@ -126,7 +126,7 @@
       <div class="py-5 space-y-2">
         <div class="flex justify-between text-xs font-semibold">
           <span class="text-gray-400">Stage 1 Raised</span>
-          <span class="text-white font-mono">$168,420.50 / $500,000.00</span>
+          <span class="text-white font-mono"><span id="liveRaisedUSD">$0.00</span> / <span id="targetRaisedUSD">$500,000.00</span></span>
         </div>
         <div class="w-full bg-gray-800/80 rounded-full h-3 overflow-hidden p-0.5 border border-gray-700">
           <div class="bg-gradient-to-r from-teal-400 via-emerald-400 to-yellow-400 h-full rounded-full w-[33.6%]"></div>
@@ -1393,6 +1393,55 @@
   document.addEventListener("DOMContentLoaded", tick);
   tick();
 })();
+</script>
+
+
+<script>
+async function syncOnChainPresaleData() {
+  const PRESALE_ADDRESS = window.PRESALE_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000";
+  const RPC_URL = "https://bsc-testnet-rpc.publicnode.com";
+
+  if (PRESALE_ADDRESS === "0x0000000000000000000000000000000000000000") {
+    // Contract deploy hone tak default base $0.00
+    const raisedEl = document.getElementById("liveRaisedUSD");
+    if (raisedEl) raisedEl.innerText = "$0.00";
+    return;
+  }
+
+  try {
+    const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+    const presaleAbi = [
+      "function totalRaisedUSD() view returns (uint256)",
+      "function hardCapUSD() view returns (uint256)"
+    ];
+    const contract = new ethers.Contract(PRESALE_ADDRESS, presaleAbi, provider);
+
+    const [raised, cap] = await Promise.all([
+      contract.totalRaisedUSD().catch(() => ethers.BigNumber.from(0)),
+      contract.hardCapUSD().catch(() => ethers.utils.parseEther("500000"))
+    ]);
+
+    const raisedFormatted = Number(ethers.utils.formatEther(raised)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const capFormatted = Number(ethers.utils.formatEther(cap)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const raisedEl = document.getElementById("liveRaisedUSD");
+    const capEl = document.getElementById("targetRaisedUSD");
+    if (raisedEl) raisedEl.innerText = "$" + raisedFormatted;
+    if (capEl) capEl.innerText = "$" + capFormatted;
+
+    // Progress bar width update
+    const percent = Math.min(100, (Number(ethers.utils.formatEther(raised)) / Number(ethers.utils.formatEther(cap))) * 100);
+    const bar = document.getElementById("presaleProgressBar") || document.querySelector(".bg-emerald-500.h-full");
+    if (bar) bar.style.width = percent.toFixed(2) + "%";
+  } catch (err) {
+    console.warn("On-chain raised sync error:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  syncOnChainPresaleData();
+  setInterval(syncOnChainPresaleData, 15000); // Har 15 sec me live re-sync
+});
 </script>
 
 </body>
