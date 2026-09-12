@@ -215,7 +215,7 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       
       <div class="neon-card p-5 rounded-2xl text-center border border-emerald-500/30 hover:border-emerald-400 transition-all shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-        <div class="text-3xl mb-1"><img src="logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
+        <div class="text-3xl mb-1"><img src="logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
         <div class="text-[11px] uppercase tracking-wider text-gray-400 font-brand">Token Name</div>
         <div class="font-brand font-black text-lg sm:text-xl text-white mt-0.5">CockroachAI</div>
       </div>
@@ -894,32 +894,7 @@
   // Yeh date har reload par change nahi hogi
   const TARGET_END_TIME = new Date("2026-09-20T18:00:00Z").getTime();
 
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = TARGET_END_TIME - now;
-
-    if (distance <= 0) {
-      document.getElementById("cd-days") ? document.getElementById("cd-days").innerText = "00" : null;
-      document.getElementById("cd-hours") ? document.getElementById("cd-hours").innerText = "00" : null;
-      document.getElementById("cd-mins") ? document.getElementById("cd-mins").innerText = "00" : null;
-      document.getElementById("cd-secs") ? document.getElementById("cd-secs").innerText = "00" : null;
-      return;
-    }
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    const pad = (n) => String(n).padStart(2, '0');
-
-    if (document.getElementById("cd-days")) document.getElementById("cd-days").innerText = pad(days);
-    if (document.getElementById("cd-hours")) document.getElementById("cd-hours").innerText = pad(hours);
-    if (document.getElementById("cd-mins")) document.getElementById("cd-mins").innerText = pad(minutes);
-    if (document.getElementById("cd-secs")) document.getElementById("cd-secs").innerText = pad(seconds);
-  }
-
-  setInterval(updateCountdown, 1000);
+  
   updateCountdown();
     updateCountdown();
 
@@ -1092,7 +1067,7 @@
       <!-- Top Bar Inside Modal -->
       <div class="flex items-center justify-between border-b border-gray-800/80 pb-4 mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
           <div>
             <h3 class="text-lg sm:text-xl font-brand font-black text-white">CockroachAI Portal</h3>
             <p class="text-[11px] text-emerald-400 font-mono">BSC Mainnet • Vault v2.4 Active</p>
@@ -1355,36 +1330,34 @@
   </script>
 
 
+
+
+
 <script>
-  (function() {
-    // Target Date: 20 September 2026 18:00 UTC
-    const TARGET = new Date("2026-09-20T18:00:00Z").getTime();
+window.addEventListener('DOMContentLoaded', () => {
+  const TARGET_TIME = new Date("2026-09-25T18:00:00Z").getTime();
 
-    function tick() {
-      const now = Date.now();
-      const rem = Math.max(0, TARGET - now);
+  function renderTimer() {
+    const now = Date.now();
+    const remaining = Math.max(0, TARGET_TIME - now);
 
-      const d = Math.floor(rem / (1000 * 60 * 60 * 24));
-      const h = Math.floor((rem % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((rem % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((rem % (1000 * 60)) / 1000);
+    const d = Math.floor(remaining / (1000 * 60 * 60 * 24));
+    const h = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((remaining % (1000 * 60)) / 1000);
 
-      const pad = n => String(n).padStart(2, '0');
+    const pad = (val) => String(val).padStart(2, '0');
 
-      const elD = document.getElementById("cd-days") || document.getElementById("days");
-      const elH = document.getElementById("cd-hours") || document.getElementById("hours");
-      const elM = document.getElementById("cd-mins") || document.getElementById("cd-minutes") || document.getElementById("minutes");
-      const elS = document.getElementById("cd-secs") || document.getElementById("cd-seconds") || document.getElementById("seconds");
+    // Saare potential container IDs ko update karein
+    ['cd-days', 'days'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(d); });
+    ['cd-hours', 'hours'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(h); });
+    ['cd-mins', 'cd-minutes', 'minutes'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(m); });
+    ['cd-secs', 'cd-seconds', 'seconds'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = pad(s); });
+  }
 
-      if (elD) elD.textContent = pad(d);
-      if (elH) elH.textContent = pad(h);
-      if (elM) elM.textContent = pad(m);
-      if (elS) elS.textContent = pad(s);
-    }
-
-    setInterval(tick, 1000);
-    tick();
-  })();
+  setInterval(renderTimer, 1000);
+  renderTimer();
+});
 </script>
 
 </body>
