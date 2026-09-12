@@ -1338,17 +1338,20 @@
 
 <script>
 (function() {
-  // Target: 25 Sep 2026 18:00 UTC
-  const targetTime = new Date("2026-09-25T18:00:00Z").getTime();
+  // Cycle duration: 3 days in milliseconds
+  const CYCLE_MS = 3 * 24 * 60 * 60 * 1000;
+  // Presale Anchor Start: 12 Sep 2026 00:00 UTC
+  const BASE_EPOCH = new Date("2026-09-12T00:00:00Z").getTime();
 
   function update() {
     const now = Date.now();
-    const diff = Math.max(0, targetTime - now);
+    const elapsed = now - BASE_EPOCH;
+    const rem = (elapsed >= 0) ? (CYCLE_MS - (elapsed % CYCLE_MS)) : (BASE_EPOCH - now);
 
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    const d = Math.floor(rem / (1000 * 60 * 60 * 24));
+    const h = Math.floor((rem % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((rem % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((rem % (1000 * 60)) / 1000);
 
     const pad = (n) => String(n).padStart(2, '0');
     const formatted = `${pad(d)}d : ${pad(h)}h : ${pad(m)}m : ${pad(s)}s`;
@@ -1357,16 +1360,6 @@
     if (el) {
       el.textContent = formatted;
     }
-
-    // Backup ke liye alag spans agar kahi hon
-    const elD = document.getElementById("cd-days");
-    const elH = document.getElementById("cd-hours");
-    const elM = document.getElementById("cd-mins");
-    const elS = document.getElementById("cd-secs");
-    if (elD) elD.textContent = pad(d);
-    if (elH) elH.textContent = pad(h);
-    if (elM) elM.textContent = pad(m);
-    if (elS) elS.textContent = pad(s);
   }
 
   setInterval(update, 1000);
