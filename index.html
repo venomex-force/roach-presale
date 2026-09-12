@@ -1338,15 +1338,43 @@
 
 <script>
 (function() {
-  // Cycle duration: 3 days in milliseconds
-  const CYCLE_MS = 3 * 24 * 60 * 60 * 1000;
-  // Presale Anchor Start: 12 Sep 2026 00:00 UTC
-  const BASE_EPOCH = new Date("2026-09-12T00:00:00Z").getTime();
+  // Exact Target Launch: 14 Sep 2026 18:30:00 IST (13:00:00 UTC)
+  const LAUNCH_TIMESTAMP = new Date("2026-09-14T13:00:00Z").getTime();
+  const CYCLE_MS = 3 * 24 * 60 * 60 * 1000; // 3 Days in milliseconds
 
-  function update() {
+  function tick() {
     const now = Date.now();
-    const elapsed = now - BASE_EPOCH;
-    const rem = (elapsed >= 0) ? (CYCLE_MS - (elapsed % CYCLE_MS)) : (BASE_EPOCH - now);
+    const countdownEl = document.getElementById("countdown");
+    const subHeaderEl = document.querySelector("#countdown")?.previousElementSibling;
+    const buyBtn = document.getElementById("buyBtn") || document.querySelector("button[onclick*='buy']");
+
+    let rem = 0;
+
+    if (now < LAUNCH_TIMESTAMP) {
+      // Phase 1: Pre-launch countdown
+      rem = LAUNCH_TIMESTAMP - now;
+      if (subHeaderEl) {
+        subHeaderEl.innerText = "PRESALE LAUNCHES IN:";
+      }
+      if (buyBtn && !buyBtn.dataset.originalText) {
+        buyBtn.dataset.originalText = buyBtn.innerText;
+        buyBtn.innerText = "PRESALE STARTS SOON";
+        buyBtn.disabled = true;
+        buyBtn.classList.add("opacity-60", "cursor-not-allowed");
+      }
+    } else {
+      // Phase 2: Live presale with 3-day recurring price jump
+      const elapsedSinceLaunch = now - LAUNCH_TIMESTAMP;
+      rem = CYCLE_MS - (elapsedSinceLaunch % CYCLE_MS);
+      if (subHeaderEl) {
+        subHeaderEl.innerText = "NEXT PRICE JUMP IN:";
+      }
+      if (buyBtn && buyBtn.disabled) {
+        buyBtn.disabled = false;
+        buyBtn.innerText = buyBtn.dataset.originalText || "BUY $ROACH NOW";
+        buyBtn.classList.remove("opacity-60", "cursor-not-allowed");
+      }
+    }
 
     const d = Math.floor(rem / (1000 * 60 * 60 * 24));
     const h = Math.floor((rem % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -1354,17 +1382,16 @@
     const s = Math.floor((rem % (1000 * 60)) / 1000);
 
     const pad = (n) => String(n).padStart(2, '0');
-    const formatted = `${pad(d)}d : ${pad(h)}h : ${pad(m)}m : ${pad(s)}s`;
+    const display = `${pad(d)}d : ${pad(h)}h : ${pad(m)}m : ${pad(s)}s`;
 
-    const el = document.getElementById("countdown");
-    if (el) {
-      el.textContent = formatted;
+    if (countdownEl) {
+      countdownEl.innerText = display;
     }
   }
 
-  setInterval(update, 1000);
-  document.addEventListener("DOMContentLoaded", update);
-  update();
+  setInterval(tick, 1000);
+  document.addEventListener("DOMContentLoaded", tick);
+  tick();
 })();
 </script>
 
