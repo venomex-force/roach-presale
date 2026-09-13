@@ -191,7 +191,7 @@ setInterval(syncOnChainStats, 10000);
         <div class="hidden sm:flex items-center gap-2 bg-gray-900 border border-emerald-500/30 px-3 py-1.5 rounded-full text-xs text-emerald-400 font-semibold">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span> BSC Mainnet
         </div>
-        <button onclick="handleModalWalletConnect()"  class="glow-btn text-black font-brand font-bold px-5 py-2.5 rounded-xl hover:scale-105 transition-all text-xs tracking-wider uppercase">Connect Wallet</button>
+        <button id="navConnectBtn" onclick="connectWallet()" onclick="handleModalWalletConnect()"  class="glow-btn text-black font-brand font-bold px-5 py-2.5 rounded-xl hover:scale-105 transition-all text-xs tracking-wider uppercase">Connect Wallet</button>
       </div>
     </div>
   </header>
@@ -1030,57 +1030,115 @@ setInterval(syncOnChainStats, 10000);
   updateCountdown();
     updateCountdown();
 
-    async function connectWallet() {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const userAccount = accounts[0];
-          const short = userAccount.slice(0, 6) + '...' + userAccount.slice(-4);
-          
-          document.getElementById('navConnectBtn').innerText = short;
-          document.getElementById('refBox').value = window.location.origin + window.location.pathname + '?ref=' + userAccount;
-        } catch (err) {
-          console.error("Wallet connection cancelled", err);
+    <script>
+let userAccount = null;
+const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+
+async function connectWallet() {
+  if (typeof window.ethereum !== 'undefined') {
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (accounts && accounts.length > 0) {
+        userAccount = accounts[0];
+        const short = userAccount.slice(0, 6) + '...' + userAccount.slice(-4);
+        
+        // Update all connect buttons
+        const navBtn = document.getElementById('navConnectBtn');
+        if (navBtn) {
+          navBtn.innerText = short;
+          navBtn.classList.remove('bg-emerald-500');
+          navBtn.style.background = '#047857';
         }
-      } else {
-        alert("Web3 Wallet not detected! Please install MetaMask or Trust Wallet.");
+        const refBox = document.getElementById('refBox');
+        if (refBox) {
+          refBox.value = window.location.origin + window.location.pathname + '?ref=' + userAccount;
+        }
+
+        // BSC Switch (56 = 0x38)
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (chainId !== '0x38') {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: '0x38' }]
+            });
+          } catch (switchErr) {
+            if (switchErr.code === 4902) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: '0x38',
+                  chainName: 'Binance Smart Chain',
+                  nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                  rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                  blockExplorerUrls: ['https://bscscan.com/']
+                }]
+              });
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Connection cancelled:", err);
+    }
+  } else {
+    alert("Please open this site inside MetaMask, Trust Wallet, or install MetaMask extension.");
+  }
+}
+
+async function triggerPurchase() {
+  if (!userAccount) {
+    await connectWallet();
+    if (!userAccount) return;
+  }
+
+  const bnbInput = document.querySelector('input[placeholder="0.0"]') || document.querySelector('input[type="number"]');
+  const bnbVal = bnbInput && parseFloat(bnbInput.value) > 0 ? parseFloat(bnbInput.value) : 0.1;
+
+  try {
+    const weiVal = "0x" + BigInt(Math.round(bnbVal * 1e18)).toString(16);
+    await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [{
+        from: userAccount,
+        to: PRESALE_CONTRACT,
+        value: weiVal,
+        gas: "0x30D40" // 200,000 gas safe limit
+      }]
+    });
+    alert("Transaction broadcasted! $ROACH tokens will land directly in your wallet.");
+  } catch (err) {
+    console.error("Tx failed:", err);
+    alert("Transaction rejected or insufficient funds.");
+  }
+}
+
+// Live Presale Stat Sync
+async function syncPresaleStats() {
+  try {
+    const res = await fetch("https://bsc-dataseed.binance.org", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "eth_getBalance",
+        params: [PRESALE_CONTRACT, "latest"],
+        id: 1
+      })
+    });
+    const d = await res.json();
+    if (d && d.result) {
+      const bal = Number(BigInt(d.result)) / 1e18;
+      // Target display counters
+      const raisedEl = document.getElementById("raisedDisplay") || document.querySelector(".raised-counter");
+      if (raisedEl) {
+        raisedEl.innerText = bal.toFixed(2) + " BNB";
       }
     }
-
-    function copyRefLink() {
-      const refInput = document.getElementById('refBox');
-      if (refInput.value.includes('http')) {
-        navigator.clipboard.writeText(refInput.value);
-        alert("Referral link copied!");
-      } else {
-        alert("Connect your wallet first to generate your referral link.");
-      }
-    }
-
-    function copyContractAddress() {
-      const caText = document.getElementById('caText').innerText;
-      navigator.clipboard.writeText(caText).then(() => {
-        const btnText = document.getElementById('copyCaText');
-        const btnIcon = document.getElementById('copyCaIcon');
-        
-        btnText.innerText = "COPIED! ✅";
-        btnIcon.innerText = "";
-        
-        setTimeout(() => {
-          btnText.innerText = "COPY CA";
-          btnIcon.innerText = "📋";
-        }, 2500);
-      });
-    }
-
-    function triggerPurchase() {
-      if (typeof window.ethereum === 'undefined' || document.getElementById('navConnectBtn').innerText.includes('CONNECT')) {
-        connectWallet();
-      } else {
-        alert("Presale contract is currently undergoing final multi-sig verification on BSC Mainnet. Purchases will activate upon contract lock.");
-      }
-    }
-  </script>
+  } catch(e) {}
+}
+window.addEventListener("DOMContentLoaded", syncPresaleStats);
+</script>
 
   <!-- PRIVACY POLICY MODAL -->
   <div id="privacyModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4 sm:p-6 overflow-y-auto">
