@@ -1323,7 +1323,37 @@ async function triggerPurchase() {
   }
 }
 
-function copyRefLink() {
+
+    function copyOfficialUrl() {
+      const url = "https://cockroachai.co";
+      navigator.clipboard.writeText(url).then(() => {
+        const btnText = document.getElementById("copyDomainText");
+        if (btnText) {
+          btnText.innerText = "Copied!";
+          setTimeout(() => { btnText.innerText = "Copy Link"; }, 2000);
+        }
+      });
+    }
+
+    async function shareOfficialUrl() {
+      const shareData = {
+        title: "$ROACH - The Unkillable Meme Ecosystem",
+        text: "Join the official $ROACH token presale on BNB Smart Chain! Official site:",
+        url: "https://cockroachai.co"
+      };
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          console.log("Share dismissed");
+        }
+      } else {
+        copyOfficialUrl();
+        alert("Official link copied to clipboard: https://cockroachai.co");
+      }
+    }
+
+    function copyRefLink() {
   const refBox = document.getElementById('refBox');
   if (!refBox || refBox.value.includes('Connect wallet')) {
     alert("Pehle wallet connect karein!");
