@@ -3,205 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CockroachAI ($ROACH) — Official Whitepaper</title>
+  <title>CockroachAI ($ROACH) | Official Whitepaper v1.0</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: 'Space Grotesk', sans-serif; background-color: #030712; color: #f3f4f6; }
+    body { font-family: 'Inter', sans-serif; background-color: #06090E; color: #E2E8F0; }
+    .font-brand { font-family: 'Orbitron', sans-serif; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glow-border { box-shadow: 0 0 25px rgba(16, 185, 129, 0.15); }
+    .paper-card { background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(6, 9, 14, 0.9) 100%); border: 1px solid rgba(51, 65, 85, 0.6); }
   </style>
 </head>
-<body class="selection:bg-emerald-500 selection:text-black">
+<body class="antialiased selection:bg-emerald-500 selection:text-black">
 
-  <!-- Top Bar -->
-  <header class="sticky top-0 z-50 bg-[#080d1a]/90 backdrop-blur border-b border-gray-800 px-6 py-4 flex justify-between items-center max-w-6xl mx-auto">
-    <div class="flex items-center gap-3">
-      <img src="logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30">
-      <span class="font-black tracking-wider text-lg text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
-      <span class="text-[10px] font-mono bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">WHITEPAPER v1.0</span>
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-50 bg-[#06090E]/90 backdrop-blur-md border-b border-gray-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <img src="assets/logo.png" onerror="this.src='logo.png'" alt="Logo" class="w-9 h-9 rounded-full border border-emerald-500/40" />
+        <span class="font-brand font-black text-lg text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
+      </a>
+      <div class="flex items-center gap-4">
+        <span class="hidden sm:inline-block px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">WHITEPAPER v1.0</span>
+        <a href="index.html" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-brand font-bold text-xs uppercase tracking-wider transition active:scale-95">
+          Back to Presale
+        </a>
+      </div>
     </div>
-    <a href="index.html" class="text-xs font-mono font-bold text-gray-300 hover:text-emerald-400 transition flex items-center gap-1.5 border border-gray-700 px-3 py-1.5 rounded-lg">
-      ← Back to Presale
-    </a>
   </header>
 
-  <!-- Hero Header -->
-  <main class="max-w-4xl mx-auto px-6 py-12 space-y-16">
-    <div class="text-center space-y-4 border-b border-gray-800 pb-10">
-      <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-3 py-1 rounded-full uppercase tracking-widest">
-        Autonomous Market Defense & Liquidity Layer
-      </span>
-      <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-white mt-2">
-        COCKROACH AI PROTOCOL
-      </h1>
-      <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
-        An unkillable, autonomous Web3 infrastructure built on the BNB Smart Chain (BEP-20) featuring automated AI bytecode audits, instant wallet delivery with launch-protection transfer lock, and high-yield deflationary staking.
-      </p>
-      <div class="text-xs font-mono text-gray-500 pt-2">
-        BNB Smart Chain (BEP-20) • Last Updated: September 2026
+  <!-- MAIN DOCUMENT -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12">
+    
+    <!-- Title Section -->
+    <div class="text-center space-y-4 pb-8 border-b border-gray-800">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-xs font-semibold border border-emerald-500/30">
+        BEP-20 NATIVE • BNB SMART CHAIN
       </div>
+      <h1 class="font-brand text-3xl sm:text-5xl font-black text-white leading-tight">
+        THE UNKILLABLE MEME &amp; AI INFRASTRUCTURE
+      </h1>
+      <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+        An autonomous, antifragile tokenomic model built to survive market volatility through algorithmic liquidity retention and community-first incentives.
+      </p>
     </div>
 
-    <!-- Section 1: Abstract -->
+    <!-- Section 1: Executive Summary -->
     <section class="space-y-4">
-      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-        <span class="text-emerald-400">01.</span> Executive Abstract
+      <h2 class="font-brand text-xl sm:text-2xl font-bold text-emerald-400 flex items-center gap-2">
+        <span>01.</span> Executive Summary
       </h2>
-      <p class="text-gray-300 text-sm leading-relaxed">
-        Decentralized exchanges and meme assets frequently suffer from vulnerability exploitation, predatory MEV sandwiching, and sudden liquidity drain. CockroachAI ($ROACH) is engineered around resilience. Utilizing deep on-chain static bytecode scanners, anti-MEV private order routing, and a verified BEP-20 smart contract architecture, $ROACH builds a sustainable ecosystem designed to survive and thrive across all market cycles.
-      </p>
-    </section>
-
-    <!-- Section 2: Core Pillars -->
-    <section class="space-y-6">
-      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-        <span class="text-emerald-400">02.</span> Ecosystem Architecture
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="p-5 rounded-xl bg-gray-900/50 border border-gray-800">
-          <div class="text-emerald-400 text-xl font-bold mb-2">🛡️ Sentinel Scanner</div>
-          <p class="text-xs text-gray-400 leading-relaxed">
-            Real-time on-chain analysis detecting honeypots, malicious proxy delegatecalls, and blacklists before transactions execute.
-          </p>
-        </div>
-        <div class="p-5 rounded-xl bg-gray-900/50 border border-gray-800">
-          <div class="text-emerald-400 text-xl font-bold mb-2">🔄 RoachSwap DEX</div>
-          <p class="text-xs text-gray-400 leading-relaxed">
-            Custom automated market maker routing trades privately to block MEV bots, featuring permanent 50% fee buyback-and-burn.
-          </p>
-        </div>
-        <div class="p-5 rounded-xl bg-gray-900/50 border border-gray-800">
-          <div class="text-emerald-400 text-xl font-bold mb-2">⚡ Staking Vaults</div>
-          <p class="text-xs text-gray-400 leading-relaxed">
-            Locked vaults offering up to 148% APY funded from an immutable 200M reward reserve, accessible even during presale.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 3: Tokenomics -->
-    <section class="space-y-6">
-      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-        <span class="text-emerald-400">03.</span> Verified Tokenomics
-      </h2>
-      <div class="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 space-y-4">
-        <div class="flex flex-wrap justify-between items-center border-b border-gray-800 pb-4 font-mono text-sm">
-          <span class="text-gray-400">Token Name: <strong class="text-white">CockroachAI</strong></span>
-          <span class="text-gray-400">Ticker: <strong class="text-emerald-400">$ROACH</strong></span>
-          <span class="text-gray-400">Total Supply: <strong class="text-white">1,000,000,000</strong></span>
-        </div>
-        
-        <div class="space-y-3 font-mono text-xs">
-          <div>
-            <div class="flex justify-between mb-1">
-              <span>Presale Allocation (Instant Delivery)</span>
-              <span class="text-emerald-400">40% (400,000,000)</span>
-            </div>
-            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-emerald-500 h-2" style="width: 40%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1">
-              <span>Staking Rewards Reserve</span>
-              <span class="text-emerald-400">20% (200,000,000)</span>
-            </div>
-            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-emerald-500/80 h-2" style="width: 20%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1">
-              <span>PancakeSwap DEX Liquidity (Locked)</span>
-              <span class="text-emerald-400">15% (150,000,000)</span>
-            </div>
-            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-emerald-500/60 h-2" style="width: 15%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1">
-              <span>Tier-1 CEX Listings & Strategic Marketing</span>
-              <span class="text-emerald-400">15% (150,000,000)</span>
-            </div>
-            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-emerald-500/40 h-2" style="width: 15%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1">
-              <span>Core Ecosystem & Security Reserve</span>
-              <span class="text-emerald-400">10% (100,000,000)</span>
-            </div>
-            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-emerald-500/20 h-2" style="width: 10%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 4: Security & Transfer Lock -->
-    <section class="space-y-4">
-      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-        <span class="text-emerald-400">04.</span> Instant Delivery & Anti-Dump Protection
-      </h2>
-      <div class="p-5 rounded-2xl bg-emerald-950/20 border border-emerald-500/30 space-y-3">
-        <h3 class="text-white font-bold text-base flex items-center gap-2">
-          <span>⚡</span> Direct Wallet Delivery with Exemption Routing
-        </h3>
-        <p class="text-xs text-gray-300 leading-relaxed">
-          Unlike legacy presales requiring manual claiming and claim fees, $ROACH is credited to the buyer's wallet immediately upon BNB/USDT purchase. To protect investors against sniper bots and premature dumping, standard peer-to-peer transfers are locked until DEX listing. Whitelisted staking vaults remain fully accessible, allowing buyers to compound up to 148% APY prior to public trading.
+      <div class="paper-card p-6 rounded-2xl space-y-3 text-sm text-gray-300 leading-relaxed">
+        <p>
+          In the crypto asset landscape, 99% of meme tokens fail within 30 days due to predatory developer allocations, hidden honeypots, and rapid liquidity exhaustion. 
         </p>
+        <p>
+          <strong class="text-white">CockroachAI ($ROACH)</strong> is engineered as a direct antidote to market extinction. Inspired by the biological resilience of cockroaches—the planet's ultimate survivors—$ROACH combines community virality with deterministic DeFi mechanics: automated DEX liquidity injection, staking yield distribution, and a progressive 3-day presale price cycle.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2: Tokenomics -->
+    <section class="space-y-4">
+      <h2 class="font-brand text-xl sm:text-2xl font-bold text-emerald-400 flex items-center gap-2">
+        <span>02.</span> Tokenomics Architecture
+      </h2>
+      <div class="paper-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-gray-800 gap-2">
+          <div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-mono">Total Max Supply</div>
+            <div class="font-brand text-2xl font-black text-white">1,000,000,000 <span class="text-emerald-400">$ROACH</span></div>
+          </div>
+          <div class="text-xs font-mono text-gray-400 bg-black/40 px-3 py-1.5 rounded-lg border border-gray-800">
+            Decimals: 18 • Tax: 0% Buy / 0% Sell
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div class="bg-black/40 p-4 rounded-xl border border-gray-800/80">
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-bold text-white text-sm">Public Presale</span>
+              <span class="font-mono text-emerald-400 font-bold">40%</span>
+            </div>
+            <p class="text-xs text-gray-400">400M $ROACH allocated across fair-launch stages with zero private venture dump.</p>
+          </div>
+          <div class="bg-black/40 p-4 rounded-xl border border-gray-800/80">
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-bold text-white text-sm">DEX Liquidity Pool</span>
+              <span class="font-mono text-emerald-400 font-bold">30%</span>
+            </div>
+            <p class="text-xs text-gray-400">300M $ROACH locked directly into PancakeSwap to guarantee permanent trading depth.</p>
+          </div>
+          <div class="bg-black/40 p-4 rounded-xl border border-gray-800/80">
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-bold text-white text-sm">Staking &amp; AI Yield</span>
+              <span class="font-mono text-emerald-400 font-bold">20%</span>
+            </div>
+            <p class="text-xs text-gray-400">200M $ROACH reserved for community vault rewards and RoachSwap ecosystem staking.</p>
+          </div>
+          <div class="bg-black/40 p-4 rounded-xl border border-gray-800/80">
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-bold text-white text-sm">Marketing &amp; Ops</span>
+              <span class="font-mono text-emerald-400 font-bold">10%</span>
+            </div>
+            <p class="text-xs text-gray-400">100M $ROACH vested for multi-platform influencer outreach, audits, and CEX listings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Presale Engine Mechanics -->
+    <section class="space-y-4">
+      <h2 class="font-brand text-xl sm:text-2xl font-bold text-emerald-400 flex items-center gap-2">
+        <span>03.</span> Presale Engine &amp; Dynamic Jump
+      </h2>
+      <div class="paper-card p-6 rounded-2xl space-y-4 text-sm text-gray-300 leading-relaxed">
+        <p>
+          Unlike static presales that trigger speculative dumps, $ROACH utilizes an automated <strong class="text-white">3-Day Recurring Price Jump</strong> cycle:
+        </p>
+        <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm pl-2">
+          <li><strong class="text-emerald-400">Stage 1 Base Floor:</strong> 1 BNB = 600,000 $ROACH (Ground-floor rate).</li>
+          <li><strong class="text-emerald-400">Recurring Jump:</strong> Every 72 hours from official launch, token valuation advances automatically, providing built-in incentive for initial backers.</li>
+          <li><strong class="text-emerald-400">10% Instant Refer &amp; Earn:</strong> Community participants generate an on-chain referral URL. Every referee purchase awards the referrer 10% instant commission.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 4: Verified Smart Contract -->
+    <section class="space-y-4">
+      <h2 class="font-brand text-xl sm:text-2xl font-bold text-emerald-400 flex items-center gap-2">
+        <span>04.</span> Smart Contract &amp; Security
+      </h2>
+      <div class="paper-card p-6 rounded-2xl space-y-4">
+        <div class="space-y-2">
+          <div class="text-xs font-mono text-gray-400 uppercase">BSC Verified Contract Address</div>
+          <div class="p-3 bg-black/70 rounded-xl border border-gray-800 font-mono text-xs sm:text-sm text-emerald-400 break-all select-all">
+            0xf329D4c22e1BCFb8FC661378b6af39d9486eD247
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono">
+          <div class="p-3 bg-black/40 rounded-lg border border-gray-800 text-center">
+            <div class="text-emerald-400 font-bold">✓ NO HONEYPOT</div>
+            <div class="text-gray-500 mt-1">Open transfer logic</div>
+          </div>
+          <div class="p-3 bg-black/40 rounded-lg border border-gray-800 text-center">
+            <div class="text-emerald-400 font-bold">✓ ZERO TAX</div>
+            <div class="text-gray-500 mt-1">0% on transfers</div>
+          </div>
+          <div class="p-3 bg-black/40 rounded-lg border border-gray-800 text-center">
+            <div class="text-emerald-400 font-bold">✓ NO HIDDEN MINT</div>
+            <div class="text-gray-500 mt-1">Hard-capped supply</div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Section 5: Roadmap -->
     <section class="space-y-4">
-      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-        <span class="text-emerald-400">05.</span> Protocol Roadmap
+      <h2 class="font-brand text-xl sm:text-2xl font-bold text-emerald-400 flex items-center gap-2">
+        <span>05.</span> Strategic Roadmap
       </h2>
-      <div class="space-y-3 font-sans text-xs sm:text-sm">
-        <div class="p-4 rounded-xl bg-gray-900/40 border border-gray-800 flex items-start gap-3">
-          <span class="font-mono text-emerald-400 font-bold">PHASE 1</span>
-          <div>
-            <strong class="text-white block">Genesis & Smart Contract Verification</strong>
-            <span class="text-gray-400">Foundry EVM test suite pass, Slither static analysis, community launch, and audited presale deployment.</span>
+      <div class="space-y-3">
+        <div class="paper-card p-5 rounded-xl flex items-start gap-4">
+          <div class="font-brand font-black text-emerald-400 text-lg sm:text-xl">Q3 2026</div>
+          <div class="space-y-1 text-xs sm:text-sm text-gray-300">
+            <div class="font-bold text-white">Stage 1 Presale Launch &amp; Social Swarm</div>
+            <p class="text-gray-400">Launch of cockroachai.co presale portal, smart contract public verification, viral Telegram/X community building, and Stage 2 promo architecture initialization.</p>
           </div>
         </div>
-        <div class="p-4 rounded-xl bg-gray-900/40 border border-gray-800 flex items-start gap-3">
-          <span class="font-mono text-emerald-400 font-bold">PHASE 2</span>
-          <div>
-            <strong class="text-white block">Staking Vaults & Sentinel AI Scanner Beta</strong>
-            <span class="text-gray-400">Opening of 3M/6M/12M vaults, automated on-chain security dashboard, and global marketing outreach.</span>
+        <div class="paper-card p-5 rounded-xl flex items-start gap-4">
+          <div class="font-brand font-black text-emerald-400 text-lg sm:text-xl">Q4 2026</div>
+          <div class="space-y-1 text-xs sm:text-sm text-gray-300">
+            <div class="font-bold text-white">PancakeSwap Listing &amp; Liquidity Lock</div>
+            <p class="text-gray-400">100% of planned liquidity locked on PancakeSwap. CoinMarketCap and CoinGecko fast-track applications, followed by Tier-2 centralized exchange discussions.</p>
           </div>
         </div>
-        <div class="p-4 rounded-xl bg-gray-900/40 border border-gray-800 flex items-start gap-3">
-          <span class="font-mono text-emerald-400 font-bold">PHASE 3</span>
-          <div>
-            <strong class="text-white block">PancakeSwap DEX Launch & Transfer Unlocking</strong>
-            <span class="text-gray-400">Seeding liquidity, triggering immutable one-way trading unlock, CoinMarketCap & CoinGecko fast-track.</span>
-          </div>
-        </div>
-        <div class="p-4 rounded-xl bg-gray-900/40 border border-gray-800 flex items-start gap-3">
-          <span class="font-mono text-emerald-400 font-bold">PHASE 4</span>
-          <div>
-            <strong class="text-white block">RoachSwap DEX & Decentralized Governance (DAO)</strong>
-            <span class="text-gray-400">Anti-MEV private routing AMM deployment, buyback-and-burn engine activation, and community DAO expansion.</span>
+        <div class="paper-card p-5 rounded-xl flex items-start gap-4">
+          <div class="font-brand font-black text-emerald-400 text-lg sm:text-xl">Q1 2027</div>
+          <div class="space-y-1 text-xs sm:text-sm text-gray-300">
+            <div class="font-bold text-white">RoachSwap DEX &amp; AI Sentinel Bot</div>
+            <p class="text-gray-400">Deployment of RoachSwap decentralized swap engine with integrated AI honeypot-detection alerts for meme traders.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Disclaimer -->
-    <section class="p-6 rounded-2xl bg-black border border-gray-800 text-[11px] text-gray-500 leading-relaxed font-mono">
-      <strong class="text-gray-400 block mb-1">RISK DISCLAIMER</strong>
-      This whitepaper is intended for informational and architectural review purposes only. Cryptographic assets carry market volatility risks. $ROACH smart contracts are tested and verified, but participants should always exercise sound risk assessment.
-    </section>
+    <!-- Bottom Notice -->
+    <div class="p-6 rounded-2xl bg-emerald-950/20 border border-emerald-500/30 text-center space-y-3">
+      <div class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">OFFICIAL REPOSITORIES &amp; VERIFICATION</div>
+      <p class="text-xs text-gray-400 max-w-xl mx-auto">
+        Always cross-check URLs and contracts against official project channels. Never trust unsolicited messages or unverified mirror links.
+      </p>
+      <div class="pt-2">
+        <a href="index.html" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-brand font-bold text-xs uppercase tracking-wider transition">
+          Enter Presale Portal
+        </a>
+      </div>
+    </div>
+
   </main>
 
-  <footer class="border-t border-gray-900 py-8 text-center text-xs text-gray-600 font-mono">
-    © 2026 CockroachAI Protocol. Built on BNB Smart Chain. All Rights Reserved.
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-800 bg-[#05070B] py-8 text-center text-xs font-mono text-gray-500">
+    <div>© 2026 CockroachAI Protocol. All rights reserved. • Deployed on BNB Smart Chain</div>
   </footer>
+
 </body>
 </html>
