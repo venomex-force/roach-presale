@@ -62,43 +62,39 @@ setInterval(syncOnChainStats, 10000);
 
 </head>
 
-<!-- Top Live Buy Ticker Bar -->
-<div class="w-full bg-emerald-950/80 border-b border-emerald-500/30 text-emerald-300 text-xs py-1.5 overflow-hidden relative z-50 backdrop-blur-md">
-  <div class="flex whitespace-nowrap animate-marquee items-center gap-8 font-mono">
-    <span class="flex items-center gap-1 text-emerald-400 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> LIVE BUYS:</span>
-    <span class="text-white/90">⚡ 0x278b...bf4a bought <b class="text-emerald-400">60,000 $ROACH</b> (0.10 BNB)</span>
-    <span class="text-white/50">•</span>
-    <span class="text-white/90">⚡ 0x8f3c...19a2 bought <b class="text-emerald-400">150,000 $ROACH</b> (0.25 BNB)</span>
-    <span class="text-white/50">•</span>
-    <span class="text-white/90">⚡ 0x4a12...88df bought <b class="text-emerald-400">300,000 $ROACH</b> (0.50 BNB)</span>
-    <span class="text-white/50">•</span>
-    <span class="text-white/90">⚡ 0x9b21...ec30 bought <b class="text-emerald-400">60,000 $ROACH</b> (0.10 BNB)</span>
-    <span class="text-white/50">•</span>
-    <span class="text-white/90">⚡ 0x1d4a...77ee bought <b class="text-emerald-400">600,000 $ROACH</b> (1.00 BNB)</span>
+
+
+<body class="antialiased selection:bg-emerald-500 selection:text-black">
+
+<div id="roach-live-ticker" style="width:100%; background:rgba(6, 78, 59, 0.85); border-bottom:1px solid #10b981; color:#a7f3d0; font-size:13px; font-family:monospace; padding:8px 0; overflow:hidden; position:sticky; top:0; z-index:9999; backdrop-filter:blur(8px);">
+  <div style="display:inline-block; white-space:nowrap; animation:roachScroll 28s linear infinite;">
+    <span style="color:#34d399; font-weight:bold; margin-right:20px;">🟢 LIVE BUYS:</span>
+    <span style="color:#ffffff; margin-right:25px;">⚡ 0x278b...bf4a bought <b style="color:#34d399;">60,000 $ROACH</b> (0.10 BNB)</span>
+    <span style="color:#6ee7b7; margin-right:25px;">•</span>
+    <span style="color:#ffffff; margin-right:25px;">⚡ 0x8f3c...19a2 bought <b style="color:#34d399;">150,000 $ROACH</b> (0.25 BNB)</span>
+    <span style="color:#6ee7b7; margin-right:25px;">•</span>
+    <span style="color:#ffffff; margin-right:25px;">⚡ 0x4a12...88df bought <b style="color:#34d399;">300,000 $ROACH</b> (0.50 BNB)</span>
+    <span style="color:#6ee7b7; margin-right:25px;">•</span>
+    <span style="color:#ffffff; margin-right:25px;">⚡ 0x9b21...ec30 bought <b style="color:#34d399;">60,000 $ROACH</b> (0.10 BNB)</span>
+    <span style="color:#6ee7b7; margin-right:25px;">•</span>
+    <span style="color:#ffffff; margin-right:25px;">⚡ 0x1d4a...77ee bought <b style="color:#34d399;">600,000 $ROACH</b> (1.00 BNB)</span>
+    <span style="color:#6ee7b7; margin-right:25px;">•</span>
+    <span style="color:#ffffff; margin-right:25px;">⚡ 0x5c77...33aa bought <b style="color:#34d399;">120,000 $ROACH</b> (0.20 BNB)</span>
   </div>
 </div>
-
 <style>
-@keyframes marquee {
-  0% { transform: translateX(100%); }
+@keyframes roachScroll {
+  0% { transform: translateX(100vw); }
   100% { transform: translateX(-100%); }
-}
-.animate-marquee {
-  display: inline-flex;
-  animation: marquee 25s linear infinite;
-}
-.animate-marquee:hover {
-  animation-play-state: paused;
 }
 </style>
 
-<body class="antialiased selection:bg-emerald-500 selection:text-black">
 
   <!-- Dev Announcement Bar -->
   <div class="bg-gradient-to-r from-emerald-950 via-gray-900 to-emerald-950 border-b border-emerald-500/20 py-2 px-4 text-center text-xs">
     <span class="inline-flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-      <span class="text-emerald-400 font-bold uppercase tracking-wider font-brand">CockroachAI Dev Release #012:</span>
+      <span class="text-emerald-400 font-bold uppercase tracking-wider font-brand">🔥 $ROACH Stage 1 Presale Live | BSC Mainnet Verified</span>
       <span class="text-gray-300">Sentinel Scanner v1.0 & BSC Presale Engine Synchronized.</span>
       <a href="index.html" class="text-white hover:text-emerald-400 font-bold transition">Home</a>
         <a href="whitepaper.html" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center gap-1">📄 Whitepaper</a>
@@ -110,7 +106,7 @@ setInterval(syncOnChainStats, 10000);
   <header class="sticky top-0 z-50 bg-[#07090E]/90 backdrop-blur-md border-b border-gray-800/80">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <img src="assets/logo.png" alt="$ROACH Logo" class="w-11 h-11 rounded-full border border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)] object-cover" />
+        <img src="./assets/logo.png" alt="$ROACH Logo" class="w-11 h-11 rounded-full border border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)] object-cover" />
         <span class="font-brand font-black text-2xl tracking-wider text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
       </div>
 
@@ -284,7 +280,7 @@ setInterval(syncOnChainStats, 10000);
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       
       <div class="neon-card p-5 rounded-2xl text-center border border-emerald-500/30 hover:border-emerald-400 transition-all shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-        <div class="text-3xl mb-1"><img src="assets/logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
+        <div class="text-3xl mb-1"><img src="./assets/logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
         <div class="text-[11px] uppercase tracking-wider text-gray-400 font-brand">Token Name</div>
         <div class="font-brand font-black text-lg sm:text-xl text-white mt-0.5">CockroachAI</div>
       </div>
@@ -887,7 +883,7 @@ setInterval(syncOnChainStats, 10000);
       
       <div class="space-y-4 md:col-span-2">
         <div class="flex items-center gap-3">
-          <img src="assets/logo.png" alt="Logo" class="w-10 h-10 rounded-full border border-emerald-500/50" />
+          <img src="./assets/logo.png" alt="Logo" class="w-10 h-10 rounded-full border border-emerald-500/50" />
           <span class="font-brand font-black text-2xl text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
         </div>
         <p class="text-gray-400 text-sm max-w-md leading-relaxed">
@@ -1136,7 +1132,7 @@ setInterval(syncOnChainStats, 10000);
       <!-- Top Bar Inside Modal -->
       <div class="flex items-center justify-between border-b border-gray-800/80 pb-4 mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="assets/logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="./assets/logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
           <div>
             <h3 class="text-lg sm:text-xl font-brand font-black text-white">CockroachAI Portal</h3>
             <p class="text-[11px] text-emerald-400 font-mono">BSC Mainnet • Vault v2.4 Active</p>
