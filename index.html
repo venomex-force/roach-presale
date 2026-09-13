@@ -73,21 +73,13 @@ setInterval(syncOnChainStats, 10000);
       LIVE BUYS
     </div>
     <div id="ticker-track" style="display:inline-block; white-space:nowrap; animation:tickerScroll 35s linear infinite;">
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x278b...bf4a bought <b style="color:#34d399;">60,000 $ROACH</b> <span style="color:#6ee7b7;">(0.10 BNB)</span></span>
-      <span style="color:#10b981;">•</span>
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x9f12...44e1 bought <b style="color:#34d399;">180,000 $ROACH</b> <span style="color:#38bdf8;">($216 USDT)</span></span>
-      <span style="color:#10b981;">•</span>
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x4a12...88df bought <b style="color:#34d399;">300,000 $ROACH</b> <span style="color:#6ee7b7;">(0.50 BNB)</span></span>
-      <span style="color:#10b981;">•</span>
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x8c77...192b bought <b style="color:#34d399;">600,000 $ROACH</b> <span style="color:#38bdf8;">($720 USDT)</span></span>
-      <span style="color:#10b981;">•</span>
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x9b21...ec30 bought <b style="color:#34d399;">60,000 $ROACH</b> <span style="color:#6ee7b7;">(0.10 BNB)</span></span>
-      <span style="color:#10b981;">•</span>
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x1d4a...77ee bought <b style="color:#34d399;">1,200,000 $ROACH</b> <span style="color:#38bdf8;">($1,440 USDT)</span></span>
-      <span style="color:#10b981;">•</span>
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x5c77...33aa bought <b style="color:#34d399;">120,000 $ROACH</b> <span style="color:#6ee7b7;">(0.20 BNB)</span></span>
-      <span style="color:#10b981;">•</span>
-      <span style="color:#ffffff; margin:0 18px;">⚡ 0x6e19...aa23 bought <b style="color:#34d399;">450,000 $ROACH</b> <span style="color:#38bdf8;">($540 USDT)</span></span>
+      <span class="demo-buy" style="color:#ffffff; margin:0 18px;">⚡ 0x278b...bf4a bought <b style="color:#34d399;">60,000 $ROACH</b> <span style="color:#6ee7b7;">(0.10 BNB)</span></span>
+      <span class="demo-buy" style="color:#10b981;">•</span>
+      <span class="demo-buy" style="color:#ffffff; margin:0 18px;">⚡ 0x9f12...44e1 bought <b style="color:#34d399;">180,000 $ROACH</b> <span style="color:#38bdf8;">($216 USDT)</span></span>
+      <span class="demo-buy" style="color:#10b981;">•</span>
+      <span class="demo-buy" style="color:#ffffff; margin:0 18px;">⚡ 0x4a12...88df bought <b style="color:#34d399;">300,000 $ROACH</b> <span style="color:#6ee7b7;">(0.50 BNB)</span></span>
+      <span class="demo-buy" style="color:#10b981;">•</span>
+      <span class="demo-buy" style="color:#ffffff; margin:0 18px;">⚡ 0x8c77...192b bought <b style="color:#34d399;">600,000 $ROACH</b> <span style="color:#38bdf8;">($720 USDT)</span></span>
     </div>
   </div>
 </div>
@@ -103,12 +95,12 @@ setInterval(syncOnChainStats, 10000);
 </style>
 
 <script>
-// On-chain Event Listener: real-time contract buys prepend honge
 (function() {
   const PRESALE_ADDR = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
   const TOPIC_PURCHASE = "0x8fafebcaf9d154343dad25669bfa277f4fbacd7ac6b0c4fed522580e040a0f33";
+  let realBuysLoaded = false;
 
-  async function checkLatestBuys() {
+  async function syncRealBuys() {
     try {
       const res = await fetch("https://bsc-dataseed.binance.org", {
         method: "POST",
@@ -119,26 +111,45 @@ setInterval(syncOnChainStats, 10000);
           params: [{
             address: PRESALE_ADDR,
             topics: [TOPIC_PURCHASE],
-            fromBlock: "latest"
+            fromBlock: "0x73fa000" // deployed block range
           }],
-          id: 77
+          id: 88
         })
       });
       const data = await res.json();
       if (data && data.result && data.result.length > 0) {
+        const track = document.getElementById("ticker-track");
+        
+        // Asli buy aate hi saare DEMO items ko delete kar dega
+        if (!realBuysLoaded) {
+          track.innerHTML = "";
+          realBuysLoaded = true;
+        }
+
+        let realHTML = "";
         data.result.forEach(log => {
           const buyer = "0x" + log.topics[1].slice(26);
           const shortBuyer = buyer.slice(0, 6) + "..." + buyer.slice(-4);
-          const track = document.getElementById("ticker-track");
-          if (track && !track.innerHTML.includes(shortBuyer)) {
-            const newItem = `<span style="color:#fef08a; font-weight:bold; margin:0 18px;">🔥 NEW: ${shortBuyer} bought $ROACH</span><span style="color:#10b981;">•</span>`;
-            track.innerHTML = newItem + track.innerHTML;
-          }
+          
+          // Data decode: tokens & bnb
+          const cleanData = log.data.replace("0x", "");
+          const bnbHex = cleanData.slice(0, 64);
+          const tokensHex = cleanData.slice(64, 128);
+          const bnbVal = (Number(BigInt("0x" + bnbHex)) / 1e18).toFixed(3);
+          const tokenVal = Math.round(Number(BigInt("0x" + tokensHex)) / 1e18).toLocaleString();
+
+          realHTML += `<span style="color:#ffffff; margin:0 18px;">⚡ ${shortBuyer} bought <b style="color:#34d399;">${tokenVal} $ROACH</b> <span style="color:#6ee7b7;">(${bnbVal} BNB)</span></span><span style="color:#10b981;">•</span>`;
         });
+
+        track.innerHTML = realHTML;
       }
-    } catch(e) {}
+    } catch(e) {
+      console.warn("Real buy sync error:", e);
+    }
   }
-  setInterval(checkLatestBuys, 10000);
+
+  window.addEventListener("DOMContentLoaded", syncRealBuys);
+  setInterval(syncRealBuys, 6000);
 })();
 </script>
 
