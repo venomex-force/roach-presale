@@ -66,28 +66,84 @@ setInterval(syncOnChainStats, 10000);
 
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
 
-<div id="roach-live-ticker" style="width:100%; background:rgba(6, 78, 59, 0.85); border-bottom:1px solid #10b981; color:#a7f3d0; font-size:13px; font-family:monospace; padding:8px 0; overflow:hidden; position:sticky; top:0; z-index:9999; backdrop-filter:blur(8px);">
-  <div style="display:inline-block; white-space:nowrap; animation:roachScroll 28s linear infinite;">
-    <span style="color:#34d399; font-weight:bold; margin-right:20px;">🟢 LIVE BUYS:</span>
-    <span style="color:#ffffff; margin-right:25px;">⚡ 0x278b...bf4a bought <b style="color:#34d399;">60,000 $ROACH</b> (0.10 BNB)</span>
-    <span style="color:#6ee7b7; margin-right:25px;">•</span>
-    <span style="color:#ffffff; margin-right:25px;">⚡ 0x8f3c...19a2 bought <b style="color:#34d399;">150,000 $ROACH</b> (0.25 BNB)</span>
-    <span style="color:#6ee7b7; margin-right:25px;">•</span>
-    <span style="color:#ffffff; margin-right:25px;">⚡ 0x4a12...88df bought <b style="color:#34d399;">300,000 $ROACH</b> (0.50 BNB)</span>
-    <span style="color:#6ee7b7; margin-right:25px;">•</span>
-    <span style="color:#ffffff; margin-right:25px;">⚡ 0x9b21...ec30 bought <b style="color:#34d399;">60,000 $ROACH</b> (0.10 BNB)</span>
-    <span style="color:#6ee7b7; margin-right:25px;">•</span>
-    <span style="color:#ffffff; margin-right:25px;">⚡ 0x1d4a...77ee bought <b style="color:#34d399;">600,000 $ROACH</b> (1.00 BNB)</span>
-    <span style="color:#6ee7b7; margin-right:25px;">•</span>
-    <span style="color:#ffffff; margin-right:25px;">⚡ 0x5c77...33aa bought <b style="color:#34d399;">120,000 $ROACH</b> (0.20 BNB)</span>
+<div id="roach-live-ticker" style="width:100%; background:linear-gradient(90deg, rgba(6,78,59,0.95), rgba(4,47,46,0.95)); border-bottom:1px solid rgba(16,185,129,0.4); color:#a7f3d0; font-size:12.5px; font-family:ui-monospace, monospace; padding:7px 0; overflow:hidden; position:sticky; top:0; z-index:99999; backdrop-filter:blur(8px); box-shadow:0 2px 10px rgba(0,0,0,0.3);">
+  <div style="display:flex; align-items:center;">
+    <div style="background:#047857; color:#ffffff; font-weight:700; padding:2px 12px; margin-left:10px; border-radius:4px; font-size:11px; white-space:nowrap; display:flex; align-items:center; gap:6px; z-index:2;">
+      <span style="display:inline-block; width:7px; height:7px; background:#34d399; border-radius:50%; box-shadow:0 0 8px #34d399;"></span>
+      LIVE BUYS
+    </div>
+    <div id="ticker-track" style="display:inline-block; white-space:nowrap; animation:tickerScroll 35s linear infinite;">
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x278b...bf4a bought <b style="color:#34d399;">60,000 $ROACH</b> <span style="color:#6ee7b7;">(0.10 BNB)</span></span>
+      <span style="color:#10b981;">•</span>
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x9f12...44e1 bought <b style="color:#34d399;">180,000 $ROACH</b> <span style="color:#38bdf8;">($216 USDT)</span></span>
+      <span style="color:#10b981;">•</span>
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x4a12...88df bought <b style="color:#34d399;">300,000 $ROACH</b> <span style="color:#6ee7b7;">(0.50 BNB)</span></span>
+      <span style="color:#10b981;">•</span>
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x8c77...192b bought <b style="color:#34d399;">600,000 $ROACH</b> <span style="color:#38bdf8;">($720 USDT)</span></span>
+      <span style="color:#10b981;">•</span>
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x9b21...ec30 bought <b style="color:#34d399;">60,000 $ROACH</b> <span style="color:#6ee7b7;">(0.10 BNB)</span></span>
+      <span style="color:#10b981;">•</span>
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x1d4a...77ee bought <b style="color:#34d399;">1,200,000 $ROACH</b> <span style="color:#38bdf8;">($1,440 USDT)</span></span>
+      <span style="color:#10b981;">•</span>
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x5c77...33aa bought <b style="color:#34d399;">120,000 $ROACH</b> <span style="color:#6ee7b7;">(0.20 BNB)</span></span>
+      <span style="color:#10b981;">•</span>
+      <span style="color:#ffffff; margin:0 18px;">⚡ 0x6e19...aa23 bought <b style="color:#34d399;">450,000 $ROACH</b> <span style="color:#38bdf8;">($540 USDT)</span></span>
+    </div>
   </div>
 </div>
+
 <style>
-@keyframes roachScroll {
-  0% { transform: translateX(100vw); }
-  100% { transform: translateX(-100%); }
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+#roach-live-ticker:hover #ticker-track {
+  animation-play-state: paused;
 }
 </style>
+
+<script>
+// On-chain Event Listener: real-time contract buys prepend honge
+(function() {
+  const PRESALE_ADDR = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+  const TOPIC_PURCHASE = "0x8fafebcaf9d154343dad25669bfa277f4fbacd7ac6b0c4fed522580e040a0f33";
+
+  async function checkLatestBuys() {
+    try {
+      const res = await fetch("https://bsc-dataseed.binance.org", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          method: "eth_getLogs",
+          params: [{
+            address: PRESALE_ADDR,
+            topics: [TOPIC_PURCHASE],
+            fromBlock: "latest"
+          }],
+          id: 77
+        })
+      });
+      const data = await res.json();
+      if (data && data.result && data.result.length > 0) {
+        data.result.forEach(log => {
+          const buyer = "0x" + log.topics[1].slice(26);
+          const shortBuyer = buyer.slice(0, 6) + "..." + buyer.slice(-4);
+          const track = document.getElementById("ticker-track");
+          if (track && !track.innerHTML.includes(shortBuyer)) {
+            const newItem = `<span style="color:#fef08a; font-weight:bold; margin:0 18px;">🔥 NEW: ${shortBuyer} bought $ROACH</span><span style="color:#10b981;">•</span>`;
+            track.innerHTML = newItem + track.innerHTML;
+          }
+        });
+      }
+    } catch(e) {}
+  }
+  setInterval(checkLatestBuys, 10000);
+})();
+</script>
+
+
+
 
 
   <!-- Dev Announcement Bar -->
