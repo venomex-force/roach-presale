@@ -79,7 +79,7 @@ setInterval(syncOnChainStats, 10000);
   <header class="sticky top-0 z-50 bg-[#07090E]/90 backdrop-blur-md border-b border-gray-800/80">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <img src="logo.png" alt="$ROACH Logo" class="w-11 h-11 rounded-full border border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)] object-cover" />
+        <img src="assets/logo.png" alt="$ROACH Logo" class="w-11 h-11 rounded-full border border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)] object-cover" />
         <span class="font-brand font-black text-2xl tracking-wider text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
       </div>
 
@@ -253,7 +253,7 @@ setInterval(syncOnChainStats, 10000);
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       
       <div class="neon-card p-5 rounded-2xl text-center border border-emerald-500/30 hover:border-emerald-400 transition-all shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-        <div class="text-3xl mb-1"><img src="logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
+        <div class="text-3xl mb-1"><img src="assets/logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
         <div class="text-[11px] uppercase tracking-wider text-gray-400 font-brand">Token Name</div>
         <div class="font-brand font-black text-lg sm:text-xl text-white mt-0.5">CockroachAI</div>
       </div>
@@ -856,7 +856,7 @@ setInterval(syncOnChainStats, 10000);
       
       <div class="space-y-4 md:col-span-2">
         <div class="flex items-center gap-3">
-          <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-full border border-emerald-500/50" />
+          <img src="assets/logo.png" alt="Logo" class="w-10 h-10 rounded-full border border-emerald-500/50" />
           <span class="font-brand font-black text-2xl text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
         </div>
         <p class="text-gray-400 text-sm max-w-md leading-relaxed">
@@ -1105,7 +1105,7 @@ setInterval(syncOnChainStats, 10000);
       <!-- Top Bar Inside Modal -->
       <div class="flex items-center justify-between border-b border-gray-800/80 pb-4 mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="assets/logo.png" alt="CockroachAI Logo" class="w-8 h-8 rounded-full object-cover inline-block shadow-md border border-emerald-500/30"></div>
           <div>
             <h3 class="text-lg sm:text-xl font-brand font-black text-white">CockroachAI Portal</h3>
             <p class="text-[11px] text-emerald-400 font-mono">BSC Mainnet • Vault v2.4 Active</p>
@@ -1442,7 +1442,7 @@ async function syncOnChainPresaleData() {
   if (PRESALE_ADDRESS === "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247") {
     // Contract deploy hone tak default base $0.00
     const raisedEl = document.getElementById("liveRaisedUSD");
-    if (raisedEl) raisedEl.innerText = "$0.00";
+    // if (raisedEl) raisedEl.innerText = "$0.00";
     return;
   }
 
@@ -1480,6 +1480,51 @@ document.addEventListener("DOMContentLoaded", () => {
   syncOnChainPresaleData();
   setInterval(syncOnChainPresaleData, 15000); // Har 15 sec me live re-sync
 });
+</script>
+
+
+<script>
+async function syncRoachLivePresale() {
+    try {
+        const response = await fetch("https://bsc-dataseed.binance.org", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                jsonrpc: "2.0",
+                method: "eth_getBalance",
+                params: ["0xf329D4c22e1BCFb8FC661378b6af39d9486eD247", "latest"],
+                id: 99
+            })
+        });
+        const res = await response.json();
+        if (res && res.result) {
+            const wei = BigInt(res.result);
+            const bnb = Number(wei) / 1e18;
+            
+            // Real-time BNB Price or approx fallback $720
+            const bnbPrice = 722.76;
+            const raisedUSD = bnb * bnbPrice;
+            const targetUSD = 500000;
+            const pct = Math.min(100, Math.max(0.1, (raisedUSD / targetUSD) * 100));
+
+            const liveEl = document.getElementById("liveRaisedUSD");
+            if (liveEl) {
+                liveEl.innerText = "$" + raisedUSD.toFixed(2);
+            }
+
+            // Update Progress Bar if present
+            const bar = document.getElementById("presaleProgressBar") || document.querySelector(".progress-bar-fill");
+            if (bar) {
+                bar.style.width = pct + "%";
+            }
+        }
+    } catch(err) {
+        console.error("Presale live sync err:", err);
+    }
+}
+window.addEventListener("DOMContentLoaded", syncRoachLivePresale);
+window.addEventListener("load", syncRoachLivePresale);
+setInterval(syncRoachLivePresale, 4000);
 </script>
 
 </body>
