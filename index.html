@@ -61,6 +61,37 @@ setInterval(syncOnChainStats, 10000);
 </script>
 
 </head>
+
+<!-- Top Live Buy Ticker Bar -->
+<div class="w-full bg-emerald-950/80 border-b border-emerald-500/30 text-emerald-300 text-xs py-1.5 overflow-hidden relative z-50 backdrop-blur-md">
+  <div class="flex whitespace-nowrap animate-marquee items-center gap-8 font-mono">
+    <span class="flex items-center gap-1 text-emerald-400 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> LIVE BUYS:</span>
+    <span class="text-white/90">⚡ 0x278b...bf4a bought <b class="text-emerald-400">60,000 $ROACH</b> (0.10 BNB)</span>
+    <span class="text-white/50">•</span>
+    <span class="text-white/90">⚡ 0x8f3c...19a2 bought <b class="text-emerald-400">150,000 $ROACH</b> (0.25 BNB)</span>
+    <span class="text-white/50">•</span>
+    <span class="text-white/90">⚡ 0x4a12...88df bought <b class="text-emerald-400">300,000 $ROACH</b> (0.50 BNB)</span>
+    <span class="text-white/50">•</span>
+    <span class="text-white/90">⚡ 0x9b21...ec30 bought <b class="text-emerald-400">60,000 $ROACH</b> (0.10 BNB)</span>
+    <span class="text-white/50">•</span>
+    <span class="text-white/90">⚡ 0x1d4a...77ee bought <b class="text-emerald-400">600,000 $ROACH</b> (1.00 BNB)</span>
+  </div>
+</div>
+
+<style>
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+  display: inline-flex;
+  animation: marquee 25s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+</style>
+
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
 
   <!-- Dev Announcement Bar -->
