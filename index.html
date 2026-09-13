@@ -1243,7 +1243,7 @@ setInterval(updateTimer, 1000);
 updateTimer();
 
 
-    let activeBonusMultiplier = 0; // 0 = standard, 0.05 = 5% extra
+    let activeBonusMultiplier = 0; // Locked for Stage 1
 
     function toggleBonusBox() {
       const container = document.getElementById("bonusCodeContainer");
@@ -1257,16 +1257,14 @@ updateTimer();
       const status = document.getElementById("bonusCodeStatus");
       if (!input || !status) return;
 
-      const code = input.value.trim().toUpperCase();
-      if (code === "ROACH5" || code === "AIRDROP" || code === "PRESALE") {
-        activeBonusMultiplier = 0.05;
-        status.innerHTML = '<span class="text-emerald-400 font-bold">✓ Code applied: +5% EXTRA $ROACH Tokens added!</span>';
-        recalc();
-      } else if (code === "") {
-        status.innerHTML = '<span class="text-red-400">Please enter a promo code.</span>';
-      } else {
-        status.innerHTML = '<span class="text-red-400">Invalid or expired code. Try "ROACH5".</span>';
+      const code = input.value.trim();
+      if (!code) {
+        status.innerHTML = '<span class="text-gray-400">Promo codes unlock in Stage 2.</span>';
+        return;
       }
+
+      // Friendly notification that bonus codes start in Stage 2
+      status.innerHTML = '<span class="text-yellow-400 font-medium">⚡ Promo codes will activate in Stage 2. Current Stage 1 offers the lowest ground-floor price!</span>';
     }
 
     function recalc() {
