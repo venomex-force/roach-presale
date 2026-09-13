@@ -1134,26 +1134,56 @@
 
 
 
+
+
+
 <script>
 const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
 let currentAccount = null;
 let currentCurrency = 'BNB';
 
-const RATE_BNB = 600000;  // 1 BNB = 600,000 $ROACH
-const RATE_USDT = 1000;   // 1 USDT = 1,000 $ROACH
+const RATE_BNB = 600000;
+const RATE_USDT = 1000;
 
-// Live recalculation on amount change
+// 1. LIVE COUNTDOWN TIMER (Presale Stage Jump)
+// Target: 3 Days from today
+const targetDate = new Date().getTime() + (3 * 24 * 60 * 60 * 1000) + (4 * 3600 * 1000);
+
+function updateTimer() {
+  const now = new Date().getTime();
+  const diff = targetDate - now;
+
+  if (diff <= 0) {
+    const el = document.getElementById("countdown");
+    if (el) el.innerText = "00D : 00H : 00M : 00S";
+    return;
+  }
+
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const el = document.getElementById("countdown");
+  if (el) {
+    el.innerText = `${pad(d)}D : ${pad(h)}H : ${pad(m)}M : ${pad(s)}S`;
+  }
+}
+setInterval(updateTimer, 1000);
+
+// 2. LIVE RECALCULATION
 function recalc() {
   const payInput = document.getElementById('payInput');
   const receiveInput = document.getElementById('receiveInput');
   if (!payInput || !receiveInput) return;
-  
+
   const val = parseFloat(payInput.value) || 0;
   const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
   receiveInput.value = Math.floor(val * rate).toLocaleString();
 }
 
-// Switch BNB / USDT tab
+// 3. CURRENCY TAB SWITCH
 function setCurrency(curr) {
   currentCurrency = curr;
   const btnBnb = document.getElementById('btnPayBnb');
@@ -1183,15 +1213,15 @@ function setCurrency(curr) {
   recalc();
 }
 
-// Connect Wallet handler
+// 4. WALLET CONNECTION
 async function connectWallet() {
   if (typeof window.ethereum === 'undefined') {
-    alert("MetaMask ya Web3 wallet detect nahi hua! DApp browser ya extension me kholein.");
+    alert("MetaMask ya Web3 wallet detect nahi hua! DApp browser me kholein.");
     return;
   }
   try {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    if (accounts.length > 0) {
+    if (accounts && accounts.length > 0) {
       currentAccount = accounts[0];
       const short = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
       
@@ -1201,13 +1231,13 @@ async function connectWallet() {
         navBtn.style.background = "#059669";
         navBtn.style.color = "#ffffff";
       }
-      
+
       const refBox = document.getElementById('refBox');
       if (refBox) {
         refBox.value = window.location.origin + window.location.pathname + '?ref=' + currentAccount;
       }
 
-      // Auto switch to BSC Mainnet (0x38)
+      // Auto switch BSC (56 / 0x38)
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
@@ -1233,19 +1263,7 @@ async function connectWallet() {
   }
 }
 
-// Copy referral link
-function copyRefLink() {
-  const refBox = document.getElementById('refBox');
-  if (!refBox || refBox.value.includes('Connect wallet')) {
-    alert("Pehle wallet connect karein referral link generate karne ke liye!");
-    return;
-  }
-  navigator.clipboard.writeText(refBox.value).then(() => {
-    alert("Referral link copied!");
-  });
-}
-
-// Direct Buy execution
+// 5. BUY EXECUTION
 async function triggerPurchase() {
   if (!currentAccount) {
     await connectWallet();
@@ -1255,7 +1273,7 @@ async function triggerPurchase() {
   const payInput = document.getElementById('payInput');
   const amt = payInput ? parseFloat(payInput.value) : 0;
   if (!amt || amt <= 0) {
-    alert("Kripya valid purchase amount enter karein.");
+    alert("Valid purchase amount enter karein.");
     return;
   }
 
@@ -1268,20 +1286,31 @@ async function triggerPurchase() {
           from: currentAccount,
           to: PRESALE_CONTRACT,
           value: weiHex,
-          gas: "0x249F0" // 150k gas safe limit
+          gas: "0x249F0"
         }]
       });
-      alert("Order broadcast ho gaya! Contract se $ROACH tokens aapke wallet me bhej diye jayenge.");
+      alert("Order broadcast ho gaya! Contract dwara $ROACH tokens aapke wallet me send ho jayenge.");
     } catch (err) {
       alert("Transaction reject ya fail hui: " + (err.message || err));
     }
   } else {
-    alert("USDT route contract approval maangta hai. Recommended: Direct BNB se purchase karein.");
+    alert("USDT route requires token approval. Kripya BNB option se purchase karein.");
   }
 }
 
-// Initial triggers
+function copyRefLink() {
+  const refBox = document.getElementById('refBox');
+  if (!refBox || refBox.value.includes('Connect wallet')) {
+    alert("Pehle wallet connect karein!");
+    return;
+  }
+  navigator.clipboard.writeText(refBox.value).then(() => {
+    alert("Referral link copied!");
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+  updateTimer();
   recalc();
 });
 </script>
