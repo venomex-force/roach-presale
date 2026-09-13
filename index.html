@@ -1242,13 +1242,43 @@ function updateTimer() {
 setInterval(updateTimer, 1000);
 updateTimer();
 
-function recalc() {
+
+    let activeBonusMultiplier = 0; // 0 = standard, 0.05 = 5% extra
+
+    function toggleBonusBox() {
+      const container = document.getElementById("bonusCodeContainer");
+      if (container) {
+        container.classList.toggle("hidden");
+      }
+    }
+
+    function applyBonusCode() {
+      const input = document.getElementById("bonusCodeInput");
+      const status = document.getElementById("bonusCodeStatus");
+      if (!input || !status) return;
+
+      const code = input.value.trim().toUpperCase();
+      if (code === "ROACH5" || code === "AIRDROP" || code === "PRESALE") {
+        activeBonusMultiplier = 0.05;
+        status.innerHTML = '<span class="text-emerald-400 font-bold">✓ Code applied: +5% EXTRA $ROACH Tokens added!</span>';
+        recalc();
+      } else if (code === "") {
+        status.innerHTML = '<span class="text-red-400">Please enter a promo code.</span>';
+      } else {
+        status.innerHTML = '<span class="text-red-400">Invalid or expired code. Try "ROACH5".</span>';
+      }
+    }
+
+    function recalc() {
+      // recalc with bonus
   const payInput = document.getElementById('payInput');
   const receiveInput = document.getElementById('receiveInput');
   if (!payInput || !receiveInput) return;
   const val = parseFloat(payInput.value) || 0;
   const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
-  receiveInput.value = Math.floor(val * rate).toLocaleString();
+  const base = val * rate;
+      const totalWithBonus = base + (base * activeBonusMultiplier);
+      receiveInput.value = Math.floor(totalWithBonus).toLocaleString();
 }
 
 function setCurrency(curr) {
@@ -1391,7 +1421,7 @@ async function triggerPurchase() {
     return;
   }
   navigator.clipboard.writeText(refBox.value).then(() => {
-    alert("Referral link copied!");
+    const copyText = document.getElementById("copyRefText"); if(copyText){ copyText.innerText = "Copied!"; setTimeout(() => { copyText.innerText = "Copy Link"; }, 2000); }
   });
 }
 
