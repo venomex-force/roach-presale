@@ -256,7 +256,7 @@
             Official Smart Contract Address (BSC Mainnet)
           </div>
           <div class="bg-black border border-gray-700 rounded-xl px-4 py-3 font-mono text-gray-300 text-sm sm:text-base break-all selection:bg-emerald-500 selection:text-black">
-            <span id="caText">0x0000000000000000000000000000000000000000</span>
+            <span id="caText">0xf329D4c22e1BCFb8FC661378b6af39d9486eD247</span>
           </div>
         </div>
       </div>
@@ -1398,10 +1398,10 @@
 
 <script>
 async function syncOnChainPresaleData() {
-  const PRESALE_ADDRESS = window.PRESALE_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000";
-  const RPC_URL = "https://bsc-testnet-rpc.publicnode.com";
+  const PRESALE_ADDRESS = window.PRESALE_CONTRACT_ADDRESS || "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+  const RPC_URL = "https://bsc-dataseed.binance.org";
 
-  if (PRESALE_ADDRESS === "0x0000000000000000000000000000000000000000") {
+  if (PRESALE_ADDRESS === "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247") {
     // Contract deploy hone tak default base $0.00
     const raisedEl = document.getElementById("liveRaisedUSD");
     if (raisedEl) raisedEl.innerText = "$0.00";
