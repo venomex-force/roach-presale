@@ -46,93 +46,7 @@
 @keyframes scrollTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 </style>
 
-<script>
-const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
-let currentAccount = null;
 
-async function handleConnect() {
-  if (typeof window.ethereum === 'undefined') {
-    alert("Web3 Wallet not detected! Please open this site inside MetaMask/Trust Wallet browser or install MetaMask extension.");
-    return;
-  }
-  try {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    if (accounts.length > 0) {
-      currentAccount = accounts[0];
-      const short = currentAccount.slice(0, 6) + "..." + currentAccount.slice(-4);
-      
-      // Update all Connect buttons text
-      document.querySelectorAll("button, a").forEach(b => {
-        if ((b.innerText || "").toUpperCase().includes("CONNECT")) {
-          b.innerText = short;
-          b.style.background = "#059669";
-        }
-      });
-
-      // Ensure BSC Chain (56 / 0x38)
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x38' }]
-        });
-      } catch (err) {
-        if (err.code === 4902) {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: '0x38',
-              chainName: 'BNB Smart Chain',
-              nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-              rpcUrls: ['https://bsc-dataseed.binance.org/'],
-              blockExplorerUrls: ['https://bscscan.com/']
-            }]
-          });
-        }
-      }
-    }
-  } catch (e) {
-    console.error("Connect rejected", e);
-  }
-}
-
-async function handleBuy() {
-  if (!currentAccount) {
-    await handleConnect();
-    if (!currentAccount) return;
-  }
-
-  const inputEl = document.querySelector('input[type="number"]') || document.querySelector('input[placeholder*="0"]');
-  const bnb = inputEl && parseFloat(inputEl.value) > 0 ? parseFloat(inputEl.value) : 0.05;
-
-  try {
-    const weiVal = "0x" + BigInt(Math.round(bnb * 1e18)).toString(16);
-    await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [{
-        from: currentAccount,
-        to: PRESALE_CONTRACT,
-        value: weiVal,
-        gas: "0x249F0"
-      }]
-    });
-    alert("Transaction submitted successfully! Tokens will be delivered to your wallet.");
-  } catch (err) {
-    alert("Transaction rejected or failed: " + (err.message || err));
-  }
-}
-
-// Bind events directly to elements after page loads
-window.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("button, a").forEach(btn => {
-    const t = (btn.innerText || "").toUpperCase();
-    if (t.includes("CONNECT")) {
-      btn.onclick = (e) => { e.preventDefault(); handleConnect(); };
-    } else if (t.includes("BUY $ROACH") || t.includes("BUY NOW")) {
-      btn.onclick = (e) => { e.preventDefault(); handleBuy(); };
-    }
-  });
-});
-</script>
 
 
 
@@ -1223,6 +1137,175 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+
+<script>
+const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955"; // BSC Mainnet USDT
+let currentAccount = null;
+let selectedCurrency = "BNB";
+
+// 1 BNB = 600,000 ROACH (Testing rate)
+const RATE_BNB = 600000;
+const RATE_USDT = 1000; // 1 USDT = 1000 ROACH
+
+async function handleConnect() {
+  if (typeof window.ethereum === 'undefined') {
+    alert("Web3 Wallet nahi mila! MetaMask ya Trust Wallet use karein.");
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    if (accounts && accounts.length > 0) {
+      currentAccount = accounts[0];
+      const short = currentAccount.slice(0, 6) + "..." + currentAccount.slice(-4);
+      
+      document.querySelectorAll("button, a").forEach(b => {
+        if ((b.innerText || "").toUpperCase().includes("CONNECT") || (b.innerText || "").includes("0x")) {
+          b.innerText = short;
+          b.style.background = "#059669";
+          b.style.color = "#ffffff";
+        }
+      });
+
+      // Ensure BSC Mainnet
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+      if (chainId !== '0x38') {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x38' }]
+          });
+        } catch (e) {
+          if (e.code === 4902) {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: '0x38',
+                chainName: 'BNB Smart Chain',
+                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                blockExplorerUrls: ['https://bscscan.com/']
+              }]
+            });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Connect cancelled", err);
+  }
+}
+
+// Currency Tab Selection
+function selectCurrency(curr) {
+  selectedCurrency = curr;
+  const bnbBtn = document.getElementById("payBnbBtn");
+  const usdtBtn = document.getElementById("payUsdtBtn");
+  const currLabel = document.getElementById("currLabel");
+  
+  if (curr === "BNB") {
+    if (bnbBtn) { bnbBtn.style.border = "2px solid #10b981"; bnbBtn.style.background = "rgba(16,185,129,0.15)"; }
+    if (usdtBtn) { usdtBtn.style.border = "1px solid #374151"; usdtBtn.style.background = "transparent"; }
+    if (currLabel) currLabel.innerText = "BNB";
+  } else {
+    if (usdtBtn) { usdtBtn.style.border = "2px solid #10b981"; usdtBtn.style.background = "rgba(16,185,129,0.15)"; }
+    if (bnbBtn) { bnbBtn.style.border = "1px solid #374151"; bnbBtn.style.background = "transparent"; }
+    if (currLabel) currLabel.innerText = "USDT";
+  }
+  calculateTokens();
+}
+
+// Real-time Token Calculation
+function calculateTokens() {
+  const input = document.getElementById("payAmountInput");
+  const receiveEl = document.getElementById("roachReceiveDisplay");
+  const amount = input ? parseFloat(input.value) || 0 : 0;
+
+  let tokens = 0;
+  if (selectedCurrency === "BNB") {
+    tokens = amount * RATE_BNB;
+  } else {
+    tokens = amount * RATE_USDT;
+  }
+
+  if (receiveEl) {
+    receiveEl.innerText = tokens.toLocaleString();
+  }
+}
+
+// Main Buy Execution
+async function handleBuy() {
+  if (!currentAccount) {
+    await handleConnect();
+    if (!currentAccount) return;
+  }
+
+  const input = document.getElementById("payAmountInput");
+  const amount = input ? parseFloat(input.value) : 0;
+  if (!amount || amount <= 0) {
+    alert("Please enter a valid amount to purchase.");
+    return;
+  }
+
+  if (selectedCurrency === "BNB") {
+    try {
+      const weiVal = "0x" + BigInt(Math.floor(amount * 1e18)).toString(16);
+      await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [{
+          from: currentAccount,
+          to: PRESALE_CONTRACT,
+          value: weiVal,
+          gas: "0x249F0" // 150k gas safe limit
+        }]
+      });
+      alert("Purchase transaction broadcasted! Tokens will land in your wallet once confirmed.");
+    } catch (err) {
+      console.error(err);
+      alert("Transaction failed or rejected: " + (err.message || err));
+    }
+  } else {
+    alert("USDT Presale route requires approval. Switching to direct BNB transaction is recommended.");
+  }
+}
+
+// Hook tab buttons and input listeners on load
+window.addEventListener("DOMContentLoaded", () => {
+  // Bind tabs
+  document.querySelectorAll("button, div").forEach(el => {
+    const txt = (el.innerText || "").toUpperCase();
+    if (txt.includes("PAY WITH BNB") || txt === "BNB") {
+      el.id = "payBnbBtn";
+      el.onclick = (e) => { e.preventDefault(); selectCurrency("BNB"); };
+      el.style.cursor = "pointer";
+    } else if (txt.includes("PAY WITH USDT") || txt === "USDT") {
+      el.id = "payUsdtBtn";
+      el.onclick = (e) => { e.preventDefault(); selectCurrency("USDT"); };
+      el.style.cursor = "pointer";
+    }
+  });
+
+  // Bind input
+  const inputEl = document.querySelector('input[type="number"]') || document.querySelector('input[placeholder*="0"]');
+  if (inputEl) {
+    inputEl.id = "payAmountInput";
+    inputEl.addEventListener("input", calculateTokens);
+  }
+
+  // Bind Buy button
+  document.querySelectorAll("button").forEach(b => {
+    const txt = (b.innerText || "").toUpperCase();
+    if (txt.includes("BUY $ROACH") || txt.includes("BUY NOW")) {
+      b.onclick = (e) => { e.preventDefault(); handleBuy(); };
+      b.style.cursor = "pointer";
+    }
+  });
+
+  // Default selection
+  selectCurrency("BNB");
+});
+</script>
 
 </body>
 </html>
