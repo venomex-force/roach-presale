@@ -1679,5 +1679,103 @@ window.addEventListener("load", syncRoachLivePresale);
 setInterval(syncRoachLivePresale, 4000);
 </script>
 
+
+<script>
+// Global Web3 Handler
+let connectedUser = null;
+const PRESALE_ADDRESS = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+
+async function doConnectWallet() {
+  if (typeof window.ethereum === 'undefined') {
+    alert("Web3 Wallet nahi mila! Agar mobile me hain to MetaMask ya Trust Wallet app ke DApp Browser me cockroachai.co kholein. PC me MetaMask extension install karein.");
+    return;
+  }
+
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    if (accounts.length > 0) {
+      connectedUser = accounts[0];
+      const shortAddr = connectedUser.substring(0, 6) + "..." + connectedUser.substring(connectedUser.length - 4);
+
+      // Page ke sabhi Connect buttons ka text wallet address me badal do
+      document.querySelectorAll("button, a").forEach(el => {
+        if (el.innerText && el.innerText.toUpperCase().includes("CONNECT")) {
+          el.innerText = shortAddr;
+          el.style.background = "#059669";
+          el.style.color = "#ffffff";
+        }
+      });
+
+      // Chain ID check (BSC = 56 ya hex 0x38)
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x38' }]
+        });
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: '0x38',
+              chainName: 'BNB Smart Chain',
+              nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+              rpcUrls: ['https://bsc-dataseed.binance.org/'],
+              blockExplorerUrls: ['https://bscscan.com/']
+            }]
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.error("User rejected:", err);
+  }
+}
+
+async function doBuyTokens() {
+  if (!connectedUser) {
+    await doConnectWallet();
+    if (!connectedUser) return;
+  }
+
+  // Find BNB Input
+  let bnbInput = document.querySelector('input[type="number"]') || document.querySelector('input[placeholder*="0"]');
+  let amount = bnbInput ? parseFloat(bnbInput.value) : 0.05;
+  if (!amount || amount <= 0) amount = 0.05;
+
+  try {
+    const weiAmount = "0x" + BigInt(Math.floor(amount * 1e18)).toString(16);
+    await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [{
+        from: connectedUser,
+        to: PRESALE_ADDRESS,
+        value: weiAmount,
+        gas: "0x30D40"
+      }]
+    });
+    alert("Buy Order Successful! Tokens contract dwara aapke wallet me bhej diye gaye.");
+  } catch (err) {
+    alert("Transaction cancel ya fail hui: " + (err.message || err));
+  }
+}
+
+// Global Event Listener - Page load hote hi har button par hook laga dega
+window.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("button, a").forEach(btn => {
+    const txt = (btn.innerText || "").toUpperCase();
+    if (txt.includes("CONNECT WALLET") || txt === "CONNECT") {
+      btn.onclick = (e) => { e.preventDefault(); doConnectWallet(); };
+      btn.removeAttribute("href");
+      btn.style.cursor = "pointer";
+    } else if (txt.includes("BUY $ROACH") || txt.includes("BUY NOW")) {
+      btn.onclick = (e) => { e.preventDefault(); doBuyTokens(); };
+      btn.removeAttribute("href");
+      btn.style.cursor = "pointer";
+    }
+  });
+});
+</script>
+
 </body>
 </html>
