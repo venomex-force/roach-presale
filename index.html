@@ -22,6 +22,44 @@
     .gold-pill { background: linear-gradient(90deg, rgba(234,179,8,0.15), rgba(16,185,129,0.15)); border: 1px solid rgba(234,179,8,0.3); }
   </style>
   <style>html { scroll-behavior: smooth; }</style>
+<script>
+window.PRESALE_CONTRACT_ADDRESS = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+window.TOKEN_CONTRACT_ADDRESS = "0x70008f3f24f17Ed6981136B248399dfcEF982078";
+window.BSC_RPC = "https://bsc-dataseed.binance.org";
+
+async function syncOnChainStats() {
+    try {
+        // Direct RPC call for Presale BNB balance
+        const res = await fetch(window.BSC_RPC, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                jsonrpc: "2.0",
+                method: "eth_getBalance",
+                params: [window.PRESALE_CONTRACT_ADDRESS, "latest"],
+                id: 1
+            })
+        });
+        const data = await res.json();
+        if (data && data.result) {
+            const wei = BigInt(data.result);
+            const bnb = Number(wei) / 1e18;
+            const bnbPriceUSD = 720; // current approx BNB price
+            const raisedUSD = bnb * bnbPriceUSD;
+            
+            const raisedEl = document.getElementById("raised-amount") || document.querySelector(".raised-val");
+            if (raisedEl) {
+                raisedEl.innerText = "$" + raisedUSD.toFixed(2);
+            }
+        }
+    } catch(e) {
+        console.warn("RPC sync failed:", e);
+    }
+}
+window.addEventListener("DOMContentLoaded", syncOnChainStats);
+setInterval(syncOnChainStats, 10000);
+</script>
+
 </head>
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
 
