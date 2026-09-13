@@ -71,7 +71,7 @@
   <header class="sticky top-0 z-50 bg-[#07090E]/90 backdrop-blur-md border-b border-gray-800/80">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <img src="assets/logo.png?v=999" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
+        <img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
         <span class="font-brand font-black text-2xl tracking-wider text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
       </div>
 
@@ -188,15 +188,7 @@
 
       <!-- Calculator Inputs -->
       <div class="space-y-4">
-      <details class="p-5 rounded-2xl bg-black/60 border border-gray-800 transition">
-        <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center">
-          <span>Do I get $ROACH in my wallet immediately after buying?</span>
-          <span class="text-emerald-400">▼</span>
-        </summary>
-        <p class="mt-3 text-xs sm:text-sm text-gray-400 leading-relaxed">
-          Yes! Purchased $ROACH tokens are transferred directly to your connected Web3 wallet. To prevent early market dumping and sniper bot manipulation before PancakeSwap listing, peer-to-peer transfers remain locked until official launch. However, your tokens can be deposited directly into 3M, 6M, or 12M Staking Vaults to compound up to 148% APY.
-        </p>
-      </details>
+
 
         <div>
           <div class="flex justify-between text-xs text-gray-400 mb-1">
@@ -245,7 +237,7 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       
       <div class="neon-card p-5 rounded-2xl text-center border border-emerald-500/30 hover:border-emerald-400 transition-all shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-        <div class="text-3xl mb-1"><img src="assets/logo.png?v=999" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
+        <div class="text-3xl mb-1"><img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
         <div class="text-[11px] uppercase tracking-wider text-gray-400 font-brand">Token Name</div>
         <div class="font-brand font-black text-lg sm:text-xl text-white mt-0.5">CockroachAI</div>
       </div>
@@ -848,7 +840,7 @@
       
       <div class="space-y-4 md:col-span-2">
         <div class="flex items-center gap-3">
-          <img src="assets/logo.png?v=999" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
+          <img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
           <span class="font-brand font-black text-2xl text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
         </div>
         <p class="text-gray-400 text-sm max-w-md leading-relaxed">
@@ -994,7 +986,7 @@
       <!-- Top Bar Inside Modal -->
       <div class="flex items-center justify-between border-b border-gray-800/80 pb-4 mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="assets/logo.png?v=999" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
           <div>
             <h3 class="text-lg sm:text-xl font-brand font-black text-white">CockroachAI Portal</h3>
             <p class="text-[11px] text-emerald-400 font-mono">BSC Mainnet • Vault v2.4 Active</p>
@@ -1139,171 +1131,158 @@
 
 
 
+
+
+
 <script>
 const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
-const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955"; // BSC Mainnet USDT
 let currentAccount = null;
-let selectedCurrency = "BNB";
+let currentCurrency = 'BNB';
 
-// 1 BNB = 600,000 ROACH (Testing rate)
-const RATE_BNB = 600000;
-const RATE_USDT = 1000; // 1 USDT = 1000 ROACH
+const RATE_BNB = 600000;  // 1 BNB = 600,000 $ROACH
+const RATE_USDT = 1000;   // 1 USDT = 1,000 $ROACH
 
-async function handleConnect() {
+// Live recalculation on amount change
+function recalc() {
+  const payInput = document.getElementById('payInput');
+  const receiveInput = document.getElementById('receiveInput');
+  if (!payInput || !receiveInput) return;
+  
+  const val = parseFloat(payInput.value) || 0;
+  const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
+  receiveInput.value = Math.floor(val * rate).toLocaleString();
+}
+
+// Switch BNB / USDT tab
+function setCurrency(curr) {
+  currentCurrency = curr;
+  const btnBnb = document.getElementById('btnPayBnb');
+  const btnUsdt = document.getElementById('btnPayUsdt');
+  const badge = document.getElementById('currencyBadge');
+  const payInput = document.getElementById('payInput');
+
+  if (curr === 'BNB') {
+    if (btnBnb) {
+      btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
+    }
+    if (btnUsdt) {
+      btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
+    }
+    if (badge) badge.innerText = "BNB";
+    if (payInput && payInput.value === "50") payInput.value = "0.5";
+  } else {
+    if (btnUsdt) {
+      btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
+    }
+    if (btnBnb) {
+      btnBnb.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
+    }
+    if (badge) badge.innerText = "USDT";
+    if (payInput && payInput.value === "0.5") payInput.value = "50";
+  }
+  recalc();
+}
+
+// Connect Wallet handler
+async function connectWallet() {
   if (typeof window.ethereum === 'undefined') {
-    alert("Web3 Wallet nahi mila! MetaMask ya Trust Wallet use karein.");
+    alert("MetaMask ya Web3 wallet detect nahi hua! DApp browser ya extension me kholein.");
     return;
   }
   try {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    if (accounts && accounts.length > 0) {
+    if (accounts.length > 0) {
       currentAccount = accounts[0];
-      const short = currentAccount.slice(0, 6) + "..." + currentAccount.slice(-4);
+      const short = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
       
-      document.querySelectorAll("button, a").forEach(b => {
-        if ((b.innerText || "").toUpperCase().includes("CONNECT") || (b.innerText || "").includes("0x")) {
-          b.innerText = short;
-          b.style.background = "#059669";
-          b.style.color = "#ffffff";
-        }
-      });
+      const navBtn = document.getElementById('navConnectBtn');
+      if (navBtn) {
+        navBtn.innerText = short;
+        navBtn.style.background = "#059669";
+        navBtn.style.color = "#ffffff";
+      }
+      
+      const refBox = document.getElementById('refBox');
+      if (refBox) {
+        refBox.value = window.location.origin + window.location.pathname + '?ref=' + currentAccount;
+      }
 
-      // Ensure BSC Mainnet
-      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-      if (chainId !== '0x38') {
-        try {
+      // Auto switch to BSC Mainnet (0x38)
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x38' }]
+        });
+      } catch (err) {
+        if (err.code === 4902) {
           await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x38' }]
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: '0x38',
+              chainName: 'BNB Smart Chain',
+              nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+              rpcUrls: ['https://bsc-dataseed.binance.org/'],
+              blockExplorerUrls: ['https://bscscan.com/']
+            }]
           });
-        } catch (e) {
-          if (e.code === 4902) {
-            await window.ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0x38',
-                chainName: 'BNB Smart Chain',
-                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                blockExplorerUrls: ['https://bscscan.com/']
-              }]
-            });
-          }
         }
       }
     }
-  } catch (err) {
-    console.error("Connect cancelled", err);
+  } catch (e) {
+    console.error("Connect cancelled:", e);
   }
 }
 
-// Currency Tab Selection
-function selectCurrency(curr) {
-  selectedCurrency = curr;
-  const bnbBtn = document.getElementById("payBnbBtn");
-  const usdtBtn = document.getElementById("payUsdtBtn");
-  const currLabel = document.getElementById("currLabel");
-  
-  if (curr === "BNB") {
-    if (bnbBtn) { bnbBtn.style.border = "2px solid #10b981"; bnbBtn.style.background = "rgba(16,185,129,0.15)"; }
-    if (usdtBtn) { usdtBtn.style.border = "1px solid #374151"; usdtBtn.style.background = "transparent"; }
-    if (currLabel) currLabel.innerText = "BNB";
-  } else {
-    if (usdtBtn) { usdtBtn.style.border = "2px solid #10b981"; usdtBtn.style.background = "rgba(16,185,129,0.15)"; }
-    if (bnbBtn) { bnbBtn.style.border = "1px solid #374151"; bnbBtn.style.background = "transparent"; }
-    if (currLabel) currLabel.innerText = "USDT";
+// Copy referral link
+function copyRefLink() {
+  const refBox = document.getElementById('refBox');
+  if (!refBox || refBox.value.includes('Connect wallet')) {
+    alert("Pehle wallet connect karein referral link generate karne ke liye!");
+    return;
   }
-  calculateTokens();
+  navigator.clipboard.writeText(refBox.value).then(() => {
+    alert("Referral link copied!");
+  });
 }
 
-// Real-time Token Calculation
-function calculateTokens() {
-  const input = document.getElementById("payAmountInput");
-  const receiveEl = document.getElementById("roachReceiveDisplay");
-  const amount = input ? parseFloat(input.value) || 0 : 0;
-
-  let tokens = 0;
-  if (selectedCurrency === "BNB") {
-    tokens = amount * RATE_BNB;
-  } else {
-    tokens = amount * RATE_USDT;
-  }
-
-  if (receiveEl) {
-    receiveEl.innerText = tokens.toLocaleString();
-  }
-}
-
-// Main Buy Execution
-async function handleBuy() {
+// Direct Buy execution
+async function triggerPurchase() {
   if (!currentAccount) {
-    await handleConnect();
+    await connectWallet();
     if (!currentAccount) return;
   }
 
-  const input = document.getElementById("payAmountInput");
-  const amount = input ? parseFloat(input.value) : 0;
-  if (!amount || amount <= 0) {
-    alert("Please enter a valid amount to purchase.");
+  const payInput = document.getElementById('payInput');
+  const amt = payInput ? parseFloat(payInput.value) : 0;
+  if (!amt || amt <= 0) {
+    alert("Kripya valid purchase amount enter karein.");
     return;
   }
 
-  if (selectedCurrency === "BNB") {
+  if (currentCurrency === 'BNB') {
     try {
-      const weiVal = "0x" + BigInt(Math.floor(amount * 1e18)).toString(16);
+      const weiHex = "0x" + BigInt(Math.floor(amt * 1e18)).toString(16);
       await window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{
           from: currentAccount,
           to: PRESALE_CONTRACT,
-          value: weiVal,
+          value: weiHex,
           gas: "0x249F0" // 150k gas safe limit
         }]
       });
-      alert("Purchase transaction broadcasted! Tokens will land in your wallet once confirmed.");
+      alert("Order broadcast ho gaya! Contract se $ROACH tokens aapke wallet me bhej diye jayenge.");
     } catch (err) {
-      console.error(err);
-      alert("Transaction failed or rejected: " + (err.message || err));
+      alert("Transaction reject ya fail hui: " + (err.message || err));
     }
   } else {
-    alert("USDT Presale route requires approval. Switching to direct BNB transaction is recommended.");
+    alert("USDT route contract approval maangta hai. Recommended: Direct BNB se purchase karein.");
   }
 }
 
-// Hook tab buttons and input listeners on load
-window.addEventListener("DOMContentLoaded", () => {
-  // Bind tabs
-  document.querySelectorAll("button, div").forEach(el => {
-    const txt = (el.innerText || "").toUpperCase();
-    if (txt.includes("PAY WITH BNB") || txt === "BNB") {
-      el.id = "payBnbBtn";
-      el.onclick = (e) => { e.preventDefault(); selectCurrency("BNB"); };
-      el.style.cursor = "pointer";
-    } else if (txt.includes("PAY WITH USDT") || txt === "USDT") {
-      el.id = "payUsdtBtn";
-      el.onclick = (e) => { e.preventDefault(); selectCurrency("USDT"); };
-      el.style.cursor = "pointer";
-    }
-  });
-
-  // Bind input
-  const inputEl = document.querySelector('input[type="number"]') || document.querySelector('input[placeholder*="0"]');
-  if (inputEl) {
-    inputEl.id = "payAmountInput";
-    inputEl.addEventListener("input", calculateTokens);
-  }
-
-  // Bind Buy button
-  document.querySelectorAll("button").forEach(b => {
-    const txt = (b.innerText || "").toUpperCase();
-    if (txt.includes("BUY $ROACH") || txt.includes("BUY NOW")) {
-      b.onclick = (e) => { e.preventDefault(); handleBuy(); };
-      b.style.cursor = "pointer";
-    }
-  });
-
-  // Default selection
-  selectCurrency("BNB");
+// Initial triggers
+window.addEventListener('DOMContentLoaded', () => {
+  recalc();
 });
 </script>
 
