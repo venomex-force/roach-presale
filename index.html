@@ -71,7 +71,7 @@
   <header class="sticky top-0 z-50 bg-[#07090E]/90 backdrop-blur-md border-b border-gray-800/80">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
+        <img src="/assets/logo.png?v=fixed2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
         <span class="font-brand font-black text-2xl tracking-wider text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
       </div>
 
@@ -143,9 +143,14 @@
     <!-- Right: Presale Engine (Pure BSC) -->
     <div class="lg:col-span-5 bg-gradient-to-b from-[#0F141C] to-[#080B10] border border-emerald-500/30 rounded-3xl p-6 sm:p-8 neon-border relative shadow-2xl">
       
-      <!-- Countdown Header (3 Days) -->
+      <!-- Official Launch Header -->
       <div class="text-center pb-5 border-b border-gray-800">
-        <span class="text-[11px] font-bold uppercase tracking-widest text-gray-400">Next Price Jump In:</span>
+        <div class="inline-block bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[11px] font-bold px-3 py-1 rounded-full mb-2">
+          🚀 LAUNCH: 14 SEP 2026 • 06:30 PM IST
+        </div>
+        <div>
+          <span id="timerLabel" class="text-[11px] font-bold uppercase tracking-widest text-gray-400">PRESALE OPENS IN:</span>
+        </div>
         <div id="countdown" class="font-brand text-2xl sm:text-3xl font-black text-emerald-400 tracking-widest mt-1">
           01D : 00H : 11M : 04S
         </div>
@@ -237,7 +242,7 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       
       <div class="neon-card p-5 rounded-2xl text-center border border-emerald-500/30 hover:border-emerald-400 transition-all shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-        <div class="text-3xl mb-1"><img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
+        <div class="text-3xl mb-1"><img src="/assets/logo.png?v=fixed2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
         <div class="text-[11px] uppercase tracking-wider text-gray-400 font-brand">Token Name</div>
         <div class="font-brand font-black text-lg sm:text-xl text-white mt-0.5">CockroachAI</div>
       </div>
@@ -840,7 +845,7 @@
       
       <div class="space-y-4 md:col-span-2">
         <div class="flex items-center gap-3">
-          <img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
+          <img src="/assets/logo.png?v=fixed2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30">
           <span class="font-brand font-black text-2xl text-white">COCKROACH<span class="text-emerald-400">AI</span></span>
         </div>
         <p class="text-gray-400 text-sm max-w-md leading-relaxed">
@@ -986,7 +991,7 @@
       <!-- Top Bar Inside Modal -->
       <div class="flex items-center justify-between border-b border-gray-800/80 pb-4 mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="assets/logo.png?v=2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl"><img src="/assets/logo.png?v=fixed2026" alt="CockroachAI Logo" class="w-8 h-8 rounded-full inline-block shadow-md border border-emerald-500/30"></div>
           <div>
             <h3 class="text-lg sm:text-xl font-brand font-black text-white">CockroachAI Portal</h3>
             <p class="text-[11px] text-emerald-400 font-mono">BSC Mainnet • Vault v2.4 Active</p>
@@ -1137,6 +1142,9 @@
 
 
 
+
+
+
 <script>
 const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
 let currentAccount = null;
@@ -1145,33 +1153,39 @@ let currentCurrency = 'BNB';
 const RATE_BNB = 600000;
 const RATE_USDT = 1000;
 
-// EXACT LAUNCH & RECURRING 3-DAY PRICE JUMP ENGINE
-// Launch Time: 14 September 2026, 06:30 PM IST (UTC+5:30)
+// EXACT LAUNCH: 14 Sep 2026, 18:30:00 IST
 const LAUNCH_TIMESTAMP = new Date("2026-09-14T18:30:00+05:30").getTime();
-const STAGE_INTERVAL = 3 * 24 * 60 * 60 * 1000; // 3 Days in milliseconds
+const STAGE_INTERVAL = 3 * 24 * 60 * 60 * 1000; // 3 Days recurring jump
 
 function updateTimer() {
   const now = new Date().getTime();
-  const labelEl = document.querySelector(".text-\[11px\].font-bold.uppercase") || document.getElementById("timerLabel");
+  const labelEl = document.getElementById("timerLabel");
   const el = document.getElementById("countdown");
-  if (!el) return;
+  const buyBtn = document.querySelector('button[onclick*="triggerPurchase"]');
 
   let target;
   if (now < LAUNCH_TIMESTAMP) {
-    // Stage: Waiting for official Presale Launch
     target = LAUNCH_TIMESTAMP;
-    if (labelEl) labelEl.innerText = "PRESALE LAUNCHES IN:";
+    if (labelEl) labelEl.innerText = "PRESALE OPENS IN:";
+    if (buyBtn && !buyBtn.disabled) {
+      buyBtn.innerText = "PRESALE OPENS 14 SEP (06:30 PM IST)";
+      buyBtn.classList.add("opacity-70", "cursor-not-allowed");
+    }
   } else {
-    // Stage: Presale Live, counting down to next 3-day price jump
-    const timeElapsed = now - LAUNCH_TIMESTAMP;
-    const currentCycle = Math.floor(timeElapsed / STAGE_INTERVAL);
-    target = LAUNCH_TIMESTAMP + ((currentCycle + 1) * STAGE_INTERVAL);
+    // Exact Launch reached: Enable buy and start 3-day recurring jump
+    const elapsed = now - LAUNCH_TIMESTAMP;
+    const cycle = Math.floor(elapsed / STAGE_INTERVAL);
+    target = LAUNCH_TIMESTAMP + ((cycle + 1) * STAGE_INTERVAL);
     if (labelEl) labelEl.innerText = "NEXT PRICE JUMP IN:";
+    if (buyBtn && buyBtn.innerText.includes("PRESALE OPENS")) {
+      buyBtn.innerText = "BUY $ROACH TOKENS";
+      buyBtn.classList.remove("opacity-70", "cursor-not-allowed");
+    }
   }
 
   const diff = target - now;
   if (diff <= 0) {
-    el.innerText = "00D : 00H : 00M : 00S";
+    if (el) el.innerText = "00D : 00H : 00M : 00S";
     return;
   }
 
@@ -1181,22 +1195,20 @@ function updateTimer() {
   const s = Math.floor((diff % (1000 * 60)) / 1000);
 
   const pad = (n) => String(n).padStart(2, '0');
-  el.innerText = `${pad(d)}D : ${pad(h)}H : ${pad(m)}M : ${pad(s)}S`;
+  if (el) el.innerText = `${pad(d)}D : ${pad(h)}H : ${pad(m)}M : ${pad(s)}S`;
 }
 setInterval(updateTimer, 1000);
+updateTimer();
 
-// 2. LIVE RECALCULATION
 function recalc() {
   const payInput = document.getElementById('payInput');
   const receiveInput = document.getElementById('receiveInput');
   if (!payInput || !receiveInput) return;
-
   const val = parseFloat(payInput.value) || 0;
   const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
   receiveInput.value = Math.floor(val * rate).toLocaleString();
 }
 
-// 3. CURRENCY TAB SWITCH
 function setCurrency(curr) {
   currentCurrency = curr;
   const btnBnb = document.getElementById('btnPayBnb');
@@ -1205,28 +1217,19 @@ function setCurrency(curr) {
   const payInput = document.getElementById('payInput');
 
   if (curr === 'BNB') {
-    if (btnBnb) {
-      btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
-    }
-    if (btnUsdt) {
-      btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
-    }
+    if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
+    if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
     if (badge) badge.innerText = "BNB";
     if (payInput && payInput.value === "50") payInput.value = "0.5";
   } else {
-    if (btnUsdt) {
-      btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
-    }
-    if (btnBnb) {
-      btnBnb.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
-    }
+    if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
+    if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
     if (badge) badge.innerText = "USDT";
     if (payInput && payInput.value === "0.5") payInput.value = "50";
   }
   recalc();
 }
 
-// 4. WALLET CONNECTION
 async function connectWallet() {
   if (typeof window.ethereum === 'undefined') {
     alert("MetaMask ya Web3 wallet detect nahi hua! DApp browser me kholein.");
@@ -1237,25 +1240,18 @@ async function connectWallet() {
     if (accounts && accounts.length > 0) {
       currentAccount = accounts[0];
       const short = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
-      
       const navBtn = document.getElementById('navConnectBtn');
       if (navBtn) {
         navBtn.innerText = short;
         navBtn.style.background = "#059669";
         navBtn.style.color = "#ffffff";
       }
-
       const refBox = document.getElementById('refBox');
       if (refBox) {
         refBox.value = window.location.origin + window.location.pathname + '?ref=' + currentAccount;
       }
-
-      // Auto switch BSC (56 / 0x38)
       try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x38' }]
-        });
+        await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] });
       } catch (err) {
         if (err.code === 4902) {
           await window.ethereum.request({
@@ -1276,8 +1272,13 @@ async function connectWallet() {
   }
 }
 
-// 5. BUY EXECUTION
 async function triggerPurchase() {
+  const now = new Date().getTime();
+  if (now < LAUNCH_TIMESTAMP) {
+    alert("Presale abhi chalu nahi hui hai! Official launch 14 September 2026, shaam 06:30 PM IST par hogi.");
+    return;
+  }
+
   if (!currentAccount) {
     await connectWallet();
     if (!currentAccount) return;
@@ -1302,7 +1303,7 @@ async function triggerPurchase() {
           gas: "0x249F0"
         }]
       });
-      alert("Order broadcast ho gaya! Contract dwara $ROACH tokens aapke wallet me send ho jayenge.");
+      alert("Order broadcasted! Contract dwara $ROACH tokens deliver ho jayenge.");
     } catch (err) {
       alert("Transaction reject ya fail hui: " + (err.message || err));
     }
