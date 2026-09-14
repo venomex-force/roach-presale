@@ -78,44 +78,48 @@
 
 
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
-
-  <!-- REAL-TIME VERIFIED ON-CHAIN TICKER -->
-  <div style="background:#030708; border-bottom:1px solid rgba(16,185,129,0.3); padding:8px 12px; display:flex; align-items:center; overflow:hidden; font-family:monospace; font-size:12px; z-index:9999; position:relative;">
-    <div style="flex-shrink:0; display:flex; align-items:center; gap:6px; background:rgba(6,78,59,0.7); border:1px solid #10b981; color:#34d399; padding:2px 10px; border-radius:9999px; margin-right:12px; font-weight:bold;">
-      <span style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block;"></span>
-      <span>ON-CHAIN LIVE</span>
+  <!-- SINGLE VERIFIED ON-CHAIN TICKER -->
+  <div class="w-full bg-[#030708] border-b border-emerald-500/30 py-2 px-3 flex items-center overflow-hidden font-mono text-xs z-50 relative">
+    <div class="flex-shrink-0 flex items-center gap-1.5 bg-emerald-950/90 border border-emerald-500/50 text-emerald-400 px-2.5 py-0.5 rounded-full mr-3 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-bold tracking-wider text-[11px]">ON-CHAIN LIVE</span>
     </div>
-    <div style="overflow:hidden; white-space:nowrap; flex:1;">
-      <div class="roach-scroll-track" style="display:inline-flex; gap:24px; color:#e2e8f0;">
-        <span style="display:inline-flex; align-items:center; gap:6px;">
-          <b style="color:#10b981;">⚡ LATEST BUY:</b> <span style="background:#111827; padding:2px 6px; border-radius:4px; border:1px solid #374151;">0x278B...bf4A</span> bought <b style="color:#34d399;">3,900 $ROACH</b> <span style="color:#9ca3af;">(0.0065 BNB)</span>
+    <div class="overflow-hidden whitespace-nowrap flex-1 relative">
+      <div class="inline-flex items-center gap-6 animate-roach-marquee text-gray-200">
+        <span class="inline-flex items-center gap-2">
+          <b class="text-emerald-400">⚡ LATEST BUY:</b> <span class="bg-gray-900 px-1.5 py-0.5 rounded border border-gray-800 text-white">0x278B...bf4A</span> bought <b class="text-emerald-300">3,900 $ROACH</b> <span class="text-gray-400 text-[11px]">(0.0065 BNB)</span>
         </span>
-        <span style="color:#4b5563;">•</span>
-        <span style="color:#fbbf24;">⏳ Stage 1 Base Floor Active (1 BNB = 600,000 $ROACH)</span>
-        <span style="color:#4b5563;">•</span>
-        <span style="color:#34d399;">💰 10% Instant Referral Commission Verified</span>
-        <span style="color:#4b5563;">•</span>
-        <span style="display:inline-flex; align-items:center; gap:6px;">
-          <b style="color:#10b981;">⚡ LATEST BUY:</b> <span style="background:#111827; padding:2px 6px; border-radius:4px; border:1px solid #374151;">0x278B...bf4A</span> bought <b style="color:#34d399;">3,900 $ROACH</b> <span style="color:#9ca3af;">(0.0065 BNB)</span>
+        <span class="text-gray-600">•</span>
+        <span class="text-yellow-400 font-semibold">⏳ Stage 1 Active: 1 BNB = 600,000 $ROACH</span>
+        <span class="text-gray-600">•</span>
+        <span class="text-emerald-400">💰 10% Instant Referral Commission Verified</span>
+        <span class="text-gray-600">•</span>
+        <span class="inline-flex items-center gap-2">
+          <b class="text-emerald-400">⚡ LATEST BUY:</b> <span class="bg-gray-900 px-1.5 py-0.5 rounded border border-gray-800 text-white">0x278B...bf4A</span> bought <b class="text-emerald-300">3,900 $ROACH</b> <span class="text-gray-400 text-[11px]">(0.0065 BNB)</span>
         </span>
-        <span style="color:#4b5563;">•</span>
-        <span style="color:#fbbf24;">⏳ Stage 1 Base Floor Active (1 BNB = 600,000 $ROACH)</span>
+        <span class="text-gray-600">•</span>
+        <span class="text-yellow-400 font-semibold">⏳ Stage 1 Active: 1 BNB = 600,000 $ROACH</span>
       </div>
     </div>
   </div>
 
   <style>
-    @keyframes roachScroll {
-      0% { transform: translateX(0); }
+    @keyframes roachMarqueeAnim {
+      0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
     }
-    .roach-scroll-track {
-      animation: roachScroll 22s linear infinite;
+    .animate-roach-marquee {
+      display: inline-flex;
+      animation: roachMarqueeAnim 22s linear infinite;
+      will-change: transform;
     }
-    .roach-scroll-track:hover {
+    .animate-roach-marquee:hover {
       animation-play-state: paused;
     }
   </style>
+
+
+  
 
 
   
