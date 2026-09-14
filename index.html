@@ -1314,7 +1314,7 @@
 
     async function connectWallet() {
       if (typeof window.ethereum === 'undefined') {
-        alert("MetaMask ya compatible Web3 browser use karein.");
+        alert("Please install MetaMask or open this site in a Web3-compatible browser.");
         return;
       }
       try {
@@ -1364,7 +1364,7 @@
       const payInput = document.getElementById('payInput');
       const amt = payInput ? parseFloat(payInput.value) : 0;
       if (!amt || amt <= 0) {
-        alert("Valid amount darj karein.");
+        alert("Please enter a valid purchase amount.");
         return;
       }
 
@@ -1393,7 +1393,7 @@
           });
           alert("BNB Purchase transaction broadcasted successfully!");
         } catch (err) {
-          alert("Transaction reject ya revert hui: " + (err.message || err));
+          alert("Transaction rejected or failed: " + (err.message || err));
         }
       } else {
         const usdtWei = BigInt(Math.floor(amt * 1e18));
@@ -1406,7 +1406,7 @@
             const maxApproval = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
             const approveData = '0x095ea7b3' + cleanSpender + maxApproval;
 
-            alert("Kripya MetaMask me USDT Approval transaction confirm karein.");
+            alert("Please confirm the USDT Approval transaction in your wallet.");
             await window.ethereum.request({
               method: 'eth_sendTransaction',
               params: [{
@@ -1416,12 +1416,12 @@
                 gas: "0x186A0"
               }]
             });
-            alert("USDT Approved! Ab aap 'BUY $ROACH TOKENS' par click karke token buy kar sakte hain.");
+            alert("USDT Approved successfully! You can now click 'BUY $ROACH TOKENS' to proceed.");
             isUsdtApproved = true;
             const mainBtn = document.querySelector("button[onclick='triggerPurchase()']");
             if (mainBtn) mainBtn.innerText = "BUY $ROACH TOKENS";
           } catch (err) {
-            alert("Approval reject hui: " + (err.message || err));
+            alert("Approval rejected or failed: " + (err.message || err));
           }
         } else {
           try {
@@ -1440,7 +1440,7 @@
             });
             alert("USDT Purchase transaction broadcasted successfully!");
           } catch (err) {
-            alert("USDT Purchase reject hui: " + (err.message || err));
+            alert("USDT Purchase rejected or failed: " + (err.message || err));
           }
         }
       }
@@ -1526,7 +1526,7 @@
     function copyRefLink() {
       const refBox = document.getElementById('refBox');
       if (!refBox || refBox.value.includes('Connect wallet')) {
-        alert("Pehle wallet connect karein!");
+        alert("Please connect your wallet first!");
         return;
       }
       navigator.clipboard.writeText(refBox.value).then(() => {
