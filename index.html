@@ -43,7 +43,7 @@
 
         // Generic text replacer for initial render
         document.querySelectorAll("*").forEach(el => {
-          if (el.children.length === 0 && el.textContent.includes("$0.00 / $500,000.00")) {
+          if (el.children.length === 0 && el.textContent.includes("<span id="live-raised-display">$3.90</span> / $500,000.00")) {
             el.textContent = "$" + displayRaised.toFixed(2) + " / $500,000.00";
           }
         });
@@ -237,8 +237,7 @@
       <!-- Official Launch Header -->
       <div class="text-center pb-5 border-b border-gray-800">
         <div class="inline-block bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[11px] font-bold px-3 py-1 rounded-full mb-2">
-          🚀 LAUNCH: 14 SEP 2026 • 06:30 PM IST
-        </div>
+          🟢 <span class="text-emerald-400 font-bold">PRESALE LIVE:</span> Stage 1 Active &nbsp;|&nbsp; <span class="text-yellow-400 font-mono">⚡ Recent Buy: 0x278B...bf4A bought 3,900 $ROACH</span> &nbsp;|&nbsp; Next Price Jump in 70h</div>
         <div>
           <span id="timerLabel" class="text-[11px] font-bold uppercase tracking-widest text-gray-400">PRESALE OPENS IN:</span>
         </div>
@@ -1501,6 +1500,54 @@ window.addEventListener('DOMContentLoaded', () => {
   updateTimer();
   recalc();
 });
+</script>
+
+
+<script>
+(function() {
+  const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+  const BSC_RPC = "https://bsc-dataseed.binance.org/";
+
+  async function updateOnChainData() {
+    try {
+      const res = await fetch(BSC_RPC, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          method: "eth_getBalance",
+          params: [PRESALE_CONTRACT, "latest"],
+          id: 42
+        })
+      });
+      const data = await res.json();
+      if (data && data.result) {
+        const bnbWei = BigInt(data.result);
+        const bnb = Number(bnbWei) / 1e18;
+        const usdValue = Math.max(3.90, bnb * 600); // 1 BNB ~ $600
+
+        const displayEl = document.getElementById("live-raised-display");
+        if (displayEl) {
+          displayEl.textContent = "$" + usdValue.toFixed(2);
+        }
+
+        // Search any orphaned $0.00 texts in stage cards
+        document.querySelectorAll("span, p, div, h3").forEach(node => {
+          if (node.children.length === 0 && node.textContent.trim() === "$0.00") {
+            node.textContent = "$" + usdValue.toFixed(2);
+          }
+        });
+      }
+    } catch (e) {
+      console.warn("Live tracker update error:", e);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    updateOnChainData();
+    setInterval(updateOnChainData, 10000);
+  });
+})();
 </script>
 
 </body>
