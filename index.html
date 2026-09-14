@@ -78,6 +78,60 @@
 
 
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
+  <!-- DYNAMIC LIVE RUNNING TICKER -->
+  <div class="bg-[#04070B] border-b border-emerald-500/30 overflow-hidden text-xs py-2 px-3 flex items-center relative z-50">
+    <!-- Fixed Pulse Badge -->
+    <div class="flex-shrink-0 flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-mono text-[11px] px-2.5 py-0.5 rounded-full mr-3 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <span class="font-bold tracking-wide">LIVE STAGE 1</span>
+    </div>
+
+    <!-- Scrolling Text Track -->
+    <div class="overflow-hidden whitespace-nowrap flex-1 relative flex items-center">
+      <div class="inline-block animate-marquee flex items-center gap-8 font-mono text-gray-300">
+        <span class="flex items-center gap-1.5 text-emerald-300 font-semibold">
+          ⚡ <span>Recent Buy:</span> <span class="text-white bg-gray-900/80 px-1.5 py-0.5 rounded border border-gray-800">0x278B...bf4A</span> bought <span class="text-emerald-400 font-bold">3,900 $ROACH</span>
+        </span>
+        <span class="text-gray-600">•</span>
+        <span class="text-yellow-400 flex items-center gap-1">
+          ⏳ Next Automated Price Jump in <span class="font-bold">69h 54m</span>
+        </span>
+        <span class="text-gray-600">•</span>
+        <span class="text-emerald-400">
+          💰 10% Instant Referral Commission Active on all buys
+        </span>
+        <span class="text-gray-600">•</span>
+        <span class="text-gray-400">
+          📍 Verified BEP-20 Contract: <span class="text-white">0x7000...2078</span>
+        </span>
+        <span class="text-gray-600">•</span>
+        <!-- Duplicate for continuous loop -->
+        <span class="flex items-center gap-1.5 text-emerald-300 font-semibold">
+          ⚡ <span>Recent Buy:</span> <span class="text-white bg-gray-900/80 px-1.5 py-0.5 rounded border border-gray-800">0x278B...bf4A</span> bought <span class="text-emerald-400 font-bold">3,900 $ROACH</span>
+        </span>
+        <span class="text-gray-600">•</span>
+        <span class="text-yellow-400">
+          ⏳ Next Automated Price Jump in <span class="font-bold">69h 54m</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: inline-flex;
+      animation: marquee 22s linear infinite;
+      will-change: transform;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+  </style>
+
 
 <!-- LIVE BUY TICKER -->
 <div id="roach-live-ticker" style="width:100%; background:linear-gradient(90deg, #064e3b, #042f2e); border-bottom:1px solid #10b981; color:#a7f3d0; font-size:12px; font-family:monospace; padding:8px 0; overflow:hidden; position:sticky; top:0; z-index:99999;">
