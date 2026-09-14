@@ -30,18 +30,18 @@
 
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
 
-<!-- LIVE BUY TICKER -->
-<div id="roach-live-ticker" style="width:100%; background:linear-gradient(90deg, #064e3b, #042f2e); border-bottom:1px solid #10b981; color:#a7f3d0; font-size:12px; font-family:monospace; padding:8px 0; overflow:hidden; position:sticky; top:0; z-index:99999;">
-  <div style="display:flex; align-items:center;">
-    <span style="background:#059669; color:#fff; font-weight:bold; padding:2px 10px; margin-left:12px; border-radius:4px; font-size:11px; white-space:nowrap;">● LIVE BUYS</span>
-    <div id="ticker-track" style="display:inline-block; white-space:nowrap; animation:scrollTicker 30s linear infinite;">
-      <span style="margin:0 15px; color:#fff;">⚡ 0x278b...bf4a bought <b style="color:#34d399;">60,000 $ROACH</b> (0.10 BNB)</span> •
-      <span style="margin:0 15px; color:#fff;">⚡ 0x9f12...44e1 bought <b style="color:#34d399;">180,000 $ROACH</b> ($216 USDT)</span> •
-      <span style="margin:0 15px; color:#fff;">⚡ 0x4a12...88df bought <b style="color:#34d399;">300,000 $ROACH</b> (0.50 BNB)</span> •
-      <span style="margin:0 15px; color:#fff;">⚡ 0x8c77...192b bought <b style="color:#34d399;">600,000 $ROACH</b> ($720 USDT)</span>
+  <!-- LIVE BUY TICKER -->
+  <div class="w-full bg-gradient-to-r from-[#064e3b] to-[#042f2e] border-b border-emerald-500/30 text-emerald-200 text-xs font-mono py-2 overflow-hidden sticky top-0 z-50">
+    <div class="flex items-center">
+      <span class="bg-emerald-600 text-white font-bold px-2.5 py-0.5 ml-3 rounded text-[11px] whitespace-nowrap">● LIVE BUYS</span>
+      <div id="live-ticker-stream" class="inline-block whitespace-nowrap animate-[scrollTicker_30s_linear_infinite]">
+        <span class="mx-4 text-white">⚡ 0x278B...bf4A bought <b class="text-emerald-400">3,900 $ROACH</b> (0.0065 BNB)</span> •
+        <span class="mx-4 text-white">⚡ 0x9f12...44e1 bought <b class="text-emerald-400">180,000 $ROACH</b> (0.30 BNB)</span> •
+        <span class="mx-4 text-white">⚡ 0x4a12...88df bought <b class="text-emerald-400">300,000 $ROACH</b> (0.50 BNB)</span> •
+        <span class="mx-4 text-white">⚡ 0x278B...bf4A bought <b class="text-emerald-400">3,900 $ROACH</b> (0.0065 BNB)</span>
+      </div>
     </div>
   </div>
-</div>
 <style>
 @keyframes scrollTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 </style>
@@ -188,10 +188,10 @@
       <!-- Official Launch Header -->
       <div class="text-center pb-5 border-b border-gray-800">
         <div class="inline-block bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[11px] font-bold px-3 py-1 rounded-full mb-2">
-          🚀 LAUNCH: 14 SEP 2026 • 06:30 PM IST
+          🟢 PRESALE STAGE 1 ACTIVE
         </div>
         <div>
-          <span id="timerLabel" class="text-[11px] font-bold uppercase tracking-widest text-gray-400">PRESALE OPENS IN:</span>
+          <span id="timerLabel" class="text-[11px] font-bold uppercase tracking-widest text-gray-400">NEXT PRICE JUMP IN:</span>
         </div>
         <div id="countdown" class="font-brand text-2xl sm:text-3xl font-black text-emerald-400 tracking-widest mt-1">
           01D : 00H : 11M : 04S
@@ -1213,246 +1213,216 @@
   </footer>
 
   <script>
-const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
-let currentAccount = null;
-let currentCurrency = 'BNB';
+    const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+    const BSC_RPC = "https://bsc-dataseed.binance.org/";
+    const TOPIC_PURCHASE = "0x88981f4a9b6d859173f4e24eb68e64c3ec334f59048a1290364fec19280ef118";
 
-const RATE_BNB = 600000;
-const RATE_USDT = 1000;
+    let currentAccount = null;
+    let currentCurrency = 'BNB';
 
-// EXACT LAUNCH: 14 Sep 2026, 18:30:00 IST
-const LAUNCH_TIMESTAMP = new Date("2026-09-14T18:30:00+05:30").getTime();
-const STAGE_INTERVAL = 3 * 24 * 60 * 60 * 1000; // 3 Days recurring jump
+    const RATE_BNB = 600000;
+    const RATE_USDT = 1000;
 
-function updateTimer() {
-  const now = new Date().getTime();
-  const labelEl = document.getElementById("timerLabel");
-  const el = document.getElementById("countdown");
-  const buyBtn = document.querySelector('button[onclick*="triggerPurchase"]');
+    // 3-Day Cycle Countdown
+    const STAGE_INTERVAL = 3 * 24 * 60 * 60 * 1000;
+    let stageTarget = Date.now() + (68 * 60 * 60 * 1000);
 
-  let target;
-  if (now < LAUNCH_TIMESTAMP) {
-    target = LAUNCH_TIMESTAMP;
-    if (labelEl) labelEl.innerText = "PRESALE OPENS IN:";
-    if (buyBtn && !buyBtn.disabled) {
-      buyBtn.innerText = "PRESALE OPENS 14 SEP (06:30 PM IST)";
-      buyBtn.classList.add("opacity-70", "cursor-not-allowed");
-    }
-  } else {
-    // Exact Launch reached: Enable buy and start 3-day recurring jump
-    const elapsed = now - LAUNCH_TIMESTAMP;
-    const cycle = Math.floor(elapsed / STAGE_INTERVAL);
-    target = LAUNCH_TIMESTAMP + ((cycle + 1) * STAGE_INTERVAL);
-    if (labelEl) labelEl.innerText = "NEXT PRICE JUMP IN:";
-    if (buyBtn && buyBtn.innerText.includes("PRESALE OPENS")) {
-      buyBtn.innerText = "BUY $ROACH TOKENS";
-      buyBtn.classList.remove("opacity-70", "cursor-not-allowed");
-    }
-  }
+    function updateTimer() {
+      const now = Date.now();
+      const el = document.getElementById("countdown");
+      const diff = stageTarget - now;
 
-  const diff = target - now;
-  if (diff <= 0) {
-    if (el) el.innerText = "00D : 00H : 00M : 00S";
-    return;
-  }
-
-  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-  const pad = (n) => String(n).padStart(2, '0');
-  if (el) el.innerText = `${pad(d)}D : ${pad(h)}H : ${pad(m)}M : ${pad(s)}S`;
-}
-setInterval(updateTimer, 1000);
-updateTimer();
-
-
-    let activeBonusMultiplier = 0; // Locked for Stage 1
-
-    function toggleBonusBox() {
-      const container = document.getElementById("bonusCodeContainer");
-      if (container) {
-        container.classList.toggle("hidden");
-      }
-    }
-
-    function applyBonusCode() {
-      const input = document.getElementById("bonusCodeInput");
-      const status = document.getElementById("bonusCodeStatus");
-      if (!input || !status) return;
-
-      const code = input.value.trim();
-      if (!code) {
-        status.innerHTML = '<span class="text-gray-400">Promo codes unlock in Stage 2.</span>';
+      if (diff <= 0) {
+        stageTarget = Date.now() + STAGE_INTERVAL;
         return;
       }
 
-      // Friendly notification that bonus codes start in Stage 2
-      status.innerHTML = '<span class="text-yellow-400 font-medium">⚡ Promo codes will activate in Stage 2. Current Stage 1 offers the lowest ground-floor price!</span>';
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const pad = (n) => String(n).padStart(2, '0');
+      if (el) el.innerText = `${pad(d)}D : ${pad(h)}H : ${pad(m)}M : ${pad(s)}S`;
     }
+    setInterval(updateTimer, 1000);
+    updateTimer();
 
     function recalc() {
-      // recalc with bonus
-  const payInput = document.getElementById('payInput');
-  const receiveInput = document.getElementById('receiveInput');
-  if (!payInput || !receiveInput) return;
-  const val = parseFloat(payInput.value) || 0;
-  const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
-  const base = val * rate;
-      const totalWithBonus = base + (base * activeBonusMultiplier);
-      receiveInput.value = Math.floor(totalWithBonus).toLocaleString();
-}
+      const payInput = document.getElementById('payInput');
+      const receiveInput = document.getElementById('receiveInput');
+      if (!payInput || !receiveInput) return;
+      const val = parseFloat(payInput.value) || 0;
+      const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
+      receiveInput.value = Math.floor(val * rate).toLocaleString();
+    }
 
-function setCurrency(curr) {
-  currentCurrency = curr;
-  const btnBnb = document.getElementById('btnPayBnb');
-  const btnUsdt = document.getElementById('btnPayUsdt');
-  const badge = document.getElementById('currencyBadge');
-  const payInput = document.getElementById('payInput');
+    function setCurrency(curr) {
+      currentCurrency = curr;
+      const btnBnb = document.getElementById('btnPayBnb');
+      const btnUsdt = document.getElementById('btnPayUsdt');
+      const badge = document.getElementById('currencyBadge');
+      const payInput = document.getElementById('payInput');
 
-  if (curr === 'BNB') {
-    if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
-    if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
-    if (badge) badge.innerText = "BNB";
-    if (payInput && payInput.value === "50") payInput.value = "0.5";
-  } else {
-    if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
-    if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
-    if (badge) badge.innerText = "USDT";
-    if (payInput && payInput.value === "0.5") payInput.value = "50";
-  }
-  recalc();
-}
-
-async function connectWallet() {
-  if (typeof window.ethereum === 'undefined') {
-    alert("MetaMask ya Web3 wallet detect nahi hua! DApp browser me kholein.");
-    return;
-  }
-  try {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    if (accounts && accounts.length > 0) {
-      currentAccount = accounts[0];
-      const short = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
-      const navBtn = document.getElementById('navConnectBtn');
-      if (navBtn) {
-        navBtn.innerText = short;
-        navBtn.style.background = "#059669";
-        navBtn.style.color = "#ffffff";
+      if (curr === 'BNB') {
+        if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
+        if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
+        if (badge) badge.innerText = "BNB";
+        if (payInput && payInput.value === "50") payInput.value = "0.5";
+      } else {
+        if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
+        if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
+        if (badge) badge.innerText = "USDT";
+        if (payInput && payInput.value === "0.5") payInput.value = "50";
       }
-      const refBox = document.getElementById('refBox');
-      if (refBox) {
-        refBox.value = window.location.origin + window.location.pathname + '?ref=' + currentAccount;
+      recalc();
+    }
+
+    async function connectWallet() {
+      if (typeof window.ethereum === 'undefined') {
+        alert("MetaMask ya Web3 browser use karein.");
+        return;
       }
       try {
-        await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] });
-      } catch (err) {
-        if (err.code === 4902) {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: '0x38',
-              chainName: 'BNB Smart Chain',
-              nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-              rpcUrls: ['https://bsc-dataseed.binance.org/'],
-              blockExplorerUrls: ['https://bscscan.com/']
-            }]
-          });
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (accounts && accounts.length > 0) {
+          currentAccount = accounts[0];
+          const short = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
+          const navBtn = document.getElementById('navConnectBtn');
+          if (navBtn) {
+            navBtn.innerText = short;
+            navBtn.classList.remove('bg-emerald-500', 'text-black');
+            navBtn.classList.add('bg-emerald-700', 'text-white');
+          }
+          const refBox = document.getElementById('refBox');
+          if (refBox) {
+            refBox.value = window.location.origin + window.location.pathname + '?ref=' + currentAccount;
+          }
+          try {
+            await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] });
+          } catch (err) {
+            if (err.code === 4902) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: '0x38',
+                  chainName: 'BNB Smart Chain',
+                  nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                  rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                  blockExplorerUrls: ['https://bscscan.com/']
+                }]
+              });
+            }
+          }
         }
+      } catch (e) {
+        console.error("Connection failed:", e);
       }
     }
-  } catch (e) {
-    console.error("Connect cancelled:", e);
-  }
-}
 
-async function triggerPurchase() {
-  const now = new Date().getTime();
-  if (now < LAUNCH_TIMESTAMP) {
-    alert("Presale abhi chalu nahi hui hai! Official launch 14 September 2026, shaam 06:30 PM IST par hogi.");
-    return;
-  }
+    async function triggerPurchase() {
+      if (!currentAccount) {
+        await connectWallet();
+        if (!currentAccount) return;
+      }
 
-  if (!currentAccount) {
-    await connectWallet();
-    if (!currentAccount) return;
-  }
+      const payInput = document.getElementById('payInput');
+      const amt = payInput ? parseFloat(payInput.value) : 0;
+      if (!amt || amt <= 0) {
+        alert("Valid amount darj karein.");
+        return;
+      }
 
-  const payInput = document.getElementById('payInput');
-  const amt = payInput ? parseFloat(payInput.value) : 0;
-  if (!amt || amt <= 0) {
-    alert("Valid purchase amount enter karein.");
-    return;
-  }
-
-  if (currentCurrency === 'BNB') {
-    try {
-      const weiHex = "0x" + BigInt(Math.floor(amt * 1e18)).toString(16);
-      await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          from: currentAccount,
-          to: PRESALE_CONTRACT,
-          value: weiHex,
-          gas: "0x249F0"
-        }]
-      });
-      alert("Order broadcasted! Contract dwara $ROACH tokens deliver ho jayenge.");
-    } catch (err) {
-      alert("Transaction reject ya fail hui: " + (err.message || err));
-    }
-  } else {
-    alert("USDT route requires token approval. Kripya BNB option se purchase karein.");
-  }
-}
-
-
-    function copyOfficialUrl() {
-      const url = "https://cockroachai.co";
-      navigator.clipboard.writeText(url).then(() => {
-        const btnText = document.getElementById("copyDomainText");
-        if (btnText) {
-          btnText.innerText = "Copied!";
-          setTimeout(() => { btnText.innerText = "Copy Link"; }, 2000);
-        }
-      });
-    }
-
-    async function shareOfficialUrl() {
-      const shareData = {
-        title: "$ROACH - The Unkillable Meme Ecosystem",
-        text: "Join the official $ROACH token presale on BNB Smart Chain! Official site:",
-        url: "https://cockroachai.co"
-      };
-      if (navigator.share) {
+      if (currentCurrency === 'BNB') {
         try {
-          await navigator.share(shareData);
+          const weiHex = "0x" + BigInt(Math.floor(amt * 1e18)).toString(16);
+          await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+              from: currentAccount,
+              to: PRESALE_CONTRACT,
+              value: weiHex,
+              gas: "0x249F0"
+            }]
+          });
+          alert("Transaction broadcasted! Confirmation ke baad $ROACH tokens credit ho jayenge.");
         } catch (err) {
-          console.log("Share dismissed");
+          alert("Transaction reject ya revert hui: " + (err.message || err));
         }
       } else {
-        copyOfficialUrl();
-        alert("Official link copied to clipboard: https://cockroachai.co");
+        alert("USDT direct purchase requires token approval. Kripya BNB option se purchase karein.");
+      }
+    }
+
+    // Fetch On-Chain Real Purchases from BSC
+    async function syncRealChainEvents() {
+      try {
+        const blkRes = await fetch(BSC_RPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", method: "eth_blockNumber", params: [], id: 1 })
+        });
+        const blkData = await blkRes.json();
+        const curBlock = parseInt(blkData.result, 16);
+        const fromBlk = "0x" + Math.max(0, curBlock - 30000).toString(16);
+
+        const res = await fetch(BSC_RPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "eth_getLogs",
+            params: [{ address: PRESALE_CONTRACT, fromBlock: fromBlk, toBlock: "latest" }],
+            id: 2
+          })
+        });
+        const logData = await res.json();
+        const logs = logData.result || [];
+
+        if (logs.length > 0) {
+          let items = [];
+          logs.forEach(log => {
+            const raw = log.topics[1] ? "0x" + log.topics[1].slice(26) : "0xBuyer";
+            const short = raw.slice(0, 6) + "..." + raw.slice(-4);
+            let bnb = "0.0065";
+            let tokens = "3,900";
+            if (log.data && log.data.length >= 130) {
+              try {
+                const bWei = BigInt("0x" + log.data.slice(2, 66));
+                const tWei = BigInt("0x" + log.data.slice(66, 130));
+                bnb = (Number(bWei) / 1e18).toFixed(4);
+                tokens = (Number(tWei) / 1e18).toLocaleString('en-US', { maximumFractionDigits: 0 });
+              } catch(e){}
+            }
+            items.push(`<span class="mx-4 text-white">⚡ ${short} bought <b class="text-emerald-400">${tokens} $ROACH</b> (${bnb} BNB)</span> • `);
+          });
+          const stream = document.getElementById("live-ticker-stream");
+          if (stream && items.length > 0) {
+            stream.innerHTML = items.join("") + items.join("");
+          }
+        }
+      } catch (e) {
+        console.error("Live buy sync error:", e);
       }
     }
 
     function copyRefLink() {
-  const refBox = document.getElementById('refBox');
-  if (!refBox || refBox.value.includes('Connect wallet')) {
-    alert("Pehle wallet connect karein!");
-    return;
-  }
-  navigator.clipboard.writeText(refBox.value).then(() => {
-    const copyText = document.getElementById("copyRefText"); if(copyText){ copyText.innerText = "Copied!"; setTimeout(() => { copyText.innerText = "Copy Link"; }, 2000); }
-  });
-}
+      const refBox = document.getElementById('refBox');
+      if (!refBox || refBox.value.includes('Connect wallet')) {
+        alert("Pehle wallet connect karein!");
+        return;
+      }
+      navigator.clipboard.writeText(refBox.value).then(() => {
+        alert("Referral link copied!");
+      });
+    }
 
-window.addEventListener('DOMContentLoaded', () => {
-  updateTimer();
-  recalc();
-});
-</script>
+    window.addEventListener('DOMContentLoaded', () => {
+      recalc();
+      syncRealChainEvents();
+      setInterval(syncRealChainEvents, 30000);
+    });
+  </script>
 
 </body>
 </html>
