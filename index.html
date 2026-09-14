@@ -227,9 +227,10 @@
           <button id="btnPayBnb" onclick="setCurrency('BNB')" class="py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all">
             PAY WITH BNB
           </button>
-          <button id="btnPayUsdt" onclick="setCurrency('USDT')" class="py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all">
-            PAY WITH USDT (BEP-20)
-          </button>
+          <button id="btnPayUsdt" type="button" onclick="showUsdtUpcomingNotice()" class="py-2.5 px-2 rounded-lg font-bold text-xs text-gray-500 bg-gray-900/60 border border-gray-800/80 cursor-not-allowed font-brand transition-all flex items-center justify-center gap-1.5 opacity-80 hover:opacity-100">
+              <span>PAY WITH USDT</span>
+              <span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 text-[9px] px-1.5 py-0.5 rounded font-mono uppercase tracking-wider">Upcoming</span>
+            </button>
         </div>
       </div>
 
@@ -1255,6 +1256,11 @@
       const val = parseFloat(payInput.value) || 0;
       const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
       receiveInput.value = Math.floor(val * rate).toLocaleString();
+    }
+
+    
+    function showUsdtUpcomingNotice() {
+      alert("USDT (BEP-20) direct gateway agle router update me live hoga. Instant Stage 1 allocation ke liye kripya 'PAY WITH BNB' option use karein.");
     }
 
     function setCurrency(curr) {
