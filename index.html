@@ -29,24 +29,24 @@
 
 
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
-  <!-- SINGLE VERIFIED ON-CHAIN TICKER -->
+  <!-- UNIFIED MASTER ON-CHAIN TICKER -->
   <div class="w-full bg-[#030708] border-b border-emerald-500/30 py-2 px-3 flex items-center overflow-hidden font-mono text-xs z-50 relative">
     <div class="flex-shrink-0 flex items-center gap-1.5 bg-emerald-950/90 border border-emerald-500/50 text-emerald-400 px-2.5 py-0.5 rounded-full mr-3 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span class="font-bold tracking-wider text-[11px]">ON-CHAIN LIVE</span>
+      <span class="font-bold tracking-wider text-[11px]">LIVE ON-CHAIN</span>
     </div>
     <div class="overflow-hidden whitespace-nowrap flex-1 relative">
-      <div class="inline-flex items-center gap-6 animate-roach-marquee text-gray-200">
+      <div class="inline-flex items-center gap-6 animate-master-marquee text-gray-200">
         <span class="inline-flex items-center gap-2">
-          <b class="text-emerald-400">⚡ LATEST BUY:</b> <span class="bg-gray-900 px-1.5 py-0.5 rounded border border-gray-800 text-white">0x278B...bf4A</span> bought <b class="text-emerald-300">3,900 $ROACH</b> <span class="text-gray-400 text-[11px]">(0.0065 BNB)</span>
+          <b class="text-emerald-400">⚡ RECENT BUY:</b> <span class="bg-gray-900 px-1.5 py-0.5 rounded border border-gray-800 text-white">0x278B...bf4A</span> bought <b class="text-emerald-300">3,900 $ROACH</b> <span class="text-gray-400 text-[11px]">(0.0065 BNB)</span>
         </span>
         <span class="text-gray-600">•</span>
         <span class="text-yellow-400 font-semibold">⏳ Stage 1 Active: 1 BNB = 600,000 $ROACH</span>
         <span class="text-gray-600">•</span>
-        <span class="text-emerald-400">💰 10% Instant Referral Commission Verified</span>
+        <span class="text-emerald-400">💰 10% Instant Referral Commission Active</span>
         <span class="text-gray-600">•</span>
         <span class="inline-flex items-center gap-2">
-          <b class="text-emerald-400">⚡ LATEST BUY:</b> <span class="bg-gray-900 px-1.5 py-0.5 rounded border border-gray-800 text-white">0x278B...bf4A</span> bought <b class="text-emerald-300">3,900 $ROACH</b> <span class="text-gray-400 text-[11px]">(0.0065 BNB)</span>
+          <b class="text-emerald-400">⚡ RECENT BUY:</b> <span class="bg-gray-900 px-1.5 py-0.5 rounded border border-gray-800 text-white">0x278B...bf4A</span> bought <b class="text-emerald-300">3,900 $ROACH</b> <span class="text-gray-400 text-[11px]">(0.0065 BNB)</span>
         </span>
         <span class="text-gray-600">•</span>
         <span class="text-yellow-400 font-semibold">⏳ Stage 1 Active: 1 BNB = 600,000 $ROACH</span>
@@ -55,19 +55,21 @@
   </div>
 
   <style>
-    @keyframes roachMarqueeAnim {
+    @keyframes masterMarquee {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
     }
-    .animate-roach-marquee {
+    .animate-master-marquee {
       display: inline-flex;
-      animation: roachMarqueeAnim 22s linear infinite;
+      animation: masterMarquee 24s linear infinite;
       will-change: transform;
     }
-    .animate-roach-marquee:hover {
+    .animate-master-marquee:hover {
       animation-play-state: paused;
     }
   </style>
+
+  
 
 
   
@@ -252,21 +254,7 @@
   
 
 
-<!-- LIVE BUY TICKER -->
-<div id="roach-live-ticker" style="width:100%; background:linear-gradient(90deg, #064e3b, #042f2e); border-bottom:1px solid #10b981; color:#a7f3d0; font-size:12px; font-family:monospace; padding:8px 0; overflow:hidden; position:sticky; top:0; z-index:99999;">
-  <div style="display:flex; align-items:center;">
-    <span style="background:#059669; color:#fff; font-weight:bold; padding:2px 10px; margin-left:12px; border-radius:4px; font-size:11px; white-space:nowrap;">● LIVE BUYS</span>
-    <div id="ticker-track" style="display:inline-block; white-space:nowrap; animation:scrollTicker 30s linear infinite;">
-      <span style="margin:0 15px; color:#fff;">⚡ 0x278b...bf4a bought <b style="color:#34d399;">60,000 $ROACH</b> (0.10 BNB)</span> •
-      <span style="margin:0 15px; color:#fff;">⚡ 0x9f12...44e1 bought <b style="color:#34d399;">180,000 $ROACH</b> ($216 USDT)</span> •
-      <span style="margin:0 15px; color:#fff;">⚡ 0x4a12...88df bought <b style="color:#34d399;">300,000 $ROACH</b> (0.50 BNB)</span> •
-      <span style="margin:0 15px; color:#fff;">⚡ 0x8c77...192b bought <b style="color:#34d399;">600,000 $ROACH</b> ($720 USDT)</span>
-    </div>
-  </div>
-</div>
-<style>
-@keyframes scrollTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-</style>
+
 
 
 
