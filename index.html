@@ -176,7 +176,7 @@
           <div class="text-xs text-gray-400 mt-1">Instant Referral Bonus</div>
         </div>
         <div class="neon-card p-4 rounded-2xl text-center">
-          <div class="text-2xl sm:text-3xl font-bold font-brand text-white">$0.0080</div>
+          <div class="text-2xl sm:text-3xl font-bold font-brand text-white"><span id="live-raised-amount">$3.75</span>80</div>
           <div class="text-xs text-gray-400 mt-1">Launch Price</div>
         </div>
       </div>
@@ -1417,11 +1417,44 @@
       });
     }
 
+    
+    // Real-time On-chain Raised Balance Sync
+    async function syncContractRaised() {
+      try {
+        const res = await fetch(BSC_RPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "eth_getBalance",
+            params: [PRESALE_CONTRACT, "latest"],
+            id: 99
+          })
+        });
+        const data = await res.json();
+        if (data && data.result) {
+          const wei = BigInt(data.result);
+          const bnbVal = Number(wei) / 1e18;
+          // Approximate BNB price ~$580 (or dynamically scaled)
+          const usdVal = (bnbVal * 580).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const el = document.getElementById("live-raised-amount");
+          if (el) {
+            el.innerText = "$" + usdVal;
+          }
+        }
+      } catch (e) {
+        console.error("Balance sync error:", e);
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       recalc();
       syncRealChainEvents();
+      syncContractRaised();
       setInterval(syncRealChainEvents, 30000);
+      setInterval(syncContractRaised, 15000);
     });
+
   </script>
 
 </body>
