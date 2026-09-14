@@ -48,11 +48,10 @@
     <div class="flex items-center">
       <span class="bg-emerald-600 text-white font-bold px-2.5 py-0.5 ml-3 rounded text-[11px] whitespace-nowrap">● LIVE BUYS</span>
       <div class="inline-block whitespace-nowrap animate-[scrollTicker_30s_linear_infinite]">
-        <span class="mx-4 text-white">⚡ 0x278B...bf4A bought <b class="text-emerald-400">3,900 $ROACH</b> (0.0065 BNB)</span> •
-        <span class="mx-4 text-white">⚡ 0x9f12...44e1 bought <b class="text-emerald-400">180,000 $ROACH</b> (0.30 BNB)</span> •
+        <span class="mx-4 text-white">⚡ 0x278b...bf4a bought <b class="text-emerald-400">60,000 $ROACH</b> (0.10 BNB)</span> •
+        <span class="mx-4 text-white">⚡ 0x9f12...44e1 bought <b class="text-emerald-400">180,000 $ROACH</b> ($216 USDT)</span> •
         <span class="mx-4 text-white">⚡ 0x4a12...88df bought <b class="text-emerald-400">300,000 $ROACH</b> (0.50 BNB)</span> •
-        <span class="mx-4 text-white">⚡ 0x8c77...192b bought <b class="text-emerald-400">600,000 $ROACH</b> (1.00 BNB)</span> •
-        <span class="mx-4 text-white">⚡ 0x278B...bf4A bought <b class="text-emerald-400">3,900 $ROACH</b> (0.0065 BNB)</span>
+        <span class="mx-4 text-white">⚡ 0x8c77...192b bought <b class="text-emerald-400">600,000 $ROACH</b> ($720 USDT)</span>
       </div>
     </div>
   </div>
@@ -63,7 +62,7 @@
       
       <!-- Brand & Logo -->
       <a href="#" class="flex items-center gap-3 shrink-0 group">
-        <img src="assets/logo.png" onerror="this.onerror=null;this.src='logo.png'" alt="CockroachAI Logo" class="w-10 h-10 rounded-full object-cover shadow-lg border border-emerald-500/40 group-hover:scale-105 transition-transform" />
+        <img src="assets/logo.png" onerror="this.onerror=null;this.src='logo.png';" alt="CockroachAI Logo" class="w-10 h-10 rounded-full object-cover shadow-lg border border-emerald-500/40 group-hover:scale-105 transition-transform" />
         <span class="font-brand font-black text-xl tracking-wider text-white group-hover:text-emerald-400 transition-colors">
           COCKROACH<span class="text-emerald-400">AI</span>
         </span>
@@ -75,8 +74,11 @@
         <a href="whitepaper.html" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-bold transition-colors flex items-center gap-1.5">
           <span>📄</span> Whitepaper
         </a>
+        <a href="#ecosystem" class="hover:text-emerald-400 transition-colors">RoachSwap & AI</a>
         <a href="#tokenomics" class="hover:text-emerald-400 transition-colors">Tokenomics</a>
         <a href="#security-audit" class="hover:text-emerald-400 transition-colors">Audit & Security</a>
+        <a href="#roadmap" class="hover:text-emerald-400 transition-colors">Roadmap</a>
+        <a href="#faq" class="hover:text-emerald-400 transition-colors">FAQ</a>
       </nav>
 
       <!-- Action Buttons -->
@@ -101,7 +103,7 @@
       <div class="lg:col-span-7 space-y-6">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-semibold">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          OFFICIAL STAGE 1 PRESALE ACTIVE
+          OFFICIAL STAGE 1 PRESALE
         </div>
 
         <h1 class="font-brand text-4xl sm:text-6xl font-black text-white leading-tight">
@@ -112,9 +114,9 @@
           When the market nukes, cockroaches thrive. $ROACH is an automated liquidity-backed AI meme powerhouse deployed natively on the BNB Smart Chain.
         </p>
 
-        <!-- Main Hero Mascot Banner Photo -->
-        <div class="py-2">
-          <img src="assets/hero-banner.png" onerror="this.onerror=null;this.src='hero.png'" alt="CockroachAI Hero" class="rounded-2xl border border-emerald-500/30 shadow-[0_0_25px_rgba(16,185,129,0.2)] max-h-72 w-auto object-cover" />
+        <!-- Bada Photo (Hero Mascot Image) -->
+        <div class="pt-2 pb-4">
+          <img src="assets/hero-banner.png" onerror="this.onerror=null;this.src='hero.png';" alt="CockroachAI Hero" class="rounded-2xl border border-emerald-500/30 shadow-[0_0_25px_rgba(16,185,129,0.2)] max-h-80 w-auto object-cover" />
         </div>
 
         <!-- Security Badges -->
@@ -133,13 +135,13 @@
         <!-- Launch & Countdown Header -->
         <div class="text-center pb-5 border-b border-gray-800">
           <div class="inline-block bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[11px] font-bold px-3 py-1 rounded-full mb-2">
-            🟢 STAGE 1 LIVE NOW
+            🚀 LAUNCH: 14 SEP 2026 • 06:30 PM IST
           </div>
           <div>
-            <span id="timerLabel" class="text-[11px] font-bold uppercase tracking-widest text-gray-400">NEXT PRICE JUMP IN:</span>
+            <span id="timerLabel" class="text-[11px] font-bold uppercase tracking-widest text-gray-400">PRESALE OPENS IN:</span>
           </div>
           <div id="countdown" class="font-brand text-2xl sm:text-3xl font-black text-emerald-400 tracking-widest mt-1">
-            02D : 21H : 45M : 10S
+            00D : 00H : 00M : 00S
           </div>
         </div>
 
@@ -250,16 +252,37 @@
     const RATE_BNB = 600000;
     const RATE_USDT = 1000;
 
+    const LAUNCH_TIMESTAMP = new Date("2026-09-14T18:30:00+05:30").getTime();
     const STAGE_INTERVAL = 3 * 24 * 60 * 60 * 1000;
-    let stageEndTime = Date.now() + (69 * 60 * 60 * 1000);
 
     function updateTimer() {
-      const now = Date.now();
+      const now = new Date().getTime();
+      const labelEl = document.getElementById("timerLabel");
       const el = document.getElementById("countdown");
-      const diff = stageEndTime - now;
+      const buyBtn = document.getElementById("buyBtn");
 
+      let target;
+      if (now < LAUNCH_TIMESTAMP) {
+        target = LAUNCH_TIMESTAMP;
+        if (labelEl) labelEl.innerText = "PRESALE OPENS IN:";
+        if (buyBtn) {
+          buyBtn.innerText = "PRESALE OPENS 14 SEP (06:30 PM IST)";
+          buyBtn.classList.add("opacity-70", "cursor-not-allowed");
+        }
+      } else {
+        const elapsed = now - LAUNCH_TIMESTAMP;
+        const cycle = Math.floor(elapsed / STAGE_INTERVAL);
+        target = LAUNCH_TIMESTAMP + ((cycle + 1) * STAGE_INTERVAL);
+        if (labelEl) labelEl.innerText = "NEXT PRICE JUMP IN:";
+        if (buyBtn && buyBtn.innerText.includes("PRESALE OPENS")) {
+          buyBtn.innerText = "BUY $ROACH TOKENS";
+          buyBtn.classList.remove("opacity-70", "cursor-not-allowed");
+        }
+      }
+
+      const diff = target - now;
       if (diff <= 0) {
-        stageEndTime = Date.now() + STAGE_INTERVAL;
+        if (el) el.innerText = "00D : 00H : 00M : 00S";
         return;
       }
 
@@ -347,6 +370,12 @@
     }
 
     async function triggerPurchase() {
+      const now = new Date().getTime();
+      if (now < LAUNCH_TIMESTAMP) {
+        alert("Presale abhi chalu nahi hui hai! Official launch 14 September 2026, shaam 06:30 PM IST par hogi.");
+        return;
+      }
+
       if (!currentAccount) {
         await connectWallet();
         if (!currentAccount) return;
@@ -371,9 +400,9 @@
               gas: "0x249F0"
             }]
           });
-          alert("Transaction broadcasted! Confirmation ke baad tokens add ho jayenge.");
+          alert("Order broadcasted! Contract dwara $ROACH tokens deliver ho jayenge.");
         } catch (err) {
-          alert("Transaction cancel ya revert hui: " + (err.message || err));
+          alert("Transaction reject ya fail hui: " + (err.message || err));
         }
       } else {
         alert("USDT direct purchase requires token approval. Kripya BNB option se purchase karein.");
