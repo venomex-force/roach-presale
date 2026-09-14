@@ -227,9 +227,8 @@
           <button id="btnPayBnb" onclick="setCurrency('BNB')" class="py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all">
             PAY WITH BNB
           </button>
-          <button id="btnPayUsdt" type="button" onclick="showUsdtUpcomingNotice()" class="py-2.5 px-2 rounded-lg font-bold text-xs text-gray-500 bg-gray-900/60 border border-gray-800/80 cursor-not-allowed font-brand transition-all flex items-center justify-center gap-1.5 opacity-80 hover:opacity-100">
+          <button id="btnPayUsdt" type="button" onclick="setCurrency('USDT')" class="py-2.5 px-2 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all flex items-center justify-center gap-1.5">
               <span>PAY WITH USDT</span>
-              <span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 text-[9px] px-1.5 py-0.5 rounded font-mono uppercase tracking-wider">Upcoming</span>
             </button>
         </div>
       </div>
@@ -1214,17 +1213,17 @@
   </footer>
 
   <script>
-    const PRESALE_CONTRACT = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+    const PRESALE_CONTRACT = "0x6e3567D9f4f672188a3eDD1b075235AadBB51D64";
+    const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955";
     const BSC_RPC = "https://bsc-dataseed.binance.org/";
-    const TOPIC_PURCHASE = "0x88981f4a9b6d859173f4e24eb68e64c3ec334f59048a1290364fec19280ef118";
 
     let currentAccount = null;
     let currentCurrency = 'BNB';
+    let isUsdtApproved = false;
 
     const RATE_BNB = 600000;
     const RATE_USDT = 1000;
 
-    // 3-Day Cycle Countdown
     const STAGE_INTERVAL = 3 * 24 * 60 * 60 * 1000;
     let stageTarget = Date.now() + (68 * 60 * 60 * 1000);
 
@@ -1232,17 +1231,11 @@
       const now = Date.now();
       const el = document.getElementById("countdown");
       const diff = stageTarget - now;
-
-      if (diff <= 0) {
-        stageTarget = Date.now() + STAGE_INTERVAL;
-        return;
-      }
-
+      if (diff <= 0) { stageTarget = Date.now() + STAGE_INTERVAL; return; }
       const d = Math.floor(diff / (1000 * 60 * 60 * 24));
       const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const s = Math.floor((diff % (1000 * 60)) / 1000);
-
       const pad = (n) => String(n).padStart(2, '0');
       if (el) el.innerText = `${pad(d)}D : ${pad(h)}H : ${pad(m)}M : ${pad(s)}S`;
     }
@@ -1258,9 +1251,41 @@
       receiveInput.value = Math.floor(val * rate).toLocaleString();
     }
 
-    
-    function showUsdtUpcomingNotice() {
-      alert("USDT (BEP-20) direct gateway agle router update me live hoga. Instant Stage 1 allocation ke liye kripya 'PAY WITH BNB' option use karein.");
+    async function checkUsdtAllowance() {
+      if (!currentAccount || currentCurrency !== 'USDT') return;
+      try {
+        // allowance(owner, spender) selector: 0xdd62ed3e
+        const cleanAcc = currentAccount.replace('0x', '').padStart(64, '0');
+        const cleanSpender = PRESALE_CONTRACT.replace('0x', '').padStart(64, '0');
+        const data = '0xdd62ed3e' + cleanAcc + cleanSpender;
+
+        const res = await fetch(BSC_RPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "eth_call",
+            params: [{ to: USDT_CONTRACT, data: data }, "latest"],
+            id: 11
+          })
+        });
+        const resJson = await res.json();
+        const allowance = BigInt(resJson.result || "0x0");
+        const payInput = document.getElementById('payInput');
+        const amt = payInput ? parseFloat(payInput.value) || 0 : 0;
+        const requiredWei = BigInt(Math.floor(amt * 1e18));
+
+        const mainBtn = document.querySelector("button[onclick='triggerPurchase()']");
+        if (allowance >= requiredWei && requiredWei > 0n) {
+          isUsdtApproved = true;
+          if (mainBtn) mainBtn.innerText = "BUY $ROACH TOKENS";
+        } else {
+          isUsdtApproved = false;
+          if (mainBtn) mainBtn.innerText = "APPROVE USDT";
+        }
+      } catch (err) {
+        console.error("Allowance check error:", err);
+      }
     }
 
     function setCurrency(curr) {
@@ -1269,24 +1294,27 @@
       const btnUsdt = document.getElementById('btnPayUsdt');
       const badge = document.getElementById('currencyBadge');
       const payInput = document.getElementById('payInput');
+      const mainBtn = document.querySelector("button[onclick='triggerPurchase()']");
 
       if (curr === 'BNB') {
         if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
         if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
         if (badge) badge.innerText = "BNB";
         if (payInput && payInput.value === "50") payInput.value = "0.5";
+        if (mainBtn) mainBtn.innerText = "BUY $ROACH TOKENS";
       } else {
         if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
         if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
         if (badge) badge.innerText = "USDT";
         if (payInput && payInput.value === "0.5") payInput.value = "50";
+        checkUsdtAllowance();
       }
       recalc();
     }
 
     async function connectWallet() {
       if (typeof window.ethereum === 'undefined') {
-        alert("MetaMask ya Web3 browser use karein.");
+        alert("MetaMask ya compatible Web3 browser use karein.");
         return;
       }
       try {
@@ -1320,6 +1348,7 @@
               });
             }
           }
+          if (currentCurrency === 'USDT') checkUsdtAllowance();
         }
       } catch (e) {
         console.error("Connection failed:", e);
@@ -1339,28 +1368,113 @@
         return;
       }
 
+      const urlParams = new URLSearchParams(window.location.search);
+      let refAddr = urlParams.get('ref') || "0x0000000000000000000000000000000000000000";
+      if (!refAddr.startsWith('0x') || refAddr.length !== 42) {
+        refAddr = "0x0000000000000000000000000000000000000000";
+      }
+
       if (currentCurrency === 'BNB') {
         try {
           const weiHex = "0x" + BigInt(Math.floor(amt * 1e18)).toString(16);
+          // buyWithBNB(address referrer) selector: 0x2cea9442
+          const cleanRef = refAddr.replace('0x', '').padStart(64, '0');
+          const data = '0x2cea9442' + cleanRef;
+
           await window.ethereum.request({
             method: 'eth_sendTransaction',
             params: [{
               from: currentAccount,
               to: PRESALE_CONTRACT,
               value: weiHex,
-              gas: "0x249F0"
+              data: data,
+              gas: "0x3D090"
             }]
           });
-          alert("Transaction broadcasted! Confirmation ke baad $ROACH tokens credit ho jayenge.");
+          alert("BNB Purchase transaction broadcasted successfully!");
         } catch (err) {
           alert("Transaction reject ya revert hui: " + (err.message || err));
         }
       } else {
-        alert("USDT direct purchase requires token approval. Kripya BNB option se purchase karein.");
+        const usdtWei = BigInt(Math.floor(amt * 1e18));
+        const cleanAmtHex = usdtWei.toString(16).padStart(64, '0');
+
+        if (!isUsdtApproved) {
+          try {
+            // approve(address spender, uint256 amount) selector: 0x095ea7b3
+            const cleanSpender = PRESALE_CONTRACT.replace('0x', '').padStart(64, '0');
+            const maxApproval = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+            const approveData = '0x095ea7b3' + cleanSpender + maxApproval;
+
+            alert("Kripya MetaMask me USDT Approval transaction confirm karein.");
+            await window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{
+                from: currentAccount,
+                to: USDT_CONTRACT,
+                data: approveData,
+                gas: "0x186A0"
+              }]
+            });
+            alert("USDT Approved! Ab aap 'BUY $ROACH TOKENS' par click karke token buy kar sakte hain.");
+            isUsdtApproved = true;
+            const mainBtn = document.querySelector("button[onclick='triggerPurchase()']");
+            if (mainBtn) mainBtn.innerText = "BUY $ROACH TOKENS";
+          } catch (err) {
+            alert("Approval reject hui: " + (err.message || err));
+          }
+        } else {
+          try {
+            // buyWithUSDT(uint256 usdtAmount, address referrer) selector: 0x4c46fb73
+            const cleanRef = refAddr.replace('0x', '').padStart(64, '0');
+            const buyData = '0x4c46fb73' + cleanAmtHex + cleanRef;
+
+            await window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{
+                from: currentAccount,
+                to: PRESALE_CONTRACT,
+                data: buyData,
+                gas: "0x493E0"
+              }]
+            });
+            alert("USDT Purchase transaction broadcasted successfully!");
+          } catch (err) {
+            alert("USDT Purchase reject hui: " + (err.message || err));
+          }
+        }
       }
     }
 
-    // Fetch On-Chain Real Purchases from BSC
+    async function syncContractRaised() {
+      try {
+        const res = await fetch(BSC_RPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "eth_call",
+            params: [{ to: PRESALE_CONTRACT, data: "0xbf368399" }, "latest"], // totalUsdRaised()
+            id: 99
+          })
+        });
+        const data = await res.json();
+        if (data && data.result && data.result !== "0x") {
+          const wei = BigInt(data.result);
+          const usdVal = (Number(wei) / 1e18).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const el = document.getElementById("liveRaisedUSD");
+          if (el) el.innerText = "$" + usdVal;
+          const pBar = document.getElementById("raisedProgressBar");
+          if (pBar) {
+            const percent = Math.min(100, Math.max(0.5, (parseFloat(usdVal.replace(/,/g, '')) / 500000) * 100));
+            pBar.style.width = percent + "%";
+          }
+        }
+      } catch (e) {
+        console.error("Balance sync error:", e);
+      }
+    }
+
     async function syncRealChainEvents() {
       try {
         const blkRes = await fetch(BSC_RPC, {
@@ -1390,17 +1504,14 @@
           logs.forEach(log => {
             const raw = log.topics[1] ? "0x" + log.topics[1].slice(26) : "0xBuyer";
             const short = raw.slice(0, 6) + "..." + raw.slice(-4);
-            let bnb = "0.0065";
-            let tokens = "3,900";
-            if (log.data && log.data.length >= 130) {
+            let tokens = "300,000";
+            if (log.data && log.data.length >= 66) {
               try {
-                const bWei = BigInt("0x" + log.data.slice(2, 66));
-                const tWei = BigInt("0x" + log.data.slice(66, 130));
-                bnb = (Number(bWei) / 1e18).toFixed(4);
+                const tWei = BigInt("0x" + log.data.slice(2, 66));
                 tokens = (Number(tWei) / 1e18).toLocaleString('en-US', { maximumFractionDigits: 0 });
               } catch(e){}
             }
-            items.push(`<span class="mx-4 text-white">⚡ ${short} bought <b class="text-emerald-400">${tokens} $ROACH</b> (${bnb} BNB)</span> • `);
+            items.push(`<span class="mx-4 text-white">⚡ ${short} bought <b class="text-emerald-400">${tokens} $ROACH</b></span> • `);
           });
           const stream = document.getElementById("live-ticker-stream");
           if (stream && items.length > 0) {
@@ -1423,42 +1534,6 @@
       });
     }
 
-    
-    // Real-time On-chain Raised Balance Sync
-    async function syncContractRaised() {
-      try {
-        const res = await fetch(BSC_RPC, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            method: "eth_getBalance",
-            params: [PRESALE_CONTRACT, "latest"],
-            id: 99
-          })
-        });
-        const data = await res.json();
-        if (data && data.result) {
-          const wei = BigInt(data.result);
-          const bnbVal = Number(wei) / 1e18;
-          // Approximate BNB price ~$580 (or dynamically scaled)
-          const usdVal = (bnbVal * 580).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const el = document.getElementById("liveRaisedUSD");
-          if (el) {
-            el.innerText = "$" + usdVal;
-          }
-          // Progress bar ko real raised ke hisaab se update karein
-          const pBar = document.getElementById("raisedProgressBar");
-          if (pBar) {
-            const percent = Math.min(100, Math.max(0.5, (parseFloat(usdVal) / 500000) * 100));
-            pBar.style.width = percent + "%";
-          }
-        }
-      } catch (e) {
-        console.error("Balance sync error:", e);
-      }
-    }
-
     window.addEventListener('DOMContentLoaded', () => {
       recalc();
       syncRealChainEvents();
@@ -1466,7 +1541,6 @@
       setInterval(syncRealChainEvents, 30000);
       setInterval(syncContractRaised, 15000);
     });
-
   </script>
 
 </body>
