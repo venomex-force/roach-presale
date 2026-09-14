@@ -735,6 +735,46 @@
 
   <script>
 
+  // Universal Copy Contract Address Handler
+  window.copyContractAddress = function() {
+    const ca = "0x70008f3f24f17Ed6981136B248399dfcEF982078"; // $ROACH Token Contract
+    const btnText = document.getElementById("copyCaText");
+    const btnIcon = document.getElementById("copyCaIcon");
+
+    const onSuccess = () => {
+      if (btnText) btnText.innerText = "COPIED! ✅";
+      if (btnIcon) btnIcon.innerText = "✓";
+      setTimeout(() => {
+        if (btnText) btnText.innerText = "COPY CA";
+        if (btnIcon) btnIcon.innerText = "📋";
+      }, 2000);
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(ca).then(onSuccess).catch(() => fallbackCopy(ca, onSuccess));
+    } else {
+      fallbackCopy(ca, onSuccess);
+    }
+
+    function fallbackCopy(text, cb) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        cb();
+      } catch (err) {
+        prompt("Copy contract address:", text);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
+
   // Universal Multi-Wallet Alias
   window.handleModalWalletConnect = function() {
     if (typeof connectWallet === 'function') {
