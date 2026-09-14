@@ -610,7 +610,7 @@
               </p>
             </div>
             <div>
-              <button onclick="handleModalWalletConnect()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-brand font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer">
+              <button onclick="connectWallet()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-brand font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer">
                 Connect Wallet
               </button>
             </div>
@@ -734,6 +734,14 @@
   </footer>
 
   <script>
+
+  // Universal Multi-Wallet Alias
+  window.handleModalWalletConnect = function() {
+    if (typeof connectWallet === 'function') {
+      connectWallet();
+    }
+  };
+
     const PRESALE_CONTRACT = "0x6e3567D9f4f672188a3eDD1b075235AadBB51D64";
     const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955";
     const BSC_RPC = "https://bsc-dataseed.binance.org/";
