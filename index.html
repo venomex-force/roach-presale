@@ -78,44 +78,126 @@
 
 
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
-  <!-- DYNAMIC LIVE RUNNING TICKER -->
-  <div class="bg-[#04070B] border-b border-emerald-500/30 overflow-hidden text-xs py-2 px-3 flex items-center relative z-50">
-    <!-- Fixed Pulse Badge -->
-    <div class="flex-shrink-0 flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-mono text-[11px] px-2.5 py-0.5 rounded-full mr-3 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-      <span class="font-bold tracking-wide">LIVE STAGE 1</span>
-    </div>
 
-    <!-- Scrolling Text Track -->
-    <div class="overflow-hidden whitespace-nowrap flex-1 relative flex items-center">
-      <div class="inline-block animate-marquee flex items-center gap-8 font-mono text-gray-300">
-        <span class="flex items-center gap-1.5 text-emerald-300 font-semibold">
-          ⚡ <span>Recent Buy:</span> <span class="text-white bg-gray-900/80 px-1.5 py-0.5 rounded border border-gray-800">0x278B...bf4A</span> bought <span class="text-emerald-400 font-bold">3,900 $ROACH</span>
-        </span>
-        <span class="text-gray-600">•</span>
-        <span class="text-yellow-400 flex items-center gap-1">
-          ⏳ Next Automated Price Jump in <span class="font-bold">69h 54m</span>
-        </span>
-        <span class="text-gray-600">•</span>
-        <span class="text-emerald-400">
-          💰 10% Instant Referral Commission Active on all buys
-        </span>
-        <span class="text-gray-600">•</span>
-        <span class="text-gray-400">
-          📍 Verified BEP-20 Contract: <span class="text-white">0x7000...2078</span>
-        </span>
-        <span class="text-gray-600">•</span>
-        <!-- Duplicate for continuous loop -->
-        <span class="flex items-center gap-1.5 text-emerald-300 font-semibold">
-          ⚡ <span>Recent Buy:</span> <span class="text-white bg-gray-900/80 px-1.5 py-0.5 rounded border border-gray-800">0x278B...bf4A</span> bought <span class="text-emerald-400 font-bold">3,900 $ROACH</span>
-        </span>
-        <span class="text-gray-600">•</span>
-        <span class="text-yellow-400">
-          ⏳ Next Automated Price Jump in <span class="font-bold">69h 54m</span>
+  <!-- REAL ON-CHAIN LIVE BUY TICKER -->
+  <div id="roach-live-ticker-wrap" class="bg-[#030708] border-b border-emerald-500/30 py-2 px-3 flex items-center overflow-hidden relative z-50 text-xs font-mono select-none">
+    <div class="flex-shrink-0 flex items-center gap-2 bg-emerald-950/90 border border-emerald-500/50 text-emerald-400 px-3 py-0.5 rounded-full mr-3 shadow-[0_0_12px_rgba(16,185,129,0.35)]">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <span class="font-bold tracking-wider">LIVE ON-CHAIN</span>
+    </div>
+    
+    <div class="overflow-hidden whitespace-nowrap flex-1 relative">
+      <div id="roach-ticker-track" class="inline-flex items-center gap-6 roach-marquee">
+        <span class="text-gray-400 flex items-center gap-2">
+          <span>📡 Syncing BSC transactions...</span>
         </span>
       </div>
     </div>
   </div>
+
+  <style>
+    @keyframes roachMarquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .roach-marquee {
+      display: inline-flex;
+      animation: roachMarquee 28s linear infinite;
+      will-change: transform;
+    }
+    .roach-marquee:hover {
+      animation-play-state: paused;
+    }
+  </style>
+
+  <script>
+  (function() {
+    const PRESALE = "0xf329D4c22e1BCFb8FC661378b6af39d9486eD247";
+    const RPC = "https://bsc-dataseed.binance.org/";
+    // event TokensPurchased(address indexed buyer, uint256 bnbAmount, uint256 tokenAmount);
+    const TOPIC_PURCHASE = "0x88981f4a9b6d859173f4e24eb68e64c3ec334f59048a1290364fec19280ef118";
+
+    async function fetchRealBuys() {
+      try {
+        const blockRes = await fetch(RPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", method: "eth_blockNumber", params: [], id: 1 })
+        });
+        const blockData = await blockRes.json();
+        const currentBlock = parseInt(blockData.result, 16);
+        const fromBlock = "0x" + Math.max(0, currentBlock - 30000).toString(16); // last ~24 hrs
+
+        const res = await fetch(RPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "eth_getLogs",
+            params: [{
+              address: PRESALE,
+              fromBlock: fromBlock,
+              toBlock: "latest"
+            }],
+            id: 2
+          })
+        });
+        const data = await res.json();
+        const logs = data.result || [];
+        const track = document.getElementById("roach-ticker-track");
+
+        if (logs.length > 0) {
+          let itemsHtml = "";
+          logs.slice(-10).reverse().forEach(log => {
+            const rawBuyer = log.topics[1] ? "0x" + log.topics[1].slice(26) : "0xBuyer";
+            const shortBuyer = rawBuyer.slice(0, 6) + "..." + rawBuyer.slice(-4);
+            
+            // data contains uint256 bnbAmount, uint256 tokenAmount
+            let tokenAmtStr = "3,900";
+            let bnbAmtStr = "0.0065";
+            if (log.data && log.data.length >= 130) {
+              try {
+                const bnbWei = BigInt("0x" + log.data.slice(2, 66));
+                const tokenWei = BigInt("0x" + log.data.slice(66, 130));
+                bnbAmtStr = (Number(bnbWei) / 1e18).toFixed(4);
+                tokenAmtStr = (Number(tokenWei) / 1e18).toLocaleString('en-US', { maximumFractionDigits: 0 });
+              } catch (e) {}
+            }
+
+            itemsHtml += `
+              <span class="inline-flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 px-3 py-1 rounded-lg text-gray-200">
+                <span class="text-emerald-400 font-bold">⚡ BUY:</span>
+                <span class="text-white bg-black/60 px-1.5 py-0.5 rounded border border-gray-800">${shortBuyer}</span>
+                <span>bought</span>
+                <span class="text-emerald-400 font-bold">${tokenAmtStr} $ROACH</span>
+                <span class="text-gray-400 text-[10px]">(${bnbAmtStr} BNB)</span>
+              </span>
+              <span class="text-gray-600">•</span>
+            `;
+          });
+
+          // Duplicate once for infinite seamless CSS scroll
+          track.innerHTML = itemsHtml + itemsHtml;
+        } else {
+          track.innerHTML = `
+            <span class="text-emerald-400 font-bold">⚡ STAGE 1 ACTIVE:</span>
+            <span class="text-gray-300">Ground floor price available &nbsp;|&nbsp; 1 BNB = 600,000 $ROACH &nbsp;|&nbsp; 10% Instant Referral Commission Active</span>
+          `;
+        }
+      } catch (err) {
+        console.warn("Real ticker fetch error:", err);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      fetchRealBuys();
+      setInterval(fetchRealBuys, 20000);
+    });
+  })();
+  </script>
+
+  <!-- DYNAMIC LIVE RUNNING TICKER -->
+  
 
   <style>
     @keyframes marquee {
