@@ -7,14 +7,9 @@ import "../contracts/RoachPresalePro.sol";
 
 contract DeployProtocol is Script {
     function run() external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        address deployer = vm.addr(deployerPrivateKey);
+        vm.startBroadcast();
 
-        console.log("Deploying contracts with deployer:", deployer);
-
-        vm.startBroadcast(deployerPrivateKey);
-
-        // 1. Deploy CockroachToken (1 Billion Supply)
+        // 1. Deploy CockroachToken (1 Billion Total Supply)
         CockroachToken roach = new CockroachToken("CockroachAI", "ROACH", 1_000_000_000);
         console.log("CockroachToken deployed at:", address(roach));
 
