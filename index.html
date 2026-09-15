@@ -1282,9 +1282,22 @@
         <!-- MetaMask -->
         <button onclick="triggerWallet('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
           <div class="flex items-center gap-3">
-            <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" 
-     onerror="this.onerror=null;this.src='https://unpkg.com/@walletconnect/modal@2.6.2/dist/index.js';" 
-     class="w-8 h-8 object-contain shrink-0" alt="MetaMask" />
+            <div class="w-8 h-8 rounded-xl bg-[#F6851B]/20 flex items-center justify-center shrink-0 border border-[#F6851B]/40">
+  <svg class="w-5 h-5" viewBox="0 0 32 32" fill="none">
+    <path d="M27.05 6.64l-9.87 7.28 1.83-4.32L27.05 6.64z" fill="#E2761B"/>
+    <path d="M4.95 6.64l9.76 7.37-1.72-4.41L4.95 6.64z" fill="#E4761B"/>
+    <path d="M22.88 20.73l-2.62 4.02 5.86 1.61 1.7-5.83-4.94.2z" fill="#E4761B"/>
+    <path d="M4.2 20.53l1.69 5.83 5.85-1.61-2.6-4.02-4.94-.2z" fill="#E4761B"/>
+    <path d="M10.87 14.39l-1.63 2.46 5.81.26-.22-6.26-3.96 3.54z" fill="#E4761B"/>
+    <path d="M21.13 14.39l-4.02-3.64-.17 6.36 5.82-.26-1.63-2.46z" fill="#E4761B"/>
+    <path d="M11.74 24.75l3.29-1.6-2.85-2.22-.44 3.82z" fill="#D7C1B3"/>
+    <path d="M20.26 24.75l-.44-3.82-2.86 2.22 3.3 1.6z" fill="#D7C1B3"/>
+    <path d="M15.03 23.15l-3.23-1.57 2.58-1.19.65 2.76z" fill="#233447"/>
+    <path d="M16.97 23.15l.65-2.76 2.58 1.19-3.23 1.57z" fill="#233447"/>
+    <path d="M16 17.5l-4.95-.35 3.89 3.01.99-.44.07-2.22z" fill="#CD6116"/>
+    <path d="M16 17.5l.07 2.22.99.44 3.89-3.01L16 17.5z" fill="#CD6116"/>
+  </svg>
+</div>
             <span class="font-bold text-sm text-white">MetaMask</span>
           </div>
           <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-400 font-semibold tracking-wide">RECENT</span>
@@ -1366,11 +1379,9 @@
     };
 
     window.triggerWallet = async function(type) {
-      const cleanHost = window.location.host + window.location.pathname;
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
       closeWalletModal();
 
+      // 1. If inside any Web3 DApp Browser (MetaMask, Trust, Binance)
       if (window.ethereum) {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -1378,28 +1389,33 @@
             updateWalletUI(accounts[0]);
           }
           return;
-        } catch(e) { console.warn(e); }
+        } catch(err) {
+          console.warn("Connection cancelled", err);
+          return;
+        }
       }
 
-      if (isMobile) {
-        if (type === 'metamask') {
-          window.location.href = "https://metamask.app.link/dapp/" + cleanHost;
-        } else if (type === 'trust') {
-          window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(window.location.href);
-        } else if (type === 'binance') {
-          window.location.href = "bnc://app.binance.com/cedefi/dapp?url=" + encodeURIComponent(window.location.href);
-        } else if (type === 'coinbase') {
-          window.location.href = "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(window.location.href);
-        } else {
-          // Open AppKit Explorer for 550+
-          if (window.roachAppKit) window.roachAppKit.open();
-        }
-      } else {
-        if (window.roachAppKit) {
+      // 2. Open standard Reown AppKit modal directly without triggering malicious URL redirects
+      if (window.roachAppKit) {
+        try {
           window.roachAppKit.open();
-        } else {
-          alert("Please install MetaMask or your preferred Web3 extension.");
+          return;
+        } catch(e) {
+          console.warn("AppKit open error", e);
         }
+      }
+
+      // 3. Fallback: Normal protocol trigger
+      const cleanUrl = window.location.origin + window.location.pathname;
+      if (type === 'metamask') {
+        // Direct intent without phishing aggregator
+        window.location.href = "https://metamask.app.link/dapp/" + window.location.host;
+      } else if (type === 'trust') {
+        window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(cleanUrl);
+      } else if (type === 'binance') {
+        window.location.href = "bnc://app.binance.com/cedefi/dapp?url=" + encodeURIComponent(cleanUrl);
+      } else if (type === 'coinbase') {
+        window.location.href = "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(cleanUrl);
       }
     };
 
