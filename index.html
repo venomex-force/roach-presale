@@ -30,55 +30,7 @@
   <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
   
   <!-- Official Reown AppKit CDN Bundle -->
-  <script type="module">
-    import { createAppKit } from 'https://esm.sh/@reown/appkit@1.6.8?bundle';
-    import { bsc } from 'https://esm.sh/@reown/appkit@1.6.8/networks?bundle';
-    import { EthersAdapter } from 'https://esm.sh/@reown/appkit-adapter-ethers@1.6.8?bundle';
-
-    const projectId = 'c4f79cc821944d9680842e34466bfbd';
-
-    const modal = createAppKit({
-      adapters: [new EthersAdapter()],
-      networks: [bsc],
-      projectId: projectId,
-      metadata: {
-        name: '$ROACH Presale',
-        description: 'AI-Powered DEX Intelligence & Presale',
-        url: window.location.origin,
-        icons: ['https://cockroachai.co/assets/logo.png']
-      },
-      themeMode: 'dark',
-      themeVariables: {
-        '--w3m-accent': '#10b981',
-        '--w3m-border-radius-master': '16px',
-        '--w3m-z-index': 999999
-      },
-      featuredWalletIds: [
-        'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
-        '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust
-        '8a0ee50d18f9e6100c173245388e4d5663e80cb047c00f738e49ab4c2a110c68', // Binance
-        'fd20dc426e43b3b186794000f10b50c7326a49230ea571573d00ef2b965457a1'  // Base / Coinbase
-      ],
-      allWallets: 'SHOW',
-      features: {
-        analytics: false,
-        email: false,
-        socials: [],
-        allWallets: true
-      }
-    });
-
-    window.roachAppKit = modal;
-
-    // Listen to account changes from AppKit modal
-    modal.subscribeAccount(state => {
-      if (state.isConnected && state.address) {
-        if (typeof updateWalletUI === 'function') {
-          updateWalletUI(state.address);
-        }
-      }
-    });
-  </script>
+  
 </head>
 
 
@@ -1353,60 +1305,58 @@
   </script>
 
   <!-- Official 4-Wallet Connect Sheet -->
-  <div id="customWalletModal" class="fixed inset-0 z-[999999] hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm">
-    <div class="w-full sm:max-w-md bg-[#141414] border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 text-white shadow-2xl">
+  
+
+  <!-- Pure 4-Wallet Selection Sheet -->
+  <div id="roachWalletModal" class="fixed inset-0 z-[999999] hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-md">
+    <div class="w-full sm:max-w-md bg-[#121316] border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 text-white shadow-2xl">
       
-      <!-- Header -->
       <div class="flex items-center justify-between pb-4 border-b border-white/10">
         <div class="flex items-center gap-2 text-sm text-gray-400">
-          <span class="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center text-xs font-bold text-gray-400">?</span>
-          <span class="font-semibold text-white">Connect Wallet</span>
+          <span class="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center text-xs font-bold text-gray-300">?</span>
+          <span class="font-semibold text-white tracking-wide">Connect Wallet</span>
         </div>
-        <button onclick="closeWalletModal()" class="text-gray-400 hover:text-white text-2xl leading-none px-2">&times;</button>
+        <button onclick="closeRoachModal()" class="text-gray-400 hover:text-white text-2xl font-light leading-none p-1">&times;</button>
       </div>
 
-      <!-- 4 Wallet Options -->
       <div class="mt-4 space-y-2.5">
-        
         <!-- MetaMask -->
-        <button onclick="connectProvider('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="assets/metamask_fox.svg?v=2" onerror="this.onerror=null;this.src='assets/metamask.svg';" class="w-8 h-8 object-contain shrink-0" alt="MetaMask" />
+        <button onclick="executeWalletConnect('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d22] hover:bg-[#25272e] border border-white/5 transition-all active:scale-[0.98]">
+          <div class="flex items-center gap-3.5">
+            <img src='https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg' class="w-8 h-8 object-contain shrink-0" alt="MetaMask" />
             <span class="font-bold text-sm text-white">MetaMask</span>
           </div>
-          <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-400 font-semibold tracking-wide">RECENT</span>
+          <span class="text-[10px] bg-white/10 text-gray-300 px-2 py-0.5 rounded font-semibold tracking-wider">RECENT</span>
         </button>
 
         <!-- Trust Wallet -->
-        <button onclick="connectProvider('trust')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="https://assets.coingecko.com/coins/images/11085/large/Trust.png" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Trust Wallet" />
+        <button onclick="executeWalletConnect('trust')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d22] hover:bg-[#25272e] border border-white/5 transition-all active:scale-[0.98]">
+          <div class="flex items-center gap-3.5">
+            <img src='https://assets.coingecko.com/coins/images/11085/large/Trust.png' class="w-8 h-8 rounded-lg object-contain shrink-0" alt="Trust Wallet" />
             <span class="font-bold text-sm text-white">Trust Wallet</span>
           </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
+          <span class="text-gray-500 text-lg font-light">&rsaquo;</span>
         </button>
 
         <!-- Binance Wallet -->
-        <button onclick="connectProvider('binance')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Binance Wallet" />
+        <button onclick="executeWalletConnect('binance')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d22] hover:bg-[#25272e] border border-white/5 transition-all active:scale-[0.98]">
+          <div class="flex items-center gap-3.5">
+            <img src='https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png' class="w-8 h-8 rounded-lg object-contain shrink-0" alt="Binance Wallet" />
             <span class="font-bold text-sm text-white">Binance Wallet</span>
           </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
+          <span class="text-gray-500 text-lg font-light">&rsaquo;</span>
         </button>
 
         <!-- Base / Coinbase Wallet -->
-        <button onclick="connectProvider('coinbase')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="https://avatars.githubusercontent.com/u/1885080?s=200&v=4" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Base Coinbase Wallet" />
-            <span class="font-bold text-sm text-white">Base <span class="text-gray-400 text-xs font-normal">(formerly Coinbase Wallet)</span></span>
+        <button onclick="executeWalletConnect('coinbase')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d22] hover:bg-[#25272e] border border-white/5 transition-all active:scale-[0.98]">
+          <div class="flex items-center gap-3.5">
+            <img src='https://avatars.githubusercontent.com/u/1885080?s=200&v=4' class="w-8 h-8 rounded-lg object-contain shrink-0" alt="Base Wallet" />
+            <span class="font-bold text-sm text-white">Base <span class="text-gray-400 text-xs font-normal">(Coinbase)</span></span>
           </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
+          <span class="text-gray-500 text-lg font-light">&rsaquo;</span>
         </button>
-
       </div>
 
-      <!-- Footer Badge -->
       <div class="mt-4 pt-3 border-t border-white/5 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
         <span>UX by</span>
         <span class="text-white font-semibold flex items-center gap-1">
@@ -1416,5 +1366,79 @@
 
     </div>
   </div>
+
+  <script>
+    window.openRoachModal = function() {
+      const modal = document.getElementById('roachWalletModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    window.closeRoachModal = function() {
+      const modal = document.getElementById('roachWalletModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    };
+
+    window.connectWallet = function() {
+      window.openRoachModal();
+    };
+
+    window.executeWalletConnect = async function(walletType) {
+      // 1. Agar dApp browser ke andar hai (MetaMask/Trust/Binance internal browser)
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          if (accounts && accounts.length > 0) {
+            handleAccountUpdate(accounts[0]);
+            return;
+          }
+        } catch (err) {
+          console.warn("Connection cancelled", err);
+          return;
+        }
+      }
+
+      // 2. Normal mobile browser standard app redirection
+      const fullUrl = window.location.href;
+      const hostName = window.location.hostname;
+
+      if (walletType === 'metamask') {
+        window.location.href = "https://metamask.app.link/dapp/" + hostName;
+      } else if (walletType === 'trust') {
+        window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(fullUrl);
+      } else if (walletType === 'binance') {
+        window.location.href = "bnc://app.binance.com/cedefi/dapp?url=" + encodeURIComponent(fullUrl);
+      } else if (walletType === 'coinbase') {
+        window.location.href = "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(fullUrl);
+      }
+
+      setTimeout(() => {
+        closeRoachModal();
+      }, 1200);
+    };
+
+    function handleAccountUpdate(account) {
+      window.userAccount = account;
+      const shortAddr = account.substring(0, 6) + "..." + account.substring(account.length - 4);
+
+      document.querySelectorAll("button").forEach(btn => {
+        const text = btn.innerText || "";
+        if (text.includes("CONNECT WALLET") || text.includes("Connect Wallet")) {
+          btn.innerHTML = '🟢 ' + shortAddr;
+          btn.classList.add("bg-emerald-950", "border-emerald-500/50", "text-emerald-300");
+        }
+      });
+
+      closeRoachModal();
+      if (typeof updateWalletUI === 'function') updateWalletUI(account);
+      if (typeof checkUserBalance === 'function') checkUserBalance(account);
+    }
+  </script>
+
 </body>
 </html>
