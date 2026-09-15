@@ -1323,7 +1323,9 @@
         <!-- MetaMask -->
         <button onclick="executeWalletConnect('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d22] hover:bg-[#25272e] border border-white/5 transition-all active:scale-[0.98]">
           <div class="flex items-center gap-3.5">
-            <img src='https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg' class="w-8 h-8 object-contain shrink-0" alt="MetaMask" />
+            <img src="https://assets.coingecko.com/markets/images/681/large/metamask.png" 
+     onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg';" 
+     class="w-8 h-8 rounded-lg object-contain shrink-0" alt="MetaMask" />
             <span class="font-bold text-sm text-white">MetaMask</span>
           </div>
           <span class="text-[10px] bg-white/10 text-gray-300 px-2 py-0.5 rounded font-semibold tracking-wider">RECENT</span>
@@ -1389,7 +1391,7 @@
     };
 
     window.executeWalletConnect = async function(walletType) {
-      // 1. Agar dApp browser ke andar hai (MetaMask/Trust/Binance internal browser)
+      // Priority 1: User is already inside In-App Browser (MetaMask, Trust, Binance Web3)
       if (window.ethereum) {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -1398,28 +1400,29 @@
             return;
           }
         } catch (err) {
-          console.warn("Connection cancelled", err);
+          console.warn("User cancelled", err);
           return;
         }
       }
 
-      // 2. Normal mobile browser standard app redirection
-      const fullUrl = window.location.href;
+      // Priority 2: Standard Universal Routes for Mobile
+      const cleanUrl = window.location.origin + window.location.pathname;
       const hostName = window.location.hostname;
 
       if (walletType === 'metamask') {
         window.location.href = "https://metamask.app.link/dapp/" + hostName;
       } else if (walletType === 'trust') {
-        window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(fullUrl);
+        window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(cleanUrl);
       } else if (walletType === 'binance') {
-        window.location.href = "bnc://app.binance.com/cedefi/dapp?url=" + encodeURIComponent(fullUrl);
+        // Universal Binance CeDeFi DApp redirect (Fixes the copy-paste prompt)
+        window.location.href = "https://app.binance.com/cedefi/dapp?url=" + encodeURIComponent(cleanUrl);
       } else if (walletType === 'coinbase') {
-        window.location.href = "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(fullUrl);
+        window.location.href = "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(cleanUrl);
       }
 
       setTimeout(() => {
         closeRoachModal();
-      }, 1200);
+      }, 1500);
     };
 
     function handleAccountUpdate(account) {
