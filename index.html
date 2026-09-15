@@ -48,6 +48,8 @@
     window.roachAppKitModal = modal;
   </script>
 
+  <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+  <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
 </head>
 
 
@@ -907,7 +909,7 @@
 
     async function connectWallet() {
       if (typeof window.ethereum === 'undefined') {
-        alert("Please install MetaMask or open this site in a Web3-compatible browser.");
+        
         return;
       }
       try {
@@ -1135,6 +1137,77 @@
       setInterval(syncContractRaised, 15000);
     });
   </script>
+
+
+<script>
+  // Robust Universal Connect Wallet
+  let web3ModalInstance = null;
+
+  function initWeb3Modal() {
+    if (window.Web3Modal) {
+      const providerOptions = {
+        walletconnect: {
+          package: window.WalletConnectProvider ? window.WalletConnectProvider.default : null,
+          options: {
+            rpc: { 56: "https://bsc-dataseed.binance.org/" },
+            chainId: 56
+          }
+        }
+      };
+      web3ModalInstance = new window.Web3Modal.default({
+        network: "binance",
+        theme: "dark",
+        cacheProvider: false,
+        providerOptions
+      });
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", initWeb3Modal);
+
+  window.connectWallet = async function() {
+    // 1. If Reown/AppKit loaded
+    if (window.roachAppKitModal) {
+      try {
+        await window.roachAppKitModal.open();
+        return;
+      } catch (e) { console.warn(e); }
+    }
+
+    // 2. If Web3Modal loaded
+    if (web3ModalInstance) {
+      try {
+        const provider = await web3ModalInstance.connect();
+        if (provider) {
+          const web3 = new Web3(provider);
+          const accounts = await web3.eth.getAccounts();
+          if (accounts.length && typeof updateWalletUI === "function") {
+            updateWalletUI(accounts[0]);
+          }
+          return;
+        }
+      } catch (e) { console.warn("Modal closed/failed", e); }
+    }
+
+    // 3. If Injected Provider (MetaMask extension, TrustWallet browser, etc.)
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        if (accounts.length && typeof updateWalletUI === "function") {
+          updateWalletUI(accounts[0]);
+        }
+        return;
+      } catch (e) { console.warn("Injected rejected", e); }
+    }
+
+    // 4. Mobile Fallback: Direct Deep-link redirect without error alert
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      const cleanHost = window.location.host + window.location.pathname;
+      window.location.href = "https://metamask.app.link/dapp/" + cleanHost;
+    }
+  };
+</script>
 
 </body>
 </html>
