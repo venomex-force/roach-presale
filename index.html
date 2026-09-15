@@ -1267,62 +1267,7 @@
 
 
   <!-- Standard Web3 Connect Sheet -->
-  <div id="customWalletModal" class="fixed inset-0 z-[999999] hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm">
-    <div class="w-full sm:max-w-md bg-[#141414] border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 text-white shadow-2xl">
-      
-      <div class="flex items-center justify-between pb-4 border-b border-white/10">
-        <div class="flex items-center gap-2 text-sm text-gray-400">
-          <span class="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center text-xs font-bold text-gray-400">?</span>
-          <span class="font-semibold text-white">Connect Wallet</span>
-        </div>
-        <button onclick="closeWalletModal()" class="text-gray-400 hover:text-white text-2xl px-2">&times;</button>
-      </div>
-
-      <div class="mt-4 space-y-2.5">
-        <!-- MetaMask (Official Brand CDN) -->
-        <button onclick="connectProvider('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="assets/metamask.png" class="w-8 h-8 object-contain shrink-0" alt="MetaMask" />
-            <span class="font-bold text-sm text-white">MetaMask</span>
-          </div>
-          <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-400 font-semibold tracking-wide">RECENT</span>
-        </button>
-
-        <!-- Trust Wallet -->
-        <button onclick="connectProvider('trust')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="https://assets.coingecko.com/coins/images/11085/large/Trust.png" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Trust Wallet" />
-            <span class="font-bold text-sm text-white">Trust Wallet</span>
-          </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
-        </button>
-
-        <!-- Binance Web3 Wallet -->
-        <button onclick="connectProvider('binance')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Binance Wallet" />
-            <span class="font-bold text-sm text-white">Binance Wallet</span>
-          </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
-        </button>
-
-        <!-- Base / Coinbase -->
-        <button onclick="connectProvider('coinbase')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
-          <div class="flex items-center gap-3">
-            <img src="https://avatars.githubusercontent.com/u/1885080?s=200&v=4" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Coinbase" />
-            <span class="font-bold text-sm text-white">Base <span class="text-gray-400 text-xs font-normal">(Coinbase)</span></span>
-          </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
-        </button>
-      </div>
-
-      <div class="mt-4 pt-3 border-t border-white/5 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
-        <span>UX by</span>
-        <span class="text-white font-semibold flex items-center gap-1">
-          <span class="text-emerald-400 font-bold">/</span> reown
-        </span>
-      </div>
-    </div>
+  
   </div>
 
   <script>
@@ -1407,5 +1352,69 @@
     }
   </script>
 
+  <!-- Official 4-Wallet Connect Sheet -->
+  <div id="customWalletModal" class="fixed inset-0 z-[999999] hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="w-full sm:max-w-md bg-[#141414] border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 text-white shadow-2xl">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center gap-2 text-sm text-gray-400">
+          <span class="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center text-xs font-bold text-gray-400">?</span>
+          <span class="font-semibold text-white">Connect Wallet</span>
+        </div>
+        <button onclick="closeWalletModal()" class="text-gray-400 hover:text-white text-2xl leading-none px-2">&times;</button>
+      </div>
+
+      <!-- 4 Wallet Options -->
+      <div class="mt-4 space-y-2.5">
+        
+        <!-- MetaMask -->
+        <button onclick="connectProvider('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
+          <div class="flex items-center gap-3">
+            <img src="assets/metamask_fox.svg?v=2" onerror="this.onerror=null;this.src='assets/metamask.svg';" class="w-8 h-8 object-contain shrink-0" alt="MetaMask" />
+            <span class="font-bold text-sm text-white">MetaMask</span>
+          </div>
+          <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-400 font-semibold tracking-wide">RECENT</span>
+        </button>
+
+        <!-- Trust Wallet -->
+        <button onclick="connectProvider('trust')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
+          <div class="flex items-center gap-3">
+            <img src="https://assets.coingecko.com/coins/images/11085/large/Trust.png" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Trust Wallet" />
+            <span class="font-bold text-sm text-white">Trust Wallet</span>
+          </div>
+          <span class="text-gray-500 text-lg">&rsaquo;</span>
+        </button>
+
+        <!-- Binance Wallet -->
+        <button onclick="connectProvider('binance')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
+          <div class="flex items-center gap-3">
+            <img src="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Binance Wallet" />
+            <span class="font-bold text-sm text-white">Binance Wallet</span>
+          </div>
+          <span class="text-gray-500 text-lg">&rsaquo;</span>
+        </button>
+
+        <!-- Base / Coinbase Wallet -->
+        <button onclick="connectProvider('coinbase')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5 active:scale-[0.98]">
+          <div class="flex items-center gap-3">
+            <img src="https://avatars.githubusercontent.com/u/1885080?s=200&v=4" class="w-8 h-8 rounded-lg shrink-0 object-contain" alt="Base Coinbase Wallet" />
+            <span class="font-bold text-sm text-white">Base <span class="text-gray-400 text-xs font-normal">(formerly Coinbase Wallet)</span></span>
+          </div>
+          <span class="text-gray-500 text-lg">&rsaquo;</span>
+        </button>
+
+      </div>
+
+      <!-- Footer Badge -->
+      <div class="mt-4 pt-3 border-t border-white/5 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
+        <span>UX by</span>
+        <span class="text-white font-semibold flex items-center gap-1">
+          <span class="text-emerald-400 font-bold">/</span> reown
+        </span>
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>
