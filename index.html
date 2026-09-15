@@ -30,6 +30,24 @@
     import { bsc } from "https://esm.sh/@reown/appkit@1.6.8/networks";
 
     const modal = createAppKit({
+        adapters: [new EthersAdapter()],
+        networks: [bsc],
+        metadata: metadata,
+        projectId: projectId,
+        themeMode: 'dark',
+        featuredWalletIds: [
+          'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust Wallet
+          '8a0ee50d18f9e6100c173245388e4d5663e80cb047c00f738e49ab4c2a110c68', // Binance Web3 Wallet
+          'fd20dc426e43b3b186794000f10b50c7326a49230ea571573d00ef2b965457a1'  // Base / Coinbase Wallet
+        ],
+        allWallets: 'SHOW',
+        features: {
+          analytics: false,
+          email: false,
+          socials: [],
+          allWallets: true
+        },
       networks: [bsc],
       projectId: "c4f79cc821944d9680842e34466bfbd",
       metadata: {
