@@ -24,90 +24,60 @@
   <style>html { scroll-behavior: smooth; }</style>
 
 
-  <!-- Reown AppKit CDN -->
-  <script type="module">
-    import { createAppKit } from "https://esm.sh/@reown/appkit@1.6.8";
-    import { bsc } from "https://esm.sh/@reown/appkit@1.6.8/networks";
-
-    const modal = createAppKit({
-        adapters: [new EthersAdapter()],
-        networks: [bsc],
-        metadata: metadata,
-        projectId: projectId,
-        themeMode: 'dark',
-        featuredWalletIds: [
-          'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
-          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust Wallet
-          '8a0ee50d18f9e6100c173245388e4d5663e80cb047c00f738e49ab4c2a110c68', // Binance Web3 Wallet
-          'fd20dc426e43b3b186794000f10b50c7326a49230ea571573d00ef2b965457a1'  // Base / Coinbase Wallet
-        ],
-        allWallets: 'SHOW',
-        features: {
-          analytics: false,
-          email: false,
-          socials: [],
-          allWallets: true
-        },
-      networks: [bsc],
-      projectId: "c4f79cc821944d9680842e34466bfbd",
-      metadata: {
-        name: "$ROACH Presale",
-        description: "Roach AI Presale Portal",
-        url: window.location.origin,
-        icons: ["https://cockroachai.co/assets/logo.png"]
-      },
-      themeMode: "dark",
-      themeVariables: {
-        "--w3m-accent": "#10b981",
-        "--w3m-border-radius-master": "16px"
-      }
-    });
-
-    window.roachAppKitModal = modal;
-  </script>
+  
 
   <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
   <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
-  <!-- Official Reown AppKit Standalone Engine -->
+  
+  <!-- Official Reown AppKit CDN Bundle -->
   <script type="module">
-    import { createAppKit } from 'https://cdn.jsdelivr.net/npm/@reown/appkit@1.6.8/+esm';
-    import { bsc } from 'https://cdn.jsdelivr.net/npm/@reown/appkit@1.6.8/networks/+esm';
-    import { EthersAdapter } from 'https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers@1.6.8/+esm';
+    import { createAppKit } from 'https://esm.sh/@reown/appkit@1.6.8?bundle';
+    import { bsc } from 'https://esm.sh/@reown/appkit@1.6.8/networks?bundle';
+    import { EthersAdapter } from 'https://esm.sh/@reown/appkit-adapter-ethers@1.6.8?bundle';
 
-    // Cloud Reown Project ID
     const projectId = 'c4f79cc821944d9680842e34466bfbd';
 
-    const metadata = {
-      name: '$ROACH Presale',
-      description: 'CockroachAI Presale & DEX Intelligence',
-      url: window.location.origin,
-      icons: ['https://cockroachai.co/assets/logo.png']
-    };
+    const modal = createAppKit({
+      adapters: [new EthersAdapter()],
+      networks: [bsc],
+      projectId: projectId,
+      metadata: {
+        name: '$ROACH Presale',
+        description: 'AI-Powered DEX Intelligence & Presale',
+        url: window.location.origin,
+        icons: ['https://cockroachai.co/assets/logo.png']
+      },
+      themeMode: 'dark',
+      themeVariables: {
+        '--w3m-accent': '#10b981',
+        '--w3m-border-radius-master': '16px',
+        '--w3m-z-index': 999999
+      },
+      featuredWalletIds: [
+        'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+        '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust
+        '8a0ee50d18f9e6100c173245388e4d5663e80cb047c00f738e49ab4c2a110c68', // Binance
+        'fd20dc426e43b3b186794000f10b50c7326a49230ea571573d00ef2b965457a1'  // Base / Coinbase
+      ],
+      allWallets: 'SHOW',
+      features: {
+        analytics: false,
+        email: false,
+        socials: [],
+        allWallets: true
+      }
+    });
 
-    try {
-      const modal = createAppKit({
-        adapters: [new EthersAdapter()],
-        networks: [bsc],
-        metadata: metadata,
-        projectId: projectId,
-        themeMode: 'dark',
-        features: {
-          analytics: false,
-          email: false,
-          socials: []
-        },
-        themeVariables: {
-          '--w3m-accent': '#10b981',
-          '--w3m-border-radius-master': '16px',
-          '--w3m-z-index': 999999
+    window.roachAppKit = modal;
+
+    // Listen to account changes from AppKit modal
+    modal.subscribeAccount(state => {
+      if (state.isConnected && state.address) {
+        if (typeof updateWalletUI === 'function') {
+          updateWalletUI(state.address);
         }
-      });
-
-      window.roachAppKit = modal;
-      console.log("Reown AppKit initialized successfully");
-    } catch(e) {
-      console.error("AppKit init error:", e);
-    }
+      }
+    });
   </script>
 </head>
 
@@ -1262,33 +1232,35 @@
   };
 </script>
 
+
+
 <script>
-  // Direct Reown Modal Trigger
   window.connectWallet = async function() {
     if (window.roachAppKit) {
       window.roachAppKit.open();
       return;
     }
-
-    // If modal is still instantiating, wait 200ms and retry
-    let retries = 0;
-    const interval = setInterval(() => {
-      retries++;
+    // Waiting for AppKit bundle to register
+    let attempts = 0;
+    const checkTimer = setInterval(() => {
+      attempts++;
       if (window.roachAppKit) {
-        clearInterval(interval);
+        clearInterval(checkTimer);
         window.roachAppKit.open();
-      } else if (retries > 5) {
-        clearInterval(interval);
-        // Fallback to injected if AppKit CDN network is blocked
+      } else if (attempts > 6) {
+        clearInterval(checkTimer);
         if (window.ethereum) {
-          window.ethereum.request({ method: 'eth_requestAccounts' });
+          window.ethereum.request({ method: 'eth_requestAccounts' }).then(accs => {
+            if (accs.length && typeof updateWalletUI === 'function') updateWalletUI(accs[0]);
+          });
         } else {
           const cleanHost = window.location.host + window.location.pathname;
-          window.location.href = "https://metamask.app.link/dapp/" + cleanHost;
+          window.location.href = 'https://metamask.app.link/dapp/' + cleanHost;
         }
       }
-    }, 200);
+    }, 150);
   };
 </script>
+
 </body>
 </html>
