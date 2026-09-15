@@ -24,6 +24,30 @@
   <style>html { scroll-behavior: smooth; }</style>
 
 
+  <!-- Reown AppKit CDN -->
+  <script type="module">
+    import { createAppKit } from "https://esm.sh/@reown/appkit@1.6.8";
+    import { bsc } from "https://esm.sh/@reown/appkit@1.6.8/networks";
+
+    const modal = createAppKit({
+      networks: [bsc],
+      projectId: "c4f79cc821944d9680842e34466bfbd",
+      metadata: {
+        name: "$ROACH Presale",
+        description: "Roach AI Presale Portal",
+        url: window.location.origin,
+        icons: ["https://cockroachai.co/assets/logo.png"]
+      },
+      themeMode: "dark",
+      themeVariables: {
+        "--w3m-accent": "#10b981",
+        "--w3m-border-radius-master": "16px"
+      }
+    });
+
+    window.roachAppKitModal = modal;
+  </script>
+
 </head>
 
 
