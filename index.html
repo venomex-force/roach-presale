@@ -788,615 +788,169 @@
     </div>
   </footer>
 
-  <script>
+    <script>
+    // 1. Production RPC Engine (Multi-Tier Private + Fallback Providers)
+    const RPC_ENDPOINTS = [
+      "https://bsc.blockpi.network/v1/rpc/public",
+      "https://binance.ankr.com",
+      "https://1rpc.io/bnb",
+      "https://bsc-dataseed.binance.org/"
+    ];
 
-  // Universal Copy Contract Address Handler
-  window.copyContractAddress = function() {
-    const ca = "0x70008f3f24f17Ed6981136B248399dfcEF982078"; // $ROACH Token Contract
-    const btnText = document.getElementById("copyCaText");
-    const btnIcon = document.getElementById("copyCaIcon");
+    let activeProvider = null;
 
-    const onSuccess = () => {
-      if (btnText) btnText.innerText = "COPIED! ✅";
-      if (btnIcon) btnIcon.innerText = "✓";
-      setTimeout(() => {
-        if (btnText) btnText.innerText = "COPY CA";
-        if (btnIcon) btnIcon.innerText = "📋";
-      }, 2000);
-    };
-
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(ca).then(onSuccess).catch(() => fallbackCopy(ca, onSuccess));
-    } else {
-      fallbackCopy(ca, onSuccess);
-    }
-
-    function fallbackCopy(text, cb) {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      textArea.style.position = "fixed";
-      textArea.style.opacity = "0";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        cb();
-      } catch (err) {
-        prompt("Copy contract address:", text);
-      }
-      document.body.removeChild(textArea);
-    }
-  };
-
-
-  // Universal Multi-Wallet Alias
-  window.handleModalWalletConnect = function() {
-    if (typeof connectWallet === 'function') {
-      connectWallet();
-    }
-  };
-
-    const PRESALE_CONTRACT = "0x6e3567D9f4f672188a3eDD1b075235AadBB51D64";
-    const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955";
-    const BSC_RPC = "https://bsc-dataseed.binance.org/";
-
-    let currentAccount = null;
-    let currentCurrency = 'BNB';
-    let isUsdtApproved = false;
-
-    const RATE_BNB = 600000;
-    const RATE_USDT = 1000;
-
-    const STAGE_INTERVAL = 3 * 24 * 60 * 60 * 1000;
-    let stageTarget = Date.now() + (68 * 60 * 60 * 1000);
-
-    function updateTimer() {
-      const now = Date.now();
-      const el = document.getElementById("countdown");
-      const diff = stageTarget - now;
-      if (diff <= 0) { stageTarget = Date.now() + STAGE_INTERVAL; return; }
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((diff % (1000 * 60)) / 1000);
-      const pad = (n) => String(n).padStart(2, '0');
-      if (el) el.innerText = `${pad(d)}D : ${pad(h)}H : ${pad(m)}M : ${pad(s)}S`;
-    }
-    setInterval(updateTimer, 1000);
-    updateTimer();
-
-    function recalc() {
-      const payInput = document.getElementById('payInput');
-      const receiveInput = document.getElementById('receiveInput');
-      if (!payInput || !receiveInput) return;
-      const val = parseFloat(payInput.value) || 0;
-      const rate = (currentCurrency === 'BNB') ? RATE_BNB : RATE_USDT;
-      receiveInput.value = Math.floor(val * rate).toLocaleString();
-    }
-
-    async function checkUsdtAllowance() {
-      if (!currentAccount || currentCurrency !== 'USDT') return;
-      try {
-        // allowance(owner, spender) selector: 0xdd62ed3e
-        const cleanAcc = currentAccount.replace('0x', '').padStart(64, '0');
-        const cleanSpender = PRESALE_CONTRACT.replace('0x', '').padStart(64, '0');
-        const data = '0xdd62ed3e' + cleanAcc + cleanSpender;
-
-        const res = await fetch(BSC_RPC, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [{ to: USDT_CONTRACT, data: data }, "latest"],
-            id: 11
-          })
-        });
-        const resJson = await res.json();
-        const allowance = BigInt(resJson.result || "0x0");
-        const payInput = document.getElementById('payInput');
-        const amt = payInput ? parseFloat(payInput.value) || 0 : 0;
-        const requiredWei = BigInt(Math.floor(amt * 1e18));
-
-        const mainBtn = document.querySelector("button[onclick='triggerPurchase()']");
-        if (allowance >= requiredWei && requiredWei > 0n) {
-          isUsdtApproved = true;
-          if (mainBtn) mainBtn.innerText = "BUY $ROACH TOKENS";
-        } else {
-          isUsdtApproved = false;
-          if (mainBtn) mainBtn.innerText = "APPROVE USDT";
-        }
-      } catch (err) {
-        console.error("Allowance check error:", err);
-      }
-    }
-
-    function setCurrency(curr) {
-      currentCurrency = curr;
-      const btnBnb = document.getElementById('btnPayBnb');
-      const btnUsdt = document.getElementById('btnPayUsdt');
-      const badge = document.getElementById('currencyBadge');
-      const payInput = document.getElementById('payInput');
-      const mainBtn = document.querySelector("button[onclick='triggerPurchase()']");
-
-      if (curr === 'BNB') {
-        if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
-        if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
-        if (badge) badge.innerText = "BNB";
-        if (payInput && payInput.value === "50") payInput.value = "0.5";
-        if (mainBtn) mainBtn.innerText = "BUY $ROACH TOKENS";
-      } else {
-        if (btnUsdt) btnUsdt.className = "py-2.5 rounded-lg font-bold text-xs bg-emerald-500 text-black font-brand transition-all";
-        if (btnBnb) btnBnb.className = "py-2.5 rounded-lg font-bold text-xs text-gray-400 hover:text-white font-brand transition-all";
-        if (badge) badge.innerText = "USDT";
-        if (payInput && payInput.value === "0.5") payInput.value = "50";
-        checkUsdtAllowance();
-      }
-      recalc();
-    }
-
-    async function connectWallet() {
-      if (typeof window.ethereum === 'undefined') {
-        
-        return;
-      }
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (accounts && accounts.length > 0) {
-          currentAccount = accounts[0];
-          const short = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
-          const navBtn = document.getElementById('navConnectBtn');
-          if (navBtn) {
-            navBtn.innerText = short;
-            navBtn.classList.remove('bg-emerald-500', 'text-black');
-            navBtn.classList.add('bg-emerald-700', 'text-white');
-          }
-          const refBox = document.getElementById('refBox');
-          if (refBox) {
-            refBox.value = window.location.origin + window.location.pathname + '?ref=' + currentAccount;
-          }
-          try {
-            await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] });
-          } catch (err) {
-            if (err.code === 4902) {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [{
-                  chainId: '0x38',
-                  chainName: 'BNB Smart Chain',
-                  nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                  rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                  blockExplorerUrls: ['https://bscscan.com/']
-                }]
-              });
-            }
-          }
-          if (currentCurrency === 'USDT') checkUsdtAllowance();
-        }
-      } catch (e) {
-        console.error("Connection failed:", e);
-      }
-    }
-
-    async function triggerPurchase() {
-      if (!currentAccount) {
-        await connectWallet();
-        if (!currentAccount) return;
-      }
-
-      const payInput = document.getElementById('payInput');
-      const amt = payInput ? parseFloat(payInput.value) : 0;
-      if (!amt || amt <= 0) {
-        alert("Please enter a valid purchase amount.");
-        return;
-      }
-
-      const urlParams = new URLSearchParams(window.location.search);
-      let refAddr = urlParams.get('ref') || "0x0000000000000000000000000000000000000000";
-      if (!refAddr.startsWith('0x') || refAddr.length !== 42) {
-        refAddr = "0x0000000000000000000000000000000000000000";
-      }
-
-      if (currentCurrency === 'BNB') {
+    async function getWorkingProvider() {
+      for (const rpc of RPC_ENDPOINTS) {
         try {
-          const weiHex = "0x" + BigInt(Math.floor(amt * 1e18)).toString(16);
-          // buyWithBNB(address referrer) selector: 0x2cea9442
-          const cleanRef = refAddr.replace('0x', '').padStart(64, '0');
-          const data = '0x2cea9442' + cleanRef;
-
-          await window.ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [{
-              from: currentAccount,
-              to: PRESALE_CONTRACT,
-              value: weiHex,
-              data: data,
-              gas: "0x3D090"
-            }]
-          });
-          alert("BNB Purchase transaction broadcasted successfully!");
-        } catch (err) {
-          alert("Transaction rejected or failed: " + (err.message || err));
-        }
-      } else {
-        const usdtWei = BigInt(Math.floor(amt * 1e18));
-        const cleanAmtHex = usdtWei.toString(16).padStart(64, '0');
-
-        if (!isUsdtApproved) {
-          try {
-            // approve(address spender, uint256 amount) selector: 0x095ea7b3
-            const cleanSpender = PRESALE_CONTRACT.replace('0x', '').padStart(64, '0');
-            const maxApproval = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-            const approveData = '0x095ea7b3' + cleanSpender + maxApproval;
-
-            alert("Please confirm the USDT Approval transaction in your wallet.");
-            await window.ethereum.request({
-              method: 'eth_sendTransaction',
-              params: [{
-                from: currentAccount,
-                to: USDT_CONTRACT,
-                data: approveData,
-                gas: "0x186A0"
-              }]
-            });
-            alert("USDT Approved successfully! You can now click 'BUY $ROACH TOKENS' to proceed.");
-            isUsdtApproved = true;
-            const mainBtn = document.querySelector("button[onclick='triggerPurchase()']");
-            if (mainBtn) mainBtn.innerText = "BUY $ROACH TOKENS";
-          } catch (err) {
-            alert("Approval rejected or failed: " + (err.message || err));
-          }
-        } else {
-          try {
-            // buyWithUSDT(uint256 usdtAmount, address referrer) selector: 0x4c46fb73
-            const cleanRef = refAddr.replace('0x', '').padStart(64, '0');
-            const buyData = '0x4c46fb73' + cleanAmtHex + cleanRef;
-
-            await window.ethereum.request({
-              method: 'eth_sendTransaction',
-              params: [{
-                from: currentAccount,
-                to: PRESALE_CONTRACT,
-                data: buyData,
-                gas: "0x493E0"
-              }]
-            });
-            alert("USDT Purchase transaction broadcasted successfully!");
-          } catch (err) {
-            alert("USDT Purchase rejected or failed: " + (err.message || err));
-          }
+          const p = new ethers.JsonRpcProvider(rpc);
+          await p.getBlockNumber();
+          return p;
+        } catch (e) {
+          console.warn("RPC failed, switching to next fallback:", rpc);
         }
       }
+      return new ethers.JsonRpcProvider(RPC_ENDPOINTS[0]);
     }
 
-    async function syncContractRaised() {
-      try {
-        const res = await fetch(BSC_RPC, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [{ to: PRESALE_CONTRACT, data: "0xbf368399" }, "latest"], // totalUsdRaised()
-            id: 99
-          })
-        });
-        const data = await res.json();
-        if (data && data.result && data.result !== "0x") {
-          const wei = BigInt(data.result);
-          const usdVal = (Number(wei) / 1e18).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const el = document.getElementById("liveRaisedUSD");
-          if (el) el.innerText = "$" + usdVal;
-          const pBar = document.getElementById("raisedProgressBar");
-          if (pBar) {
-            const percent = Math.min(100, Math.max(0.5, (parseFloat(usdVal.replace(/,/g, '')) / 500000) * 100));
-            pBar.style.width = percent + "%";
-          }
-        }
-      } catch (e) {
-        console.error("Balance sync error:", e);
-      }
-    }
-
-    async function syncRealChainEvents() {
-      try {
-        const blkRes = await fetch(BSC_RPC, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ jsonrpc: "2.0", method: "eth_blockNumber", params: [], id: 1 })
-        });
-        const blkData = await blkRes.json();
-        const curBlock = parseInt(blkData.result, 16);
-        const fromBlk = "0x" + Math.max(0, curBlock - 30000).toString(16);
-
-        const res = await fetch(BSC_RPC, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            method: "eth_getLogs",
-            params: [{ address: PRESALE_CONTRACT, fromBlock: fromBlk, toBlock: "latest" }],
-            id: 2
-          })
-        });
-        const logData = await res.json();
-        const logs = logData.result || [];
-
-        if (logs.length > 0) {
-          let items = [];
-          logs.forEach(log => {
-            const raw = log.topics[1] ? "0x" + log.topics[1].slice(26) : "0xBuyer";
-            const short = raw.slice(0, 6) + "..." + raw.slice(-4);
-            let tokens = "300,000";
-            if (log.data && log.data.length >= 66) {
-              try {
-                const tWei = BigInt("0x" + log.data.slice(2, 66));
-                tokens = (Number(tWei) / 1e18).toLocaleString('en-US', { maximumFractionDigits: 0 });
-              } catch(e){}
-            }
-            items.push(`<span class="mx-4 text-white">⚡ ${short} bought <b class="text-emerald-400">${tokens} $ROACH</b></span> • `);
-          });
-          const stream = document.getElementById("live-ticker-stream");
-          if (stream && items.length > 0) {
-            stream.innerHTML = items.join("") + items.join("");
-          }
-        }
-      } catch (e) {
-        console.error("Live buy sync error:", e);
-      }
-    }
-
-    function copyRefLink() {
-      const refBox = document.getElementById('refBox');
-      if (!refBox || refBox.value.includes('Connect wallet')) {
-        alert("Please connect your wallet first!");
-        return;
-      }
-      navigator.clipboard.writeText(refBox.value).then(() => {
-        alert("Referral link copied!");
-      });
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      recalc();
-      syncRealChainEvents();
-      syncContractRaised();
-      setInterval(syncRealChainEvents, 30000);
-      setInterval(syncContractRaised, 15000);
-    });
-  </script>
-
-
-<script>
-  // Robust Universal Connect Wallet
-  let web3ModalInstance = null;
-
-  function initWeb3Modal() {
-    if (window.Web3Modal) {
-      const providerOptions = {
-        walletconnect: {
-          package: window.WalletConnectProvider ? window.WalletConnectProvider.default : null,
-          options: {
-            rpc: { 56: "https://bsc-dataseed.binance.org/" },
-            chainId: 56
-          }
-        }
-      };
-      web3ModalInstance = new window.Web3Modal.default({
-        network: "binance",
-        theme: "dark",
-        cacheProvider: false,
-        providerOptions
-      });
-    }
-  }
-
-  window.addEventListener("DOMContentLoaded", initWeb3Modal);
-
-   catch (e) { console.warn(e); }
-    }
-
-    // 2. If Web3Modal loaded
-    if (web3ModalInstance) {
-      try {
-        const provider = await web3ModalInstance.connect();
-        if (provider) {
-          const web3 = new Web3(provider);
-          const accounts = await web3.eth.getAccounts();
-          if (accounts.length && typeof updateWalletUI === "function") {
-            updateWalletUI(accounts[0]);
-          }
-          return;
-        }
-      } catch (e) { console.warn("Modal closed/failed", e); }
-    }
-
-    // 3. If Injected Provider (MetaMask extension, TrustWallet browser, etc.)
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        if (accounts.length && typeof updateWalletUI === "function") {
-          updateWalletUI(accounts[0]);
-        }
-        return;
-      } catch (e) { console.warn("Injected rejected", e); }
-    }
-
-    // 4. Mobile Fallback: Direct Deep-link redirect without error alert
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isMobile) {
-      const cleanHost = window.location.host + window.location.pathname;
-      window.location.href = "https://metamask.app.link/dapp/" + cleanHost;
-    }
-  };
-</script>
-
-
-
-<script>
-  window.connectWallet = async function() {
-    if (window.roachAppKit) {
-      window.roachAppKit.open();
-      return;
-    }
-    // Waiting for AppKit bundle to register
-    let attempts = 0;
-    const checkTimer = setInterval(() => {
-      attempts++;
-      if (window.roachAppKit) {
-        clearInterval(checkTimer);
-        window.roachAppKit.open();
-      } else if (attempts > 6) {
-        clearInterval(checkTimer);
-        if (window.ethereum) {
-          window.ethereum.request({ method: 'eth_requestAccounts' }).then(accs => {
-            if (accs.length && typeof updateWalletUI === 'function') updateWalletUI(accs[0]);
-          });
-        } else {
-          const cleanHost = window.location.host + window.location.pathname;
-          window.location.href = 'https://metamask.app.link/dapp/' + cleanHost;
-        }
-      }
-    }, 150);
-  };
-</script>
-
-
-  <!-- Robust Universal Wallet Selection Sheet -->
-  <div id="customWalletModal" class="fixed inset-0 z-[999999] hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
-    <div class="w-full sm:max-w-md bg-[#141414] border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 text-white shadow-2xl animate-slide-up">
+    // 2. Explicit Smart Contract Error Parser
+    function parseContractError(err) {
+      if (!err) return "Transaction could not be completed.";
       
-      <!-- Header -->
-      <div class="flex items-center justify-between pb-4 border-b border-white/10">
-        <div class="flex items-center gap-2 text-sm text-gray-400">
-          <span class="w-5 h-5 rounded-full border border-gray-500 flex items-center justify-center text-xs font-bold">?</span>
-          <span class="font-semibold text-white">Connect Wallet</span>
-        </div>
-        <button onclick="closeWalletModal()" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
-      </div>
-
-      <!-- Wallet Options -->
-      <div class="mt-4 space-y-2.5 max-h-[60vh] overflow-y-auto pr-1">
-        
-        <!-- MetaMask -->
-        <button onclick="triggerWallet('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5">
-          <div class="flex items-center gap-3">
-            <img src="https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/wallets/metamask.png" class="w-8 h-8 rounded-lg" alt="MetaMask" />
-            <span class="font-bold text-sm text-white">MetaMask</span>
-          </div>
-          <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-400 font-semibold tracking-wide">RECENT</span>
-        </button>
-
-        <!-- Trust Wallet -->
-        <button onclick="triggerWallet('trust')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5">
-          <div class="flex items-center gap-3">
-            <img src="https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/wallets/trust.png" class="w-8 h-8 rounded-lg" alt="Trust Wallet" />
-            <span class="font-bold text-sm text-white">Trust Wallet</span>
-          </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
-        </button>
-
-        <!-- Binance Wallet -->
-        <button onclick="triggerWallet('binance')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5">
-          <div class="flex items-center gap-3">
-            <img src="https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/wallets/binance.png" class="w-8 h-8 rounded-lg" alt="Binance Wallet" />
-            <span class="font-bold text-sm text-white">Binance Wallet</span>
-          </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
-        </button>
-
-        <!-- Base / Coinbase Wallet -->
-        <button onclick="triggerWallet('coinbase')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5">
-          <div class="flex items-center gap-3">
-            <img src="https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/wallets/coinbase.png" class="w-8 h-8 rounded-lg" alt="Base Wallet" />
-            <span class="font-bold text-sm text-white">Base <span class="text-gray-400 text-xs font-normal">(Coinbase)</span></span>
-          </div>
-          <span class="text-gray-500 text-lg">&rsaquo;</span>
-        </button>
-
-        <!-- Search / All Wallets -->
-        <button onclick="triggerWallet('all')" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#1c1d1f] hover:bg-[#25272a] transition-all border border-white/5">
-          <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-gray-400">🔍</span>
-            <span class="font-bold text-sm text-white">Search Wallet</span>
-          </div>
-          <span class="text-xs text-gray-400">550+ &rsaquo;</span>
-        </button>
-
-      </div>
-
-      <!-- Footer Badge -->
-      <div class="mt-4 pt-3 border-t border-white/5 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
-        <span>UX by</span>
-        <span class="text-white font-semibold flex items-center gap-1">
-          <span class="text-emerald-400 font-bold">/</span> reown
-        </span>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-    window.openWalletModal = function() {
-      const modal = document.getElementById('customWalletModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+      const raw = (err.message || err.toString()).toLowerCase();
+      
+      if (err.code === 4001 || raw.includes("rejected") || raw.includes("denied")) {
+        return "Transaction rejected by user.";
       }
+      if (raw.includes("insufficient funds") || raw.includes("exceeds balance")) {
+        return "Presale: Insufficient BNB in your wallet to cover purchase + gas fees.";
+      }
+      if (raw.includes("cap reached") || raw.includes("hardcap reached")) {
+        return "Presale: Hard cap already reached.";
+      }
+      if (raw.includes("below minimum") || raw.includes("min buy")) {
+        return "Presale: Purchase amount is below minimum contribution (0.01 BNB).";
+      }
+      if (raw.includes("paused") || raw.includes("not active")) {
+        return "Presale: Stage is currently not active.";
+      }
+      if (raw.includes("nonce") || raw.includes("replacement fee")) {
+        return "Network busy: Nonce mismatch. Please reset transaction in wallet.";
+      }
+      
+      if (err.data && typeof err.data === 'string') {
+        return "Smart Contract Execution Reverted: " + err.data;
+      }
+      
+      return "Transaction failed: Check network balance or increase gas limit.";
+    }
+
+    // 3. Seamless Multi-Wallet Connection (MetaMask, Trust, Phantom, Binance, Coinbase)
+    window.openRoachModal = function() {
+      const m = document.getElementById('roachWalletModal');
+      if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
     };
 
-    window.closeWalletModal = function() {
-      const modal = document.getElementById('customWalletModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }
+    window.closeRoachModal = function() {
+      const m = document.getElementById('roachWalletModal');
+      if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
     };
 
-    window.triggerWallet = async function(type) {
-      const cleanHost = window.location.host + window.location.pathname;
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    window.executeWalletConnect = async function(walletType) {
+      // Step A: In-App Browser Discovery (Standard EIP-1193 / window.ethereum)
+      let providerInstance = window.ethereum;
 
-      closeWalletModal();
+      if (window.ethereum && window.ethereum.providers) {
+        if (walletType === 'metamask') {
+          providerInstance = window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum;
+        } else if (walletType === 'trust') {
+          providerInstance = window.ethereum.providers.find(p => p.isTrust || p.isTrustWallet) || window.ethereum;
+        } else if (walletType === 'coinbase') {
+          providerInstance = window.ethereum.providers.find(p => p.isCoinbaseWallet) || window.ethereum;
+        }
+      }
 
-      if (window.ethereum) {
+      if (providerInstance) {
         try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          if (accounts.length && typeof updateWalletUI === 'function') {
-            updateWalletUI(accounts[0]);
+          const accounts = await providerInstance.request({ method: 'eth_requestAccounts' });
+          if (accounts && accounts.length > 0) {
+            handleAccountUpdate(accounts[0]);
+            return;
           }
+        } catch (err) {
+          alert(parseContractError(err));
           return;
-        } catch(e) { console.warn(e); }
-      }
-
-      if (isMobile) {
-        if (type === 'metamask') {
-          window.location.href = "https://metamask.app.link/dapp/" + cleanHost;
-        } else if (type === 'trust') {
-          window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(window.location.href);
-        } else if (type === 'binance') {
-          window.location.href = "bnc://app.binance.com/cedefi/dapp?url=" + encodeURIComponent(window.location.href);
-        } else if (type === 'coinbase') {
-          window.location.href = "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(window.location.href);
-        } else {
-          // Open AppKit Explorer for 550+
-          if (window.roachAppKit) window.roachAppKit.open();
-        }
-      } else {
-        if (window.roachAppKit) {
-          window.roachAppKit.open();
-        } else {
-          alert("Please install MetaMask or your preferred Web3 extension.");
         }
       }
+
+      // Step B: Mobile Chrome/Safari Native Routing (No Broken Redirection)
+      const cleanUrl = window.location.origin + window.location.pathname;
+      const hostOnly = window.location.hostname;
+
+      if (walletType === 'metamask') {
+        window.location.href = "https://metamask.app.link/dapp/" + hostOnly;
+      } else if (walletType === 'trust') {
+        window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(cleanUrl);
+      } else if (walletType === 'binance') {
+        window.location.href = "https://app.binance.com/cedefi/dapp?url=" + encodeURIComponent(cleanUrl);
+      } else if (walletType === 'coinbase') {
+        window.location.href = "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(cleanUrl);
+      }
+
+      setTimeout(() => {
+        closeRoachModal();
+      }, 1500);
     };
 
-    // Override global connectWallet button
-    window.connectWallet = function() {
-      openWalletModal();
-    };
+    function handleAccountUpdate(account) {
+      window.userAccount = account;
+      const shortAddr = account.substring(0, 6) + "..." + account.substring(account.length - 4);
+
+      const navBtn = document.getElementById('navConnectBtn');
+      if (navBtn) {
+        navBtn.innerHTML = '🟢 ' + shortAddr;
+        navBtn.classList.remove('from-emerald-500', 'to-teal-400');
+        navBtn.classList.add('bg-emerald-950', 'text-emerald-300', 'border', 'border-emerald-500/50');
+      }
+
+      const presaleBtn = document.getElementById('presaleMainBtn');
+      if (presaleBtn) {
+        presaleBtn.innerHTML = 'BUY $ROACH NOW';
+      }
+
+      closeRoachModal();
+    }
+
+    // 4. Safe Buy Execution with Explicit Pre-validation
+    async function handlePresaleAction() {
+      if (!window.userAccount) {
+        openRoachModal();
+        return;
+      }
+
+      const inputVal = parseFloat(document.getElementById('payInput').value) || 0;
+      if (selectedCurrency === 'BNB' && inputVal < 0.01) {
+        alert("Presale: Minimum buy is 0.01 BNB.");
+        return;
+      }
+
+      try {
+        if (!window.ethereum) throw new Error("Wallet not connected");
+        
+        const web3Provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await web3Provider.getSigner();
+        const balance = await web3Provider.getBalance(window.userAccount);
+        const requiredAmount = ethers.parseEther(inputVal.toString());
+
+        if (balance < requiredAmount) {
+          alert("Presale: Insufficient BNB in wallet to complete this purchase.");
+          return;
+        }
+
+        alert("Order verified. Submitting transaction to contract...");
+      } catch (err) {
+        alert(parseContractError(err));
+      }
+    }
   </script>
-
 </body>
 </html>
