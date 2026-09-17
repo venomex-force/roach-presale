@@ -142,10 +142,10 @@
           <span>📄</span> Whitepaper
         </a>
         <a href="#ecosystem" class="hover:text-emerald-400 transition-colors">RoachSwap & AI</a>
-        <a href="#tokenomics" class="hover:text-emerald-400 transition-colors">Tokenomics</a>
+        <a href="#tokenomics" class="text-gray-300 hover:text-emerald-400 font-medium transition-colors">Tokenomics</a>
         <a href="#security-audit" class="hover:text-emerald-400 transition-colors">Audit & Security</a>
-        <a href="#roadmap" class="hover:text-emerald-400 transition-colors">Roadmap</a>
-        <a href="#faq" class="hover:text-emerald-400 transition-colors">FAQ</a>
+        <a href="#roadmap" class="text-gray-300 hover:text-emerald-400 font-medium transition-colors">Roadmap</a>
+        <a href="#faq" class="text-gray-300 hover:text-emerald-400 font-medium transition-colors">FAQ</a>
       </nav>
 
       <!-- Action Buttons (Network Pill + Connect Wallet) -->
@@ -154,7 +154,9 @@
           <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
           BSC Mainnet
         </div>
-        <button type="button" id="navConnectBtn" onclick="openWalletModal()" class="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-600 hover:to-teal-500 text-black font-bold py-2.5 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 flex items-center space-x-2 text-sm active:scale-95">Connect Wallet</button>
+        <button type="button" id="walletBtn" onclick="openWalletModal()" class="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-600 hover:to-teal-500 text-black font-bold py-2.5 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 flex items-center space-x-2 text-sm active:scale-95">
+  <span id="walletBtnText">Connect Wallet</span>
+</button>
       </div>
 
     </div>
@@ -751,7 +753,7 @@
           <ul class="space-y-2 text-xs font-mono text-gray-400">
             <li><a href="#" class="hover:text-emerald-400 transition">Presale Portal</a></li>
             <li><a href="https://bscscan.com/address/0x70008f3f24f17Ed6981136B248399dfcEF982078#code" target="_blank" class="hover:text-emerald-400 transition">Smart Contract</a></li>
-            <li><a href="#tokenomics" class="hover:text-emerald-400 transition">Tokenomics</a></li>
+            <li><a href="#tokenomics" class="text-gray-300 hover:text-emerald-400 font-medium transition-colors">Tokenomics</a></li>
             <li><a href="whitepaper.html" target="_blank" class="hover:text-emerald-400 transition">Whitepaper</a></li>
           </ul>
         </div>
@@ -863,6 +865,22 @@ window.triggerWallet = function(type) {
 window.executeWallet = window.triggerWallet;
 </script>
 
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        e.preventDefault();
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+});
+</script>
 
 </body>
 </html>
