@@ -26,85 +26,59 @@
 
   
 
-  
-  
+  <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+  <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
   
   <!-- Official Reown AppKit CDN Bundle -->
-  
-  <!-- Reown Web3Modal Core Bundle -->
-  
-  
-
-
-  <!-- Official Reown AppKit Universal Browser Bundle -->
   <script type="module">
-    import { createAppKit } from 'https://esm.sh/@reown/appkit@1.8.24?bundle';
-    import { EthersAdapter } from 'https://esm.sh/@reown/appkit-adapter-ethers@1.8.24?bundle';
-    import { bsc, mainnet } from 'https://esm.sh/@reown/appkit@1.8.24/networks?bundle';
+    import { createAppKit } from 'https://esm.sh/@reown/appkit@1.6.8?bundle';
+    import { bsc } from 'https://esm.sh/@reown/appkit@1.6.8/networks?bundle';
+    import { EthersAdapter } from 'https://esm.sh/@reown/appkit-adapter-ethers@1.6.8?bundle';
 
-    const projectId = '411a0413634e88f492ef7462adb475ff';
+    const projectId = 'c4f79cc821944d9680842e34466bfbd';
 
-    const metadata = {
-      name: 'CockroachAI',
-      description: 'CockroachAI ($ROACH) - Autonomous AI DEX Agent',
-      url: window.location.origin,
-      icons: [window.location.origin + '/assets/logo.png']
-    };
-
-    const appKit = createAppKit({
+    const modal = createAppKit({
       adapters: [new EthersAdapter()],
-      networks: [bsc, mainnet],
-      defaultNetwork: bsc,
-      metadata: metadata,
+      networks: [bsc],
       projectId: projectId,
-      features: {
-        analytics: true,
-        email: false,
-        socials: []
+      metadata: {
+        name: '$ROACH Presale',
+        description: 'AI-Powered DEX Intelligence & Presale',
+        url: window.location.origin,
+        icons: ['https://cockroachai.co/assets/logo.png']
       },
       themeMode: 'dark',
       themeVariables: {
         '--w3m-accent': '#10b981',
         '--w3m-border-radius-master': '16px',
-        '--w3m-z-index': 9999999
+        '--w3m-z-index': 999999
+      },
+      featuredWalletIds: [
+        'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+        '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust
+        '8a0ee50d18f9e6100c173245388e4d5663e80cb047c00f738e49ab4c2a110c68', // Binance
+        'fd20dc426e43b3b186794000f10b50c7326a49230ea571573d00ef2b965457a1'  // Base / Coinbase
+      ],
+      allWallets: 'SHOW',
+      features: {
+        analytics: false,
+        email: false,
+        socials: [],
+        allWallets: true
       }
     });
 
-    // Global click handlers
-    window.openAppKitModal = () => {
-      appKit.open();
-    };
-    window.openRoachModal = window.openAppKitModal;
-    window.openWalletModal = window.openAppKitModal;
-    window.triggerWallet = window.openAppKitModal;
+    window.roachAppKit = modal;
 
-    // Listen for connection state changes
-    appKit.subscribeAccount(state => {
-      const navBtn = document.getElementById('walletBtn') || document.getElementById('navConnectBtn');
-      const presaleBtn = document.getElementById('presaleMainBtn') || document.getElementById('presaleSubmitBtn');
-      
-      if (state && state.isConnected && state.address) {
-        const addr = state.address;
-        const shortAddr = addr.substring(0, 6) + '...' + addr.substring(addr.length - 4);
-        if (navBtn) {
-          navBtn.innerText = '🟢 ' + shortAddr;
-          navBtn.classList.remove('from-emerald-500', 'to-teal-400');
-          navBtn.classList.add('bg-emerald-950', 'text-emerald-300', 'border', 'border-emerald-500/40');
-        }
-        if (presaleBtn) {
-          presaleBtn.innerText = 'BUY $ROACH NOW';
-        }
-      } else {
-        if (navBtn) {
-          navBtn.innerText = 'Connect Wallet';
-        }
-        if (presaleBtn) {
-          presaleBtn.innerText = 'CONNECT WALLET TO BUY';
+    // Listen to account changes from AppKit modal
+    modal.subscribeAccount(state => {
+      if (state.isConnected && state.address) {
+        if (typeof updateWalletUI === 'function') {
+          updateWalletUI(state.address);
         }
       }
     });
   </script>
-
 </head>
 
 
@@ -180,9 +154,7 @@
           <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
           BSC Mainnet
         </div>
-        <button type="button" onclick="window.openAppKitModal()" id="navConnectBtn" onclick="window.openAppKitModal()">
-  Connect Wallet
-</button>
+        <button id="navConnectBtn" onclick="connectWeb3()">Connect Wallet</button>
       </div>
 
     </div>
@@ -1425,6 +1397,99 @@
       openWalletModal();
     };
   </script>
+
+
+<script>
+let activeCurr = "BNB";
+let userAccount = null;
+
+// Currency Switcher
+window.setCurr = function(c) {
+  activeCurr = c;
+  const bnb = document.getElementById("btnBNB");
+  const usdt = document.getElementById("btnUSDT");
+  const badge = document.getElementById("currencyBadge") || document.getElementById("currentCurrencyLabel");
+  const input = document.getElementById("payAmountInput") || document.getElementById("payInput");
+
+  if (c === "BNB") {
+    if (bnb) bnb.className = "py-2.5 px-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all";
+    if (usdt) usdt.className = "py-2.5 px-3 rounded-xl border border-white/10 bg-black/40 text-gray-400 font-bold text-xs flex items-center justify-center gap-2 transition-all";
+    if (badge) badge.innerText = "BNB";
+    if (input) input.value = "0.1";
+  } else {
+    if (usdt) usdt.className = "py-2.5 px-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all";
+    if (bnb) bnb.className = "py-2.5 px-3 rounded-xl border border-white/10 bg-black/40 text-gray-400 font-bold text-xs flex items-center justify-center gap-2 transition-all";
+    if (badge) badge.innerText = "USDT";
+    if (input) input.value = "50";
+  }
+};
+
+// Direct Web3 Provider Connection (Zero External Dependencies)
+window.connectWeb3 = async function() {
+  // Check if browser has Web3 (MetaMask, Trust, Brave, Binance Wallet)
+  if (window.ethereum) {
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      if (accounts && accounts.length > 0) {
+        userAccount = accounts[0];
+        const short = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
+        
+        // Update Navbar Button
+        const navBtn = document.getElementById("walletBtn") || document.getElementById("navConnectBtn");
+        const navText = document.getElementById("walletBtnText");
+        if (navText) navText.innerText = "🟢 " + short;
+        else if (navBtn) navBtn.innerText = "🟢 " + short;
+
+        // Update Presale CTA
+        const cta = document.getElementById("presaleMainBtn") || document.getElementById("presaleSubmitBtn");
+        if (cta) cta.innerText = "BUY $ROACH NOW";
+
+        // Auto Switch to BSC (Chain ID 56)
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x38" }]
+          });
+        } catch (switchErr) {
+          console.log("BSC switch notice:", switchErr);
+        }
+        return;
+      }
+    } catch (err) {
+      if (err.code === 4001) {
+        alert("Connection rejected by user.");
+      } else {
+        alert("Error connecting wallet: " + (err.message || err));
+      }
+      return;
+    }
+  }
+
+  // Mobile standard fallback: Agar mobile Chrome/Safari me hai toh seedha wallet app kholo
+  const targetUrl = window.location.origin + window.location.pathname;
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    const choice = confirm("MetaMask me open karein? (Cancel dabayein Trust Wallet ke liye)");
+    if (choice) {
+      window.location.href = "https://metamask.app.link/dapp/" + window.location.hostname;
+    } else {
+      window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(targetUrl);
+    }
+  } else {
+    alert("MetaMask ya Web3 Wallet extension install nahi mila. Kripya browser extension install karein!");
+  }
+};
+
+// Listen to account changes
+if (window.ethereum) {
+  window.ethereum.on("accountsChanged", (accs) => {
+    if (!accs || accs.length === 0) {
+      location.reload();
+    } else {
+      window.connectWeb3();
+    }
+  });
+}
+</script>
 
 </body>
 </html>
