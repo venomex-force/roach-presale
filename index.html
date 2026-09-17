@@ -86,7 +86,7 @@
 <body class="antialiased selection:bg-emerald-500 selection:text-black">
 
   <!-- LIVE BUY TICKER -->
-  <div class="w-full bg-gradient-to-r from-[#064e3b] to-[#042f2e] border-b border-emerald-500/30 text-emerald-200 text-xs font-mono py-2 overflow-hidden sticky top-0 z-50">
+  <div class="w-full bg-gradient-to-r from-[#064e3b] to-[#042f2e] border-b border-emerald-500/30 text-emerald-200 text-xs font-mono py-2 overflow-hidden sticky top-0 z-50" id="roadmap" id="faq">
     <div class="flex items-center">
       <span class="bg-emerald-600 text-white font-bold px-2.5 py-0.5 ml-3 rounded text-[11px] whitespace-nowrap">● LIVE BUYS</span>
       <div id="live-ticker-stream" class="inline-block whitespace-nowrap animate-[scrollTicker_30s_linear_infinite]">
@@ -194,7 +194,7 @@
 
 
   <!-- Hero & Presale Section -->
-  <section class="max-w-7xl mx-auto px-6 pt-12 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start" id="about">
+  <section class="max-w-7xl mx-auto px-6 pt-12 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start" id="about" id="tokenomics">
     
     <!-- Left Hero -->
     <div class="lg:col-span-7 space-y-7">
@@ -876,6 +876,151 @@ document.addEventListener("DOMContentLoaded", () => {
       if (targetElement) {
         e.preventDefault();
         targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+});
+</script>
+
+
+<!-- CockroachAI Verified Wallet Modal -->
+<div id="roachWalletModal" class="fixed inset-0 z-[999999] hidden items-center justify-center bg-black/80 backdrop-blur-md p-4 transition-all">
+  <div class="relative w-full max-w-md bg-[#0e131b] border border-emerald-500/30 rounded-2xl p-6 shadow-[0_0_50px_rgba(16,185,129,0.2)]">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+      <div class="flex items-center space-x-3">
+        <img src="assets/logo.png" onerror="this.src='logo.png'" class="w-8 h-8 rounded-full border border-emerald-500/50" />
+        <h3 class="text-xl font-extrabold text-white tracking-wide font-brand">Connect Wallet</h3>
+      </div>
+      <button type="button" onclick="closeWalletModal()" class="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-all text-2xl leading-none">&times;</button>
+    </div>
+
+    <p class="text-xs text-gray-400 mb-4">Select your preferred Web3 wallet to connect to BNB Smart Chain:</p>
+
+    <!-- Wallets List -->
+    <div class="space-y-3">
+      <!-- MetaMask -->
+      <button type="button" onclick="connectWalletProvider('metamask')" class="w-full flex items-center justify-between p-3.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/[0.06] transition-all group">
+        <div class="flex items-center space-x-3">
+          <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" class="w-8 h-8 object-contain" alt="MetaMask" />
+          <div class="text-left">
+            <div class="font-bold text-white text-sm group-hover:text-emerald-400 transition-colors">MetaMask</div>
+            <div class="text-[11px] text-gray-400">Desktop extension & Mobile App</div>
+          </div>
+        </div>
+        <span class="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity text-sm">→</span>
+      </button>
+
+      <!-- Trust Wallet -->
+      <button type="button" onclick="connectWalletProvider('trust')" class="w-full flex items-center justify-between p-3.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/[0.06] transition-all group">
+        <div class="flex items-center space-x-3">
+          <img src="https://assets.trustwalletapp.com/assets/favicon.png" class="w-8 h-8 object-contain rounded-full" alt="Trust Wallet" />
+          <div class="text-left">
+            <div class="font-bold text-white text-sm group-hover:text-emerald-400 transition-colors">Trust Wallet</div>
+            <div class="text-[11px] text-gray-400">Multi-chain mobile & extension</div>
+          </div>
+        </div>
+        <span class="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity text-sm">→</span>
+      </button>
+
+      <!-- Binance Web3 Wallet -->
+      <button type="button" onclick="connectWalletProvider('binance')" class="w-full flex items-center justify-between p-3.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/[0.06] transition-all group">
+        <div class="flex items-center space-x-3">
+          <img src="https://cryptologos.cc/logos/bnb-bnb-logo.svg?v=035" class="w-8 h-8 object-contain" alt="Binance Wallet" />
+          <div class="text-left">
+            <div class="font-bold text-white text-sm group-hover:text-emerald-400 transition-colors">Binance Web3 Wallet</div>
+            <div class="text-[11px] text-gray-400">Binance App Official Web3</div>
+          </div>
+        </div>
+        <span class="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity text-sm">→</span>
+      </button>
+    </div>
+
+    <!-- Chain Info Footer -->
+    <div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-gray-400">
+      <span>Network: <strong class="text-emerald-400">BNB Smart Chain (BSC)</strong></span>
+      <span>Chain ID: <strong class="text-white">56</strong></span>
+    </div>
+  </div>
+</div>
+
+<script>
+window.openWalletModal = function() {
+  const modal = document.getElementById('roachWalletModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+};
+
+window.closeWalletModal = function() {
+  const modal = document.getElementById('roachWalletModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+};
+
+window.connectWalletProvider = async function(walletType) {
+  if (window.ethereum) {
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (accounts && accounts.length > 0) {
+        const addr = accounts[0];
+        const short = addr.slice(0, 6) + '...' + addr.slice(-4);
+        
+        // Update Navbar Button
+        const navText = document.getElementById('walletBtnText');
+        const navBtn = document.getElementById('walletBtn');
+        if (navText) navText.innerText = '🟢 ' + short;
+        else if (navBtn) navBtn.innerText = '🟢 ' + short;
+
+        // Update Presale CTA
+        const ctaBtn = document.getElementById('presaleMainBtn') || document.getElementById('presaleSubmitBtn');
+        if (ctaBtn) ctaBtn.innerText = 'BUY $ROACH NOW';
+
+        // BSC Switch prompt
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x38' }]
+          });
+        } catch(e) {}
+
+        window.closeWalletModal();
+        return;
+      }
+    } catch(err) {
+      if (err.code === 4001) alert("Connection rejected by user.");
+      else alert("Connection error: " + (err.message || err));
+      return;
+    }
+  }
+
+  // Mobile App Deep-linking
+  const target = encodeURIComponent(window.location.origin + window.location.pathname);
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    if (walletType === 'trust') {
+      window.location.href = "https://link.trustwallet.com/open_url?coin_id=60&url=" + target;
+    } else if (walletType === 'binance') {
+      window.location.href = "https://app.binance.com/cedefi/dapp?url=" + target;
+    } else {
+      window.location.href = "https://metamask.app.link/dapp/" + window.location.hostname;
+    }
+  } else {
+    alert("Extension nahi mili! Kripya " + walletType.toUpperCase() + " browser extension install karein.");
+  }
+};
+
+// Anchor smooth scroll
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const id = this.getAttribute('href').substring(1);
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
   });
