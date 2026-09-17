@@ -1027,6 +1027,85 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+
+<script>
+function openWalletModal() {
+    const modal = document.getElementById("roachWalletModal") || document.getElementById("walletModal");
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.style.display = "flex";
+    }
+}
+
+function closeWalletModal() {
+    const modal = document.getElementById("roachWalletModal") || document.getElementById("walletModal");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+    }
+}
+
+function copyOfficialUrl() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("🔗 Official link copied to clipboard!");
+}
+
+function shareOfficialUrl() {
+    if (navigator.share) {
+        navigator.share({ title: document.title, url: window.location.href }).catch(() => {});
+    } else {
+        copyOfficialUrl();
+    }
+}
+
+function setCurrency(curr) {
+    console.log("Currency selected:", curr);
+    const bnbBtn = document.getElementById("btnPayBnb");
+    const usdtBtn = document.getElementById("btnPayUsdt");
+    if(bnbBtn && usdtBtn) {
+        bnbBtn.classList.remove("border-emerald-500", "bg-emerald-500/20");
+        usdtBtn.classList.remove("border-emerald-500", "bg-emerald-500/20");
+        if(curr === "BNB") bnbBtn.classList.add("border-emerald-500", "bg-emerald-500/20");
+        if(curr === "USDT") usdtBtn.classList.add("border-emerald-500", "bg-emerald-500/20");
+    }
+}
+
+function copyRefLink() {
+    const refBox = document.getElementById("refBox");
+    if(refBox && refBox.value) {
+        navigator.clipboard.writeText(refBox.value);
+        alert("📋 Referral link copied!");
+    } else {
+        copyOfficialUrl();
+    }
+}
+
+function copyContractAddress() {
+    const ca = "0x000000000000000000000000000000000000dead";
+    navigator.clipboard.writeText(ca);
+    alert("📋 Contract Address copied to clipboard!");
+}
+
+function connectWallet() {
+    openWalletModal();
+}
+
+function connectWalletProvider(type) {
+    if (window.ethereum) {
+        window.ethereum.request({ method: "eth_requestAccounts" }).then(accs => {
+            if(accs && accs[0]) {
+                const short = accs[0].slice(0, 6) + "..." + accs[0].slice(-4);
+                const btn = document.getElementById("walletBtn");
+                if(btn) btn.innerText = "🟢 " + short;
+                closeWalletModal();
+            }
+        }).catch(err => alert(err.message));
+    } else {
+        alert("Web3 Wallet not detected!");
+    }
+}
+</script>
+
 </body>
 </html>
 <!-- Web3-Onboard Universal CDN Engine -->
