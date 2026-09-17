@@ -19,3 +19,5 @@ docs/
 .env.*
 !.env.example
 broadcast/
+node_modules/
+*.bak
