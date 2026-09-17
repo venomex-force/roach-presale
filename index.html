@@ -30,55 +30,40 @@
   <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
   
   <!-- Official Reown AppKit CDN Bundle -->
+  
+  <!-- Reown Web3Modal Core Bundle -->
+  <script type="module" src="https://unpkg.com/@reown/appkit@1.8.24/dist/index.js"></script>
   <script type="module">
-    import { createAppKit } from 'https://esm.sh/@reown/appkit@1.6.8?bundle';
-    import { bsc } from 'https://esm.sh/@reown/appkit@1.6.8/networks?bundle';
-    import { EthersAdapter } from 'https://esm.sh/@reown/appkit-adapter-ethers@1.6.8?bundle';
+    import { createAppKit } from 'https://unpkg.com/@reown/appkit@1.8.24/dist/index.js';
+    import { EthersAdapter } from 'https://unpkg.com/@reown/appkit-adapter-ethers@1.8.24/dist/index.js';
+    import { bsc } from 'https://unpkg.com/@reown/appkit@1.8.24/dist/networks.js';
 
-    const projectId = 'c4f79cc821944d9680842e34466bfbd';
-
-    const modal = createAppKit({
+    window.appKit = createAppKit({
       adapters: [new EthersAdapter()],
       networks: [bsc],
-      projectId: projectId,
+      defaultNetwork: bsc,
       metadata: {
-        name: '$ROACH Presale',
-        description: 'AI-Powered DEX Intelligence & Presale',
-        url: window.location.origin,
+        name: 'CockroachAI',
+        description: 'CockroachAI Presale',
+        url: 'https://cockroachai.co',
         icons: ['https://cockroachai.co/assets/logo.png']
       },
+      projectId: '411a0413634e88f492ef7462adb475ff',
       themeMode: 'dark',
       themeVariables: {
-        '--w3m-accent': '#10b981',
-        '--w3m-border-radius-master': '16px',
-        '--w3m-z-index': 999999
-      },
-      featuredWalletIds: [
-        'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
-        '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust
-        '8a0ee50d18f9e6100c173245388e4d5663e80cb047c00f738e49ab4c2a110c68', // Binance
-        'fd20dc426e43b3b186794000f10b50c7326a49230ea571573d00ef2b965457a1'  // Base / Coinbase
-      ],
-      allWallets: 'SHOW',
-      features: {
-        analytics: false,
-        email: false,
-        socials: [],
-        allWallets: true
+        '--w3m-accent': '#10b981'
       }
     });
 
-    window.roachAppKit = modal;
-
-    // Listen to account changes from AppKit modal
-    modal.subscribeAccount(state => {
-      if (state.isConnected && state.address) {
-        if (typeof updateWalletUI === 'function') {
-          updateWalletUI(state.address);
-        }
+    window.openAppKitModal = () => {
+      if (window.appKit) {
+        window.appKit.open();
+      } else {
+        alert("Wallet engine initializing, please retry...");
       }
-    });
+    };
   </script>
+
 </head>
 
 
@@ -154,7 +139,9 @@
           <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
           BSC Mainnet
         </div>
-        <button id="navConnectBtn" onclick="window.openRoachModal()">Connect Wallet</button>
+        <button type="button" onclick="window.openAppKitModal()" id="navConnectBtn" class="bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-bold text-sm px-6 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+  Connect Wallet
+</button>
       </div>
 
     </div>
