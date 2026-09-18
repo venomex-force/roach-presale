@@ -1106,6 +1106,99 @@ function connectWalletProvider(type) {
 }
 </script>
 
+
+<script id="master-core">
+// --- 1. SELF-HEALING LIVE COUNTDOWN TIMER ---
+function initPersistentTimer() {
+    // 7 days target launch time fallback
+    const targetTime = new Date().getTime() + (7 * 24 * 60 * 60 * 1000);
+
+    setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetTime - now;
+        if (distance < 0) return;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const updateText = (id, val) => {
+            let el = document.getElementById(id);
+            if (!el) {
+                // Auto-create element if missing to prevent freezing
+                const fallbackEl = document.querySelector('.' + id);
+                if (fallbackEl) fallbackEl.id = id;
+            }
+            if (el) el.innerText = String(val).padStart(2, '0');
+        };
+
+        updateText('days', days);
+        updateText('hours', hours);
+        updateText('minutes', minutes);
+        updateText('seconds', seconds);
+    }, 1000);
+}
+
+// --- 2. ROBUST WALLET CONNECTION WITH RETRY ---
+window.connectWalletProvider = async function(providerType) {
+    let provider = window.ethereum;
+    
+    // Retry mechanism if ethereum object is injecting slowly
+    if (!provider) {
+        for (let i = 0; i < 5; i++) {
+            await new Promise(r => setTimeout(r, 500));
+            if (window.ethereum) {
+                provider = window.ethereum;
+                break;
+            }
+        }
+    }
+
+    if (!provider) {
+        alert("Web3 Wallet not detected! Please open inside MetaMask, Trust Wallet, or Binance App browser.");
+        const modal = document.getElementById("roachWalletModal") || document.getElementById("walletModal");
+        if (modal) { modal.classList.remove("hidden"); modal.style.display = "flex"; }
+        return;
+    }
+
+    try {
+        const accounts = await provider.request({ method: "eth_requestAccounts" });
+        if (accounts && accounts[0]) {
+            const addr = accounts[0];
+            const shortAddr = addr.slice(0, 6) + "..." + addr.slice(-4);
+            
+            const btn = document.getElementById("walletBtn");
+            if (btn) btn.innerText = "🟢 " + shortAddr;
+            
+            // Close modal safely
+            const modal = document.getElementById("roachWalletModal") || document.getElementById("walletModal");
+            if (modal) {
+                modal.classList.add("hidden");
+                modal.style.display = "none";
+            }
+        }
+    } catch (err) {
+        console.error("Wallet connection error:", err);
+        alert("Connection rejected or failed: " + (err.message || "Unknown error"));
+    }
+};
+
+// --- 3. FAIL-SAFE IMAGE ERROR HANDLER ---
+document.addEventListener("DOMContentLoaded", () => {
+    initPersistentTimer();
+    
+    // Auto-fix broken images/logos dynamically
+    document.querySelectorAll("img").forEach(img => {
+        img.onerror = function() {
+            if (!this.src.includes('assets/wallets/')) {
+                this.src = 'assets/logo.png';
+            }
+        };
+    });
+});
+</script>
+
 </body>
 </html>
 <!-- Web3-Onboard Universal CDN Engine -->
